@@ -12,8 +12,7 @@ public class GY85_I2C {
     private byte compassBuffer[], gyroBuffer[], accelBuffer[];
     private int compassByte, gyroByte, accelByte;
     
-    private final int SAMPLE_RATE = 0;
-    private final double SENSOR_SCALE = 1;
+    
     
     public GY85_I2C() {
         compassByte = 6;
@@ -37,7 +36,7 @@ public class GY85_I2C {
         gwrite = new I2C(DigitalModule.getInstance(1), 0xD1);
         gread = new I2C(DigitalModule.getInstance(1), 0xD0);
 
-        gwrite.write(21, SAMPLE_RATE);
+        gwrite.write(21, Wiring.SAMPLE_RATE);
         gwrite.write(22, 0x1A);
     }
     
@@ -55,7 +54,7 @@ public class GY85_I2C {
 
     double getGyroX() { return byteCombo(gyroBuffer[0], gyroBuffer[1]); }
     double getGyroY() { return byteCombo(gyroBuffer[2], gyroBuffer[3]); }
-    double getGyroZ() { return (byteCombo(gyroBuffer[4], gyroBuffer[5])) / SENSOR_SCALE; }
+    double getGyroZ() { return (byteCombo(gyroBuffer[4], gyroBuffer[5])) / Wiring.SENSOR_SCALE; }
 
     double getCompassX() { return byteCombo(compassBuffer[0], compassBuffer[1]); } // - 458
     double getCompassY() { return byteCombo(compassBuffer[4], compassBuffer[5]); } //  - 93
