@@ -7,7 +7,7 @@
 
 package edu.wpi.first.wpilibj.templates;
 
-
+import java.lang.Object.*;
 import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Timer;
@@ -41,6 +41,8 @@ public class RobotTemplate extends IterativeRobot {
     double autoArea;
     double firstTime;
     boolean flag = true;
+    
+    double fps;
     
     double firstTimeCycle;
     double lastTimeCycle;
@@ -82,11 +84,11 @@ public class RobotTemplate extends IterativeRobot {
 
     
     public void teleopInit()
-    {
-        System.out.println("This project does not do anything in Teleop!");
+    {        
+        fps = camera.getMaxFPS();
     }
     public void teleopPeriodic() {
-        
+        System.out.println(fps);
     }
     
     /**
@@ -97,7 +99,7 @@ public class RobotTemplate extends IterativeRobot {
     }
     
     public void disabledPeriodic() {
-        
+        camera.writeMaxFPS(15);
             light2.set(true);
             if(Timer.getFPGATimestamp() - firstTime > 10  && flag)
             {
