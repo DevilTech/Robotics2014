@@ -8,7 +8,15 @@
 package edu.wpi.first.wpilibj.templates;
 
 
+import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.camera.AxisCamera;
+import edu.wpi.first.wpilibj.camera.AxisCameraException;
+import edu.wpi.first.wpilibj.image.BinaryImage;
+import edu.wpi.first.wpilibj.image.ColorImage;
+import edu.wpi.first.wpilibj.image.NIVisionException;
+import edu.wpi.first.wpilibj.image.ParticleAnalysisReport;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -22,20 +30,61 @@ public class RobotTemplate extends IterativeRobot {
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
      */
+    AxisCamera camera;
+    int redLow = 100; //h
+    int redHigh = 255;
+    int greenLow = 0; //s
+    int greenHigh = 100;
+    int blueLow = 215; //i
+    int blueHigh = 255;
+    double initArea;
+    double autoArea;
+    double firstTime;
+    boolean flag = true;
+    
+    double firstTimeCycle;
+    double lastTimeCycle;
+    double timeTaken;
+    
+    DigitalOutput light2;
+    
+    ColorImage image;
+    BinaryImage binImage;
+    
     public void robotInit() {
-
+        camera = AxisCamera.getInstance();
+        light2 = new DigitalOutput(2);
+        light2.set(true);
+        firstTime = Timer.getFPGATimestamp();
     }
 
     /**
      * This function is called periodically during autonomous
      */
+    
+    
     public void autonomousPeriodic() {
-
+        firstTimeCycle = Timer.getFPGATimestamp(); 
+        autoArea = capture();
+           
+        if(autoArea-initArea > 125)
+        {
+            light2.set(false);
+        } else {
+            light2.set(true);
+        }
+        lastTimeCycle = Timer.getFPGATimestamp();
+        timeTaken = lastTimeCycle - firstTimeCycle;
+        
+        System.out.println("It took: " + timeTaken);
+        
     }
 
-    /**
-     * This function is called periodically during operator control
-     */
+    
+    public void teleopInit()
+    {
+        System.out.println("This project does not do anything in Teleop!");
+    }
     public void teleopPeriodic() {
         
     }
@@ -47,4 +96,59 @@ public class RobotTemplate extends IterativeRobot {
     
     }
     
-}
+    public void disabledPeriodic() {
+        
+            light2.set(true);
+            if(Timer.getFPGATimestamp() - firstTime > 10  && flag)
+            {
+                initArea = capture();
+                flag = false;
+            }
+        
+        
+        
+    }
+    
+    public void disabledInit()
+    {
+       
+    }
+
+    public double capture(){
+        double totalSize = 0;
+        try {
+            
+            image = camera.getImage();
+            binImage = image.thresholdHSL(redLow, redHigh, greenLow, greenHigh, blueLow, blueHigh);
+            image.write("/initImage.jpg");
+            
+            ParticleAnalysisReport[] reports;
+                   reports = binImage.getOrderedParticleAnalysisReports(150);
+                   
+                   
+                   
+                   for(int i = 0; i < reports.length; ++i)
+                   {
+                       if(reports[i].boundingRectTop > 30 && reports[i].boundingRectTop < 140){
+                           totalSize += reports[i].particleArea;
+                       }
+                   }
+                   
+                   System.out.println("totalsize DURING INIT: " + totalSize + "       length: " + reports.length);
+                   
+                   image.free();
+                   binImage.free();
+                   
+                   
+        } catch (AxisCameraException ex) {
+            ex.printStackTrace();
+        } catch (NIVisionException ex) {
+            ex.printStackTrace();
+        }
+    return totalSize;
+    }
+    }
+    
+    
+    
+
