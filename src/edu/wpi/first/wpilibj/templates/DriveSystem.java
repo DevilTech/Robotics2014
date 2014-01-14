@@ -116,9 +116,6 @@ public class DriveSystem {
         
         double lf, rf, lb, rb;
         
-        
-        
-
         lf = forwardY  + clockwiseZ + rightX;
         rf = forwardY  - clockwiseZ - rightX;
         lb = forwardY  + clockwiseZ - rightX;
@@ -145,12 +142,10 @@ public class DriveSystem {
         } catch (CANTimeoutException ex) {
             ex.printStackTrace();
         }
-    
     }
     
     public void PID_Drive() {
-        
-
+       
         getInput();
         GZ = sen.getGyroZ()* Wiring.G_SCALE;
 

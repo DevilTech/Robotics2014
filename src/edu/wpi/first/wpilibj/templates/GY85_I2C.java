@@ -16,9 +16,11 @@ public class GY85_I2C {
     
     double initialHeading;
     
+    private static final double kGsPerLSB = 0.00390625;
     
-    public GY85_I2C(double initialHeading) {
-        this.initialHeading = initialHeading;
+    
+    public GY85_I2C() {
+        
         compassByte = 6;
         gyroByte = 6;
         accelByte = 6;
@@ -45,34 +47,55 @@ public class GY85_I2C {
     }
     
     public void setupAccel() {
-        accelerometer = new ADXL345_I2C(1, ADXL345_I2C.DataFormat_Range.k2G);
+        //accelerometer = new ADXL345_I2C(1, ADXL345_I2C.DataFormat_Range.k2G);
         
-        /*
         
-        Don't work
+        
+        //Don't work
         
         awrite = new I2C(DigitalModule.getInstance(1), 0xA6);
         aread = new I2C(DigitalModule.getInstance(1), 0xA7);
 
         awrite.write(44, 0x0A);
         awrite.write(45, 0x08);
-        awrite.write(49, 0x08);
-        */
+        awrite.write(49, 0x00);
+        
+    }
+    
+    //don't work either
+    double getAccelX() { 
+        readA();
+        return accelByteCombo(accelBuffer[1], accelBuffer[0]); 
+    }
+    double getAccelY() { 
+        readA();
+        return accelByteCombo(accelBuffer[3], accelBuffer[2]); 
     }
     /*
-    don't work either
-    double getAccelX() { return byteCombo(accelBuffer[1], accelBuffer[0]); }
-    double getAccelY() { return byteCombo(accelBuffer[3], accelBuffer[2]); }
-    */
     double getAccelX() {return accelerometer.getAcceleration(ADXL345_I2C.Axes.kX);}
     double getAccelY() {return accelerometer.getAcceleration(ADXL345_I2C.Axes.kY);}
+*/
+    double getGyroX() { 
+        readG();
+        return byteCombo(gyroBuffer[0], gyroBuffer[1]); 
+    }
+    double getGyroY() { 
+        readG();
+        return byteCombo(gyroBuffer[2], gyroBuffer[3]); 
+    }
+    double getGyroZ() { 
+        readG();
+        return (byteCombo(gyroBuffer[4], gyroBuffer[5])) / Wiring.SENSOR_SCALE; 
+    }
 
-    double getGyroX() { return byteCombo(gyroBuffer[0], gyroBuffer[1]); }
-    double getGyroY() { return byteCombo(gyroBuffer[2], gyroBuffer[3]); }
-    double getGyroZ() { return (byteCombo(gyroBuffer[4], gyroBuffer[5])) / Wiring.SENSOR_SCALE; }
-
-    double getCompassX() { return byteCombo(compassBuffer[0], compassBuffer[1]); } // - 458
-    double getCompassY() { return byteCombo(compassBuffer[4], compassBuffer[5]); } //  - 93
+    double getCompassX() { 
+        readC();
+        return byteCombo(compassBuffer[0], compassBuffer[1]); 
+    } // - 458
+    double getCompassY() { 
+        readC();
+        return byteCombo(compassBuffer[4], compassBuffer[5]); 
+    } //  - 93
 
     double getCompassAngle() { return Math.toDegrees(atan2(getCompassY(), getCompassX())); }
     //double getCompassRadAngle() { return atan2(getCompassY(), getCompassX()); }
@@ -84,10 +107,26 @@ public class GY85_I2C {
         aread.read(50, accelByte, accelBuffer);
     }
     
+    public void readA(){
+        aread.read(50, accelByte, accelBuffer);
+    }
+    
+    public void readC(){
+        cread.read(3, compassByte, compassBuffer);
+    }
+    
+    public void readG(){
+        gread.read(29, gyroByte, gyroBuffer);
+    }
+    
     public int byteCombo(byte num1, byte num2) {
         return ((num1 << 8) | num2 & 0x000000ff); 
     }
-    
+    public double accelByteCombo(byte first, byte second){
+        short tempLow = (short) (first & 0xff);
+        short tempHigh = (short) ((second << 8) & 0xff00);
+        return (tempLow | tempHigh) * kGsPerLSB;
+    }
     
     double f(double t) {
         /* This provides 1/10 of a degree accuracy: */

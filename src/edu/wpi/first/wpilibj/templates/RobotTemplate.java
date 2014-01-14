@@ -18,17 +18,12 @@ import edu.wpi.first.wpilibj.IterativeRobot;
  * directory.
  */
 public class RobotTemplate extends IterativeRobot {
-    /**
-     * This function is run when the robot is first started up and should be
-     * used for any initialization code.
-     */
+   GY85_I2C g = new GY85_I2C();
     public void robotInit() {
 
     }
 
-    /**
-     * This function is called periodically during autonomous
-     */
+   
     public void autonomousPeriodic() {
 
     }
@@ -37,12 +32,10 @@ public class RobotTemplate extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
-        
+        System.out.println(g.getAccelX());
     }
     
-    /**
-     * This function is called periodically during test mode
-     */
+   
     public void testPeriodic() {
     
     }
