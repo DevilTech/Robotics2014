@@ -8,8 +8,6 @@ package edu.wpi.first.wpilibj.templates;
 //import edu.wpi.first.wpilibj.CANJaguar;
 //import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.can.CANTimeoutException;
 import java.util.TimerTask;
 
 /**
@@ -83,7 +81,7 @@ public class DriveSystem {
         IY = 0;
         time = new java.util.Timer();
         //untested code, beware!
-        time.schedule(new DriveLoop(this), Wiring.DRIVE_POLL_RATE);
+        time.schedule(new DriveLoop(this), 0L, Wiring.DRIVE_POLL_RATE);
     }
     
     public void driveSystemDenit(){
@@ -231,7 +229,7 @@ public class DriveSystem {
     }
     
     
-    private class DriveLoop extends TimerTask{
+    private class DriveLoop extends TimerTask {
         private DriveSystem d;
         public DriveLoop(DriveSystem d){
             if (d == null){
@@ -244,7 +242,6 @@ public class DriveSystem {
         }
         public void run(){
             d.runDrive();
-            
         }
     }
 }
