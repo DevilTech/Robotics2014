@@ -24,12 +24,17 @@ public class GY85_I2C {
         compassByte = 6;
         gyroByte = 6;
         accelByte = 6;
+        
         compassBuffer = new byte[compassByte];
         gyroBuffer = new byte[gyroByte];
         accelBuffer = new byte[accelByte];
+        
+        setupCompass();
+        setupGyro();
+        setupAccel();
     }
 
-    public void setupCompass() {
+    private void setupCompass() {
         cwrite = new I2C(DigitalModule.getInstance(1), 0x3C);
         cread = new I2C(DigitalModule.getInstance(1), 0x3D);
 
@@ -38,7 +43,7 @@ public class GY85_I2C {
         cwrite.write(2, 0);
     }
     
-    public void setupGyro() {
+    private void setupGyro() {
         gwrite = new I2C(DigitalModule.getInstance(1), 0xD1);
         gread = new I2C(DigitalModule.getInstance(1), 0xD0);
 
@@ -46,12 +51,7 @@ public class GY85_I2C {
         gwrite.write(22, 0x1A);
     }
     
-    public void setupAccel() {
-        //accelerometer = new ADXL345_I2C(1, ADXL345_I2C.DataFormat_Range.k2G);
-        
-        
-        
-        //Don't work
+    private void setupAccel() {
         
         awrite = new I2C(DigitalModule.getInstance(1), 0xA6);
         aread = new I2C(DigitalModule.getInstance(1), 0xA7);
@@ -62,7 +62,7 @@ public class GY85_I2C {
         
     }
     
-    //don't work either
+   
     double getAccelX() { 
         readA();
         return accelByteCombo(accelBuffer[1], accelBuffer[0]); 
@@ -71,10 +71,7 @@ public class GY85_I2C {
         readA();
         return accelByteCombo(accelBuffer[3], accelBuffer[2]); 
     }
-    /*
-    double getAccelX() {return accelerometer.getAcceleration(ADXL345_I2C.Axes.kX);}
-    double getAccelY() {return accelerometer.getAcceleration(ADXL345_I2C.Axes.kY);}
-*/
+  
     double getGyroX() { 
         readG();
         return byteCombo(gyroBuffer[0], gyroBuffer[1]); 

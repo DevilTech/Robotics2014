@@ -32,7 +32,7 @@ public class RobotTemplate extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
-        System.out.println(g.getAccelX());
+        System.out.println(g.getAccelY() + "   -   " + g.getAccelX());
     }
     
    

@@ -40,4 +40,6 @@ public class Wiring {
         
         static final double A_SCALE = 32.174 * 12 * .004;
         static final double G_SCALE = Math.PI / (180 * 14.375);
+        
+        static final long DRIVE_POLL_RATE = 10;
 }
