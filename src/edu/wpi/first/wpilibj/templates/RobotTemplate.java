@@ -9,6 +9,7 @@ package edu.wpi.first.wpilibj.templates;
 
 
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Joystick;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -19,8 +20,13 @@ import edu.wpi.first.wpilibj.IterativeRobot;
  */
 public class RobotTemplate extends IterativeRobot {
    GY85_I2C g = new GY85_I2C();
+   CANJaguar c = new CANJaguar();
+   Encoder e = new Encoder();
+   DriveSystem d;
+   Joystick joy;
     public void robotInit() {
-
+        joy = new Joystick(1);
+        d = new DriveSystem(c,c,c,c,g,joy,e,e,1);
     }
 
    
@@ -31,8 +37,13 @@ public class RobotTemplate extends IterativeRobot {
     /**
      * This function is called periodically during operator control
      */
+    
+    public void teleopInit(){
+        d.driveSystemInit();
+    }
+    
     public void teleopPeriodic() {
-        System.out.println(g.getAccelY() + "   -   " + g.getAccelX());
+        
     }
     
    

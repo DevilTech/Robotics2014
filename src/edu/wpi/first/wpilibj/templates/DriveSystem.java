@@ -4,9 +4,9 @@
  * and open the template in the editor.
  */
 package edu.wpi.first.wpilibj.templates;
-
-import edu.wpi.first.wpilibj.CANJaguar;
-import edu.wpi.first.wpilibj.Encoder;
+////REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE 
+//import edu.wpi.first.wpilibj.CANJaguar;
+//import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.can.CANTimeoutException;
@@ -74,7 +74,7 @@ public class DriveSystem {
         
     }
     
-    public void DriveSystemInit(){
+    public void driveSystemInit(){
         hasBeenStarted = true;
         forwardY = 0;
         rightX = 0;
@@ -86,12 +86,17 @@ public class DriveSystem {
         time.schedule(new DriveLoop(this), Wiring.DRIVE_POLL_RATE);
     }
     
+    public void driveSystemDenit(){
+        time.cancel();
+    }
+    
    private void runDrive(){
        if(driveType == PID_C){
            PID_Drive();
        }else{
            THB_Drive();
        }
+       System.out.println("RUN DRIVE");
    }
     
     private void getInput(){
@@ -155,15 +160,15 @@ public class DriveSystem {
             lb /= max;
             rb /= max;
         }
-
-        try {
+//REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE 
+       // try {
             fl.setX(lf);
             fr.setX(rf);
             bl.setX(lb);
             br.setX(rb);
-        } catch (CANTimeoutException ex) {
-            ex.printStackTrace();
-        }
+       /// } catch (CANTimeoutException ex) {
+        //    ex.printStackTrace();
+       // }
     }
     
     public void PID_Drive() {
@@ -211,15 +216,15 @@ public class DriveSystem {
             lb /= max;
             rb /= max;
         }
-
-        try {
+//REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE 
+       // try {
             fl.setX(lf);
             fr.setX(rf);
             bl.setX(lb);
             br.setX(rb);
-        } catch (CANTimeoutException ex) {
-            ex.printStackTrace();
-        }
+      //  } catch (CANTimeoutException ex) {
+        //    ex.printStackTrace();
+        //}
     }
     public double clamp(double value){
          return (value > 1) ? 1 : (value < -1) ? -1 : value;
@@ -233,7 +238,7 @@ public class DriveSystem {
                 System.out.println("Drive System not created - Something don't work");
             }else{
                 this.d = d;
-                d.DriveSystemInit();
+                d.driveSystemInit();
             }
             
         }
