@@ -28,8 +28,6 @@ public class RobotTemplate extends IterativeRobot {
         joy = new Joystick(1);
         d = new DriveSystem(c,c,c,c,g,joy,e,e,1);
     }
-
-   
     public void autonomousPeriodic() {
 
     }
@@ -43,7 +41,7 @@ public class RobotTemplate extends IterativeRobot {
     }
     
     public void teleopPeriodic() {
-        
+        d.getInput();
     }
     
    

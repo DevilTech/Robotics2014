@@ -97,7 +97,7 @@ public class DriveSystem {
        System.out.println("RUN DRIVE");
    }
     
-    private void getInput(){
+    public void getInput(){
         
         FCMode = true;
         theta = sen.getCompassRadAngle();
@@ -120,7 +120,7 @@ public class DriveSystem {
     }
     
     public void THB_Drive(){
-        getInput();
+        
         GZ = sen.getGyroZ()* Wiring.G_SCALE;
 
         double VY = enY.getRate();
@@ -171,7 +171,7 @@ public class DriveSystem {
     
     public void PID_Drive() {
        
-        getInput();
+        
         GZ = sen.getGyroZ()* Wiring.G_SCALE;
 
         double VY = enY.getRate();
@@ -236,7 +236,7 @@ public class DriveSystem {
                 System.out.println("Drive System not created - Something don't work");
             }else{
                 this.d = d;
-                d.driveSystemInit();
+                d.runDrive();
             }
             
         }
