@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.CANJaguar;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.can.CANTimeoutException;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.util.TimerTask;
 import java.util.Timer;
 
@@ -40,9 +41,11 @@ public class DriveSystem {
     double IY;
     double IX;
     private int driveType;
-    
 
-    Timer time;
+ 
+    java.util.Timer time;
+
+
 
     public DriveSystem(CANJaguar frontRight, CANJaguar frontLeft, CANJaguar backRight, CANJaguar backLeft,
             GY85_I2C sensor, Joystick joy, Encoder encoderY, Encoder encoderX, int driveType) {
@@ -71,14 +74,25 @@ public class DriveSystem {
         IX = 0;
         IY = 0;
         time = new java.util.Timer();
+        
         //untested code, beware!
-        time.schedule(new DriveLoop(this), Wiring.DRIVE_POLL_RATE);
+        time.schedule(new DriveLoop(this), 0L, Wiring.DRIVE_POLL_RATE);
     }
 
     public void driveSystemDenit() {
-        time.cancel();
-    }
 
+        time.cancel();
+    
+
+    
+
+
+        if (hasBeenStarted) {
+            hasBeenStarted = false;
+            time.cancel();
+        }
+    }
+    
     private void runDrive() {
         switch (driveType) {
             case 0:
@@ -91,11 +105,11 @@ public class DriveSystem {
                 openLoop();
                 break;
 
+    
         }
     }
 
     public void getInput() {
-
 
         theta = sen.getCompassRadAngle();
         joyY = -joy.getY() * Math.abs(joy.getY());
@@ -112,6 +126,7 @@ public class DriveSystem {
             }
 
 
+
             //takes values from joysticks and changes the values to the correct
             //vector based on compass input
             double temp = forwardY * Math.cos(theta) + rightX * Math.sin(theta);
@@ -121,7 +136,7 @@ public class DriveSystem {
     }
 
     public void THB_Drive() {
-        FCMode = true;
+
 
         GZ = sen.getGyroZ() * Wiring.G_SCALE;
 
@@ -167,6 +182,7 @@ public class DriveSystem {
             rb /= max;
         }
 
+
         try {
             fl.setX(lf);
             fr.setX(rf);
@@ -177,8 +193,10 @@ public class DriveSystem {
         }
     }
 
+
+
     public void PID_Drive() {
-        FCMode = true;
+
 
         GZ = sen.getGyroZ() * Wiring.G_SCALE;
 
@@ -197,6 +215,7 @@ public class DriveSystem {
         rightX = rightX + Wiring.KpX * (Wiring.MAX_XY * joyX - VX);	//PD expected range +/- 0.577
         clockwiseZ = clamp(clockwiseZ);
         clockwiseZ = clockwiseZ + Wiring.KpR * (6.28 * joyZ + GZ) + errorInHeading; //replace 0 with KpR
+
 
         double lf, rf, lb, rb;
 
@@ -245,6 +264,7 @@ public class DriveSystem {
         lb = joyY + joyZ - joyX;
         rb = joyY - joyZ + joyX;
 
+
         double max = Math.abs(lf);
 
         if (Math.abs(rf) > max) {
@@ -264,6 +284,7 @@ public class DriveSystem {
             rb /= max;
         }
 
+
         try {
             fl.setX(lf);
             fr.setX(rf);
@@ -273,6 +294,7 @@ public class DriveSystem {
             ex.printStackTrace();
         }
     }
+
 
     public double clamp(double value) {
         return (value > 1) ? 1 : (value < -1) ? -1 : value;
@@ -287,12 +309,14 @@ public class DriveSystem {
                 System.out.println("Drive System not created - Something don't work");
             } else {
                 this.d = d;
-                d.driveSystemInit();
+                d.runDrive();
             }
 
         }
 
         public void run() {
+
+            hasBeenStarted = true;
             d.runDrive();
 
         }
