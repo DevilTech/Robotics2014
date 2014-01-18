@@ -10,6 +10,8 @@ package edu.wpi.first.wpilibj.templates;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -24,6 +26,8 @@ public class RobotTemplate extends IterativeRobot {
    Encoder e = new Encoder();
    DriveSystem d;
    Joystick joy;
+   Timer inputLoop = new Timer();
+   double pastTime = 0;
     public void robotInit() {
         joy = new Joystick(1);
         d = new DriveSystem(c,c,c,c,g,joy,e,e,1);
@@ -37,11 +41,18 @@ public class RobotTemplate extends IterativeRobot {
      */
     
     public void teleopInit(){
+        inputLoop.start();
         d.driveSystemInit();
     }
     
     public void teleopPeriodic() {
         d.getInput();
+        SmartDashboard.putNumber("Input" ,((int) (1000 * (inputLoop.get()-pastTime))));
+        pastTime = inputLoop.get();
+    }
+    
+    public void disabledInit() {
+        d.driveSystemDenit();
     }
     
    
