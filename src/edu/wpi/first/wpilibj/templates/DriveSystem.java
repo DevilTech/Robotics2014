@@ -41,11 +41,7 @@ public class DriveSystem {
     double IY;
     double IX;
     private int driveType;
-
- 
     java.util.Timer time;
-
-
 
     public DriveSystem(CANJaguar frontRight, CANJaguar frontLeft, CANJaguar backRight, CANJaguar backLeft,
             GY85_I2C sensor, Joystick joy, Encoder encoderY, Encoder encoderX, int driveType) {
@@ -63,7 +59,6 @@ public class DriveSystem {
         enX = encoderX;
 
         this.driveType = driveType;
-
     }
 
     public void driveSystemInit() {
@@ -74,25 +69,19 @@ public class DriveSystem {
         IX = 0;
         IY = 0;
         time = new java.util.Timer();
-        
+
         //untested code, beware!
         time.schedule(new DriveLoop(this), 0L, Wiring.DRIVE_POLL_RATE);
     }
 
     public void driveSystemDenit() {
 
-        time.cancel();
-    
-
-    
-
-
         if (hasBeenStarted) {
             hasBeenStarted = false;
             time.cancel();
         }
     }
-    
+
     private void runDrive() {
         switch (driveType) {
             case 0:
@@ -104,8 +93,6 @@ public class DriveSystem {
             case 2:
                 openLoop();
                 break;
-
-    
         }
     }
 
@@ -114,7 +101,7 @@ public class DriveSystem {
         theta = sen.getCompassRadAngle();
         joyY = -joy.getY() * Math.abs(joy.getY());
         joyX = joy.getX() * Math.abs(joy.getX());
-        joyZ = joy.getZ() * Math.abs(joy.getZ()) * Math.abs(joy.getZ());
+        joyZ = joy.getZ() * Math.abs(joy.getZ()) / 2;
 
         if (FCMode) {
             if (Math.abs(joy.getZ()) > .01) {
@@ -124,9 +111,6 @@ public class DriveSystem {
             } else {
                 errorInHeading = Wiring.radianWrap(heading - theta) * Wiring.KiR;
             }
-
-
-
             //takes values from joysticks and changes the values to the correct
             //vector based on compass input
             double temp = forwardY * Math.cos(theta) + rightX * Math.sin(theta);
@@ -136,7 +120,6 @@ public class DriveSystem {
     }
 
     public void THB_Drive() {
-
 
         GZ = sen.getGyroZ() * Wiring.G_SCALE;
 
@@ -154,7 +137,6 @@ public class DriveSystem {
         forwardY = Wiring.TpY * (IY + Wiring.TdY * AY);
         rightX = Wiring.TpX * (IX + Wiring.TdX * AX);
         clockwiseZ = clockwiseZ + Wiring.KpR * (6.28 * joyZ + GZ) + errorInHeading;
-
 
         double lf, rf, lb, rb;
 
@@ -181,8 +163,7 @@ public class DriveSystem {
             lb /= max;
             rb /= max;
         }
-
-
+        
         try {
             fl.setX(lf);
             fr.setX(rf);
@@ -193,10 +174,7 @@ public class DriveSystem {
         }
     }
 
-
-
     public void PID_Drive() {
-
 
         GZ = sen.getGyroZ() * Wiring.G_SCALE;
 
@@ -215,7 +193,6 @@ public class DriveSystem {
         rightX = rightX + Wiring.KpX * (Wiring.MAX_XY * joyX - VX);	//PD expected range +/- 0.577
         clockwiseZ = clamp(clockwiseZ);
         clockwiseZ = clockwiseZ + Wiring.KpR * (6.28 * joyZ + GZ) + errorInHeading; //replace 0 with KpR
-
 
         double lf, rf, lb, rb;
 
@@ -264,7 +241,6 @@ public class DriveSystem {
         lb = joyY + joyZ - joyX;
         rb = joyY - joyZ + joyX;
 
-
         double max = Math.abs(lf);
 
         if (Math.abs(rf) > max) {
@@ -284,17 +260,15 @@ public class DriveSystem {
             rb /= max;
         }
 
-
         try {
             fl.setX(lf);
-            fr.setX(rf);
+            fr.setX(-rf);
             bl.setX(lb);
-            br.setX(rb);
+            br.setX(-rb);
         } catch (CANTimeoutException ex) {
             ex.printStackTrace();
         }
     }
-
 
     public double clamp(double value) {
         return (value > 1) ? 1 : (value < -1) ? -1 : value;
@@ -311,7 +285,6 @@ public class DriveSystem {
                 this.d = d;
                 d.runDrive();
             }
-
         }
 
         public void run() {

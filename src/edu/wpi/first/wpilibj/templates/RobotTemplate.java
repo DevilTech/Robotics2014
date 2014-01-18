@@ -10,12 +10,9 @@ import edu.wpi.first.wpilibj.CANJaguar;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
-<<<<<<< HEAD
+
 import edu.wpi.first.wpilibj.can.CANTimeoutException;
-=======
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
->>>>>>> f9c3cc28cf89c3f4f6b7a0b04d84defddb54d005
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -25,7 +22,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * directory.
  */
 public class RobotTemplate extends IterativeRobot {
-<<<<<<< HEAD
 
     Encoder enX = new Encoder(1, 2);
     Encoder enY = new Encoder(3, 4);
@@ -34,15 +30,6 @@ public class RobotTemplate extends IterativeRobot {
     DriveSystem d;
     Joystick joy;
 
-=======
-   GY85_I2C g = new GY85_I2C();
-   CANJaguar c = new CANJaguar();
-   Encoder e = new Encoder();
-   DriveSystem d;
-   Joystick joy;
-   Timer inputLoop = new Timer();
-   double pastTime = 0;
->>>>>>> f9c3cc28cf89c3f4f6b7a0b04d84defddb54d005
     public void robotInit() {
         try {
             jaglf = new CANJaguar(2);
@@ -50,44 +37,85 @@ public class RobotTemplate extends IterativeRobot {
             jaglb = new CANJaguar(12);
             jagrb = new CANJaguar(13);
             joy = new Joystick(1);
-            d = new DriveSystem(jagrf, jaglf, jagrb, jaglb, sensor, joy, enY, enX, 1);
+            d = new DriveSystem(jagrf, jaglf, jagrb, jaglb, sensor, joy, enY, enX, Wiring.OPEN_C);
         } catch (CANTimeoutException ex) {
             ex.printStackTrace();
         }
     }
-<<<<<<< HEAD
 
-=======
->>>>>>> f9c3cc28cf89c3f4f6b7a0b04d84defddb54d005
     public void autonomousPeriodic() {
     }
 
     /**
      * This function is called periodically during operator control
      */
-<<<<<<< HEAD
     public void teleopInit() {
-=======
-    
-    public void teleopInit(){
-        inputLoop.start();
->>>>>>> f9c3cc28cf89c3f4f6b7a0b04d84defddb54d005
+        
         d.driveSystemInit();
     }
 
     public void teleopPeriodic() {
         d.getInput();
-<<<<<<< HEAD
-=======
-        SmartDashboard.putNumber("Input" ,((int) (1000 * (inputLoop.get()-pastTime))));
-        pastTime = inputLoop.get();
+        smartPush();
+        smartPull();
+
     }
-    
+
     public void disabledInit() {
         d.driveSystemDenit();
->>>>>>> f9c3cc28cf89c3f4f6b7a0b04d84defddb54d005
+        smartInit();
+    }
+    public void disabled(){
+        smartPush();
+        smartPull();
     }
 
     public void testPeriodic() {
+    }
+    
+     public void smartInit() {
+        SmartDashboard.putNumber("CW", d.clockwiseZ);
+        SmartDashboard.putNumber("GZ", d.GZ);
+        SmartDashboard.putNumber("enX", enX.getRate());
+        SmartDashboard.putNumber("enY", enY.getRate());
+        SmartDashboard.putNumber("errorH" , d.errorInHeading);
+        SmartDashboard.putNumber("C", d.clockwiseZ);
+        SmartDashboard.putNumber("R", d.rightX);
+        SmartDashboard.putNumber("F", d.forwardY); //here
+        SmartDashboard.putNumber("heading", d.heading);
+        SmartDashboard.putNumber("theta", d.theta);
+        
+        SmartDashboard.putNumber("kpR", Wiring.KpR);
+        SmartDashboard.putNumber("kpR", Wiring.KpR);
+        SmartDashboard.putNumber("kpX", Wiring.KpX);
+        SmartDashboard.putNumber("kpY", Wiring.KpY);
+        SmartDashboard.putNumber("kdX", Wiring.KdX);
+        SmartDashboard.putNumber("kdY", Wiring.KdY);
+        SmartDashboard.putNumber("KiR", Wiring.KiR);
+        
+       
+        
+       
+    }
+    public void smartPush(){
+        SmartDashboard.putNumber("CW", d.clockwiseZ);
+        SmartDashboard.putNumber("GZ", d.GZ);
+        SmartDashboard.putNumber("enX", enX.getRate());
+        SmartDashboard.putNumber("enY", enY.getRate());
+        SmartDashboard.putNumber("errorH" , d.errorInHeading);
+        SmartDashboard.putNumber("C", d.clockwiseZ);
+        SmartDashboard.putNumber("R", d.rightX);
+        SmartDashboard.putNumber("F", d.forwardY); //here
+        SmartDashboard.putNumber("heading", d.heading);
+        SmartDashboard.putNumber("theta", d.theta);
+    }
+    public void smartPull(){
+        
+        Wiring.KpR = SmartDashboard.getNumber("kpR");
+        Wiring.KpX = SmartDashboard.getNumber("kpX");
+        Wiring.KpY = SmartDashboard.getNumber("kpY");
+        Wiring.KdX = SmartDashboard.getNumber("kdX");
+        Wiring.KdY = SmartDashboard.getNumber("kdY");
+        Wiring.KiR = SmartDashboard.getNumber("KiR");
     }
 }
