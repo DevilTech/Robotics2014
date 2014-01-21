@@ -16,7 +16,7 @@ public class Wiring {
     }
     public static final int SAMPLE_RATE = 0;
     public static final double SENSOR_SCALE = 1;
-    static double dt = 0.02;
+    static double dt = 0.0002;
     //K is for PID control
     //P is proportion, D is derivative
     static double KpR = 14.39 * dt;

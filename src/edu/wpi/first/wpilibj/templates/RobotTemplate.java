@@ -32,12 +32,14 @@ public class RobotTemplate extends IterativeRobot {
 
     public void robotInit() {
         try {
+            enX.start();
+            enY.start();
             jaglf = new CANJaguar(2);
             jagrf = new CANJaguar(3);
             jaglb = new CANJaguar(12);
             jagrb = new CANJaguar(13);
             joy = new Joystick(1);
-            d = new DriveSystem(jagrf, jaglf, jagrb, jaglb, sensor, joy, enY, enX, Wiring.OPEN_C);
+            d = new DriveSystem(jagrf, jaglf, jagrb, jaglb, sensor, joy, enY, enX, Wiring.THB_C);
         } catch (CANTimeoutException ex) {
             ex.printStackTrace();
         }
@@ -57,8 +59,8 @@ public class RobotTemplate extends IterativeRobot {
     public void teleopPeriodic() {
         d.getInput();
         smartPush();
-        smartPull();
-
+        smartPull();   
+        System.out.println(d.GZ);
     }
 
     public void disabledInit() {
@@ -76,8 +78,8 @@ public class RobotTemplate extends IterativeRobot {
      public void smartInit() {
         SmartDashboard.putNumber("CW", d.clockwiseZ);
         SmartDashboard.putNumber("GZ", d.GZ);
-        SmartDashboard.putNumber("enX", enX.getRate());
-        SmartDashboard.putNumber("enY", enY.getRate());
+        SmartDashboard.putNumber("enX", enX.get());
+        SmartDashboard.putNumber("enY", enY.get());
         SmartDashboard.putNumber("errorH" , d.errorInHeading);
         SmartDashboard.putNumber("C", d.clockwiseZ);
         SmartDashboard.putNumber("R", d.rightX);
@@ -92,16 +94,12 @@ public class RobotTemplate extends IterativeRobot {
         SmartDashboard.putNumber("kdX", Wiring.KdX);
         SmartDashboard.putNumber("kdY", Wiring.KdY);
         SmartDashboard.putNumber("KiR", Wiring.KiR);
-        
-       
-        
-       
     }
     public void smartPush(){
         SmartDashboard.putNumber("CW", d.clockwiseZ);
         SmartDashboard.putNumber("GZ", d.GZ);
-        SmartDashboard.putNumber("enX", enX.getRate());
-        SmartDashboard.putNumber("enY", enY.getRate());
+        SmartDashboard.putNumber("enX", enX.get());
+        SmartDashboard.putNumber("enY", enY.get());
         SmartDashboard.putNumber("errorH" , d.errorInHeading);
         SmartDashboard.putNumber("C", d.clockwiseZ);
         SmartDashboard.putNumber("R", d.rightX);
@@ -110,7 +108,6 @@ public class RobotTemplate extends IterativeRobot {
         SmartDashboard.putNumber("theta", d.theta);
     }
     public void smartPull(){
-        
         Wiring.KpR = SmartDashboard.getNumber("kpR");
         Wiring.KpX = SmartDashboard.getNumber("kpX");
         Wiring.KpY = SmartDashboard.getNumber("kpY");

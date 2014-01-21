@@ -32,6 +32,7 @@ public class DriveSystem {
     double joyX;
     double joyZ;
     double errorInHeading;
+    double initialHeading;
     double forwardY;
     double rightX;
     double clockwiseZ;
@@ -69,9 +70,8 @@ public class DriveSystem {
         IX = 0;
         IY = 0;
         time = new java.util.Timer();
-
-        //untested code, beware!
         time.schedule(new DriveLoop(this), 0L, Wiring.DRIVE_POLL_RATE);
+        initialHeading = sen.getCompassRadAngle();
     }
 
     public void driveSystemDenit() {
@@ -98,7 +98,7 @@ public class DriveSystem {
 
     public void getInput() {
 
-        theta = sen.getCompassRadAngle();
+        theta = Wiring.radianWrap(sen.getCompassRadAngle() - initialHeading);
         joyY = -joy.getY() * Math.abs(joy.getY());
         joyX = joy.getX() * Math.abs(joy.getX());
         joyZ = joy.getZ() * Math.abs(joy.getZ()) / 2;
@@ -136,7 +136,7 @@ public class DriveSystem {
 
         forwardY = Wiring.TpY * (IY + Wiring.TdY * AY);
         rightX = Wiring.TpX * (IX + Wiring.TdX * AX);
-        clockwiseZ = clockwiseZ + Wiring.KpR * (6.28 * joyZ + GZ) + errorInHeading;
+        clockwiseZ = clockwiseZ + Wiring.KpR * (6.28 * joyZ - GZ) + errorInHeading;
 
         double lf, rf, lb, rb;
 
@@ -166,9 +166,9 @@ public class DriveSystem {
         
         try {
             fl.setX(lf);
-            fr.setX(rf);
+            fr.setX(-rf);
             bl.setX(lb);
-            br.setX(rb);
+            br.setX(-rb);
         } catch (CANTimeoutException ex) {
             ex.printStackTrace();
         }
@@ -222,9 +222,9 @@ public class DriveSystem {
 
         try {
             fl.setX(lf);
-            fr.setX(rf);
+            fr.setX(-rf);
             bl.setX(lb);
-            br.setX(rb);
+            br.setX(-rb);
         } catch (CANTimeoutException ex) {
             ex.printStackTrace();
         }
