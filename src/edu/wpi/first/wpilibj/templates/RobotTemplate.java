@@ -14,13 +14,6 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.can.CANTimeoutException;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-/**
- * The VM is configured to automatically run this class, and to call the
- * functions corresponding to each mode, as described in the IterativeRobot
- * documentation. If you change the name of this class or the package after
- * creating this project, you must also update the manifest file in the resource
- * directory.
- */
 public class RobotTemplate extends IterativeRobot {
 
     Encoder enX = new Encoder(1, 2);
@@ -45,14 +38,12 @@ public class RobotTemplate extends IterativeRobot {
         }
     }
 
-    public void autonomousPeriodic() {
-    }
+    public void autonomousPeriodic() { }
 
     /**
      * This function is called periodically during operator control
      */
     public void teleopInit() {
-        
         d.driveSystemInit();
     }
 
@@ -67,7 +58,8 @@ public class RobotTemplate extends IterativeRobot {
         d.driveSystemDenit();
         smartInit();
     }
-    public void disabled(){
+
+    public void disabled() {
         smartPush();
         smartPull();
     }
@@ -75,7 +67,7 @@ public class RobotTemplate extends IterativeRobot {
     public void testPeriodic() {
     }
     
-     public void smartInit() {
+    public void smartInit() {
         SmartDashboard.putNumber("CW", d.clockwiseZ);
         SmartDashboard.putNumber("GZ", d.GZ);
         SmartDashboard.putNumber("enX", enX.get());
@@ -95,7 +87,8 @@ public class RobotTemplate extends IterativeRobot {
         SmartDashboard.putNumber("kdY", Wiring.KdY);
         SmartDashboard.putNumber("KiR", Wiring.KiR);
     }
-    public void smartPush(){
+
+    public void smartPush() {
         SmartDashboard.putNumber("CW", d.clockwiseZ);
         SmartDashboard.putNumber("GZ", d.GZ);
         SmartDashboard.putNumber("enX", enX.get());
@@ -107,7 +100,8 @@ public class RobotTemplate extends IterativeRobot {
         SmartDashboard.putNumber("heading", d.heading);
         SmartDashboard.putNumber("theta", d.theta);
     }
-    public void smartPull(){
+
+    public void smartPull() {
         Wiring.KpR = SmartDashboard.getNumber("kpR");
         Wiring.KpX = SmartDashboard.getNumber("kpX");
         Wiring.KpY = SmartDashboard.getNumber("kpY");

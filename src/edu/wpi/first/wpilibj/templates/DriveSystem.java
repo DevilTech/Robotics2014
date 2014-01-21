@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package edu.wpi.first.wpilibj.templates;
 ////REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE
 //import edu.wpi.first.wpilibj.CANJaguar;
@@ -41,12 +36,11 @@ public class DriveSystem {
     Encoder enX;
     double IY;
     double IX;
-    private int driveType;
+    int driveType;
     java.util.Timer time;
 
     public DriveSystem(CANJaguar frontRight, CANJaguar frontLeft, CANJaguar backRight, CANJaguar backLeft,
             GY85_I2C sensor, Joystick joy, Encoder encoderY, Encoder encoderX, int driveType) {
-
         fr = frontRight;
         fl = frontLeft;
         br = backRight;
@@ -75,7 +69,6 @@ public class DriveSystem {
     }
 
     public void driveSystemDenit() {
-
         if (hasBeenStarted) {
             hasBeenStarted = false;
             time.cancel();
@@ -84,20 +77,13 @@ public class DriveSystem {
 
     private void runDrive() {
         switch (driveType) {
-            case 0:
-                PID_Drive();
-                break;
-            case 1:
-                THB_Drive();
-                break;
-            case 2:
-                openLoop();
-                break;
+            case 0: PID_Drive(); break;
+            case 1: THB_Drive(); break;
+            case 2: openLoop(); break;
         }
     }
 
     public void getInput() {
-
         theta = Wiring.radianWrap(sen.getCompassRadAngle() - initialHeading);
         joyY = -joy.getY() * Math.abs(joy.getY());
         joyX = joy.getX() * Math.abs(joy.getX());
@@ -105,7 +91,6 @@ public class DriveSystem {
 
         if (FCMode) {
             if (Math.abs(joy.getZ()) > .01) {
-
                 heading = theta;
                 errorInHeading = 0;
             } else {
@@ -120,7 +105,6 @@ public class DriveSystem {
     }
 
     public void THB_Drive() {
-
         GZ = sen.getGyroZ() * Wiring.G_SCALE;
 
         double VY = enY.getRate();
@@ -175,7 +159,6 @@ public class DriveSystem {
     }
 
     public void PID_Drive() {
-
         GZ = sen.getGyroZ() * Wiring.G_SCALE;
 
         double VY = enY.getRate();
@@ -288,10 +271,8 @@ public class DriveSystem {
         }
 
         public void run() {
-
             hasBeenStarted = true;
             d.runDrive();
-
         }
     }
 }

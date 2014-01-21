@@ -3,7 +3,10 @@ package edu.wpi.first.wpilibj.templates;
 import edu.wpi.first.wpilibj.ADXL345_I2C;
 import edu.wpi.first.wpilibj.DigitalModule;
 import edu.wpi.first.wpilibj.I2C;
-
+/**
+ *
+ * @author colin
+ */
 public class GY85_I2C {
     
     private I2C cread, cwrite;
@@ -17,10 +20,8 @@ public class GY85_I2C {
     double initialHeading;
     
     private static final double kGsPerLSB = 0.00390625;
-    
-    
-    public GY85_I2C() {
         
+    public GY85_I2C() {    
         compassByte = 6;
         gyroByte = 6;
         accelByte = 6;
@@ -52,14 +53,12 @@ public class GY85_I2C {
     }
     
     private void setupAccel() {
-        
         awrite = new I2C(DigitalModule.getInstance(1), 0xA6);
         aread = new I2C(DigitalModule.getInstance(1), 0xA7);
 
         awrite.write(44, 0x0A);
         awrite.write(45, 0x08);
         awrite.write(49, 0x00);
-        
     }
     
    
@@ -67,6 +66,7 @@ public class GY85_I2C {
         readA();
         return accelByteCombo(accelBuffer[1], accelBuffer[0]); 
     }
+
     double getAccelY() { 
         readA();
         return accelByteCombo(accelBuffer[3], accelBuffer[2]); 
@@ -76,10 +76,12 @@ public class GY85_I2C {
         readG();
         return byteCombo(gyroBuffer[0], gyroBuffer[1]); 
     }
+
     double getGyroY() { 
         readG();
         return byteCombo(gyroBuffer[2], gyroBuffer[3]); 
     }
+
     double getGyroZ() { 
         readG();
         return (byteCombo(gyroBuffer[4], gyroBuffer[5])) / Wiring.SENSOR_SCALE; 
@@ -88,7 +90,8 @@ public class GY85_I2C {
     double getCompassX() { 
         readC();
         return byteCombo(compassBuffer[0], compassBuffer[1]); 
-    } // - 458
+    }// - 458
+
     double getCompassY() { 
         readC();
         return byteCombo(compassBuffer[4], compassBuffer[5]); 
@@ -104,22 +107,23 @@ public class GY85_I2C {
         aread.read(50, accelByte, accelBuffer);
     }
     
-    public void readA(){
+    public void readA() {
         aread.read(50, accelByte, accelBuffer);
     }
     
-    public void readC(){
+    public void readC() {
         cread.read(3, compassByte, compassBuffer);
     }
     
-    public void readG(){
+    public void readG() {
         gread.read(29, gyroByte, gyroBuffer);
     }
     
     public int byteCombo(byte num1, byte num2) {
         return ((num1 << 8) | num2 & 0x000000ff); 
     }
-    public double accelByteCombo(byte first, byte second){
+
+    public double accelByteCombo(byte first, byte second) {
         short tempLow = (short) (first & 0xff);
         short tempHigh = (short) ((second << 8) & 0xff00);
         return (tempLow | tempHigh) * kGsPerLSB;
@@ -133,37 +137,28 @@ public class GY85_I2C {
     public double atan2(double y, double x) {
         double pi = Math.PI;
         double pi2 = Math.PI / 2;
+
         if (x >= 0) { /* right half-plane */
             if (y >= 0) { /* 1st quadrant */
                 if (y <= x) {
-                    if (x == 0) {
-                        return 0;  /* x & y both zero */
-                    } else {
-                        return f(y / x);
-                    }
-                } else {
-                    return pi2 - f(x / y);
-                }
-            } else {  /* 4th quadrant */
-                if (-y <= x) {
-                    return -f(-y / x);
-                } else {
-                    return -pi2 + f(-x / y);
-                }
+                    if (x == 0) { return 0;  /* x & y both zero */ } 
+                    else { return f(y / x); }
+                } 
+                else { return pi2 - f(x / y); }
+            } 
+            else {  /* 4th quadrant */
+                if (-y <= x) { return -f(-y / x); } 
+                else { return -pi2 + f(-x / y); }
             }
-        } else {  /* left half-plane */
+        } 
+        else {  /* left half-plane */
             if (y >= 0) {  /* 2nd quadrant */
-                if (y >= -x) {
-                    return pi2 + f(-x / y);
-                } else {
-                    return pi - f(-y / x);
-                }
-            } else {  /* 3rd quadrant */
-                if (y >= x) {
-                    return -pi + f(y / x);
-                } else {
-                    return -pi2 - f(x / y);
-                }
+                if (y >= -x) { return pi2 + f(-x / y);} 
+                else { return pi - f(-y / x); }
+            } 
+            else {  /* 3rd quadrant */
+                if (y >= x) { return -pi + f(y / x); } 
+                else { return -pi2 - f(x / y); }
             }
         }
     }
