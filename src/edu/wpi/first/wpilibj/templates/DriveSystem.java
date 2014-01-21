@@ -31,6 +31,10 @@ public class DriveSystem {
     double forwardY;
     double rightX;
     double clockwiseZ;
+    double previousErrorX = 0;
+    double previousErrorY = 0;
+    double TbY = 0;
+    double TbX = 0;
     double GZ;
     Encoder enY;
     Encoder enX;
@@ -112,15 +116,27 @@ public class DriveSystem {
         double VX = enX.getRate();
         double AX = sen.getAccelX() / Wiring.A_SCALE;	// expected A range +/- 28.6
 
-        clamp(IX);
-        clamp(IY);
+        IY = joyY - VY;
+        IX = joyX - VX;
 
-        IY += joyY - VY;
-        IX += joyX - VX;
-
-        forwardY = Wiring.TpY * (IY + Wiring.TdY * AY);
-        rightX = Wiring.TpX * (IX + Wiring.TdX * AX);
-        clockwiseZ = clockwiseZ + Wiring.KpR * (6.28 * joyZ - GZ) + errorInHeading;
+        forwardY += Wiring.TpY * IY;
+        rightX += Wiring.TpX * IX;
+        
+        clamp(forwardY);
+        clamp(rightX);
+        
+        if(!isSameSign(previousErrorY, IY)){
+            forwardY = 0.5 * (forwardY + TbY);
+            TbY = forwardY;
+            previousErrorY = IY;
+        }
+        if(!isSameSign(previousErrorX, IX)){
+            rightX = 0.5 * (rightX + TbX);
+            TbX = rightX;
+            previousErrorX = IX;
+        }
+        
+        clockwiseZ += clockwiseZ + Wiring.KpR * (6.28 * joyZ + GZ) + errorInHeading;
 
         double lf, rf, lb, rb;
 
@@ -255,6 +271,10 @@ public class DriveSystem {
 
     public double clamp(double value) {
         return (value > 1) ? 1 : (value < -1) ? -1 : value;
+    }
+    
+    public boolean isSameSign(double one, double two){
+        return ((one>0)&&(two>0)) ? true : ((one<0)&&(two<0)) ? true : false;
     }
 
     private class DriveLoop extends TimerTask {

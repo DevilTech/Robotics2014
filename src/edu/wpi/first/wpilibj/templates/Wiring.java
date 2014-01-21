@@ -29,6 +29,7 @@ public class Wiring {
     static double TpY = 13.7 * dt;
     static double TdX = .79;
     static double TpX = 3.1 * dt;
+    
     static final double MAX_XY = 132;
     static final double A_SCALE = 32.174 * 12 * .004;
     static final double G_SCALE = Math.PI / (180 * 14.375);
