@@ -19,7 +19,7 @@ public class DriveSystem {
     CANJaguar fr, fl, br, bl;
     GY85_I2C sen;
     Joystick joy;
-    boolean FCMode;
+    boolean FCMode = true;
     boolean hasBeenStarted = false;
     double theta;
     double heading;
@@ -27,6 +27,7 @@ public class DriveSystem {
     double joyX;
     double joyZ;
     double errorInHeading;
+    double initialHeading;
     double forwardY = 0;
     double rightX = 0;
     double clockwiseZ = 0;
@@ -60,6 +61,7 @@ public class DriveSystem {
     }
 
     public void driveSystemInit() {
+        if(!hasBeenStarted){
         hasBeenStarted = true;
         forwardY = 0;
         rightX = 0;
@@ -68,6 +70,11 @@ public class DriveSystem {
         IY = 0;
         time = new java.util.Timer();
         time.schedule(new DriveLoop(this), 0L, Wiring.DRIVE_POLL_RATE);
+        initialHeading = sen.getCompassRadAngle();
+        }
+        else{
+            System.out.println("Drive system already init");
+        }
         
     }
 
@@ -87,7 +94,7 @@ public class DriveSystem {
     }
 
     public void getInput() {
-        theta = sen.getCompassRadAngle();
+        theta = sen.getCompassRadAngle(initialHeading);
         joyY = -joy.getY() * Math.abs(joy.getY());
         joyX = joy.getX() * Math.abs(joy.getX());
         joyZ = joy.getZ() * Math.abs(joy.getZ()) / 2;
@@ -101,9 +108,9 @@ public class DriveSystem {
             }
             //takes values from joysticks and changes the values to the correct
             //vector based on compass input
-            double temp = forwardY * Math.cos(theta) + rightX * Math.sin(theta);
-            rightX = -forwardY * Math.sin(theta) + rightX * Math.cos(theta);
-            forwardY = temp;
+            double temp = joyY * Math.cos(theta) + joyX * Math.sin(theta);
+            joyX = -forwardY * Math.sin(theta) + joyX * Math.cos(theta);
+            joyY = temp;
         }
     }
 
@@ -229,7 +236,6 @@ public class DriveSystem {
     }
 
     public void openLoop() {
-        FCMode = false;
 
         double lf, rf, lb, rb;
 

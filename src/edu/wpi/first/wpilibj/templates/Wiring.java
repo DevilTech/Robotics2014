@@ -16,9 +16,9 @@ public class Wiring {
 
     //K is for PID control
     //P is proportion, D is derivative
-    static double KpR = 14.39 * dt;
+    static double KpR = 14.39 * dt / Math.PI;
     static double KiR = 0;//38.68 * dt;
-    static double KpY = 0.0987 * dt;
+    static double KpY = 0.0987 * dt / Math.PI;
     static double KdY = 0;
     static double KpX = 0.0127 * dt;
     static double KdX = 0;

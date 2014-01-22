@@ -18,13 +18,11 @@ public class GY85_I2C {
     private byte compassBuffer[], gyroBuffer[], accelBuffer[];
     private int compassByte, gyroByte, accelByte;
     
-    double initialHeading;
-    
     private static final double kGsPerLSB = 0.00390625;
         
     public GY85_I2C() {    
         compassByte = 6;
-        gyroByte = 6;
+        gyroByte = 2;
         accelByte = 6;
         
         compassBuffer = new byte[compassByte];
@@ -43,6 +41,7 @@ public class GY85_I2C {
         cwrite.write(0, 0x54);
         cwrite.write(1, 64);
         cwrite.write(2, 0);
+        
     }
     
     private void setupGyro() {
@@ -72,35 +71,34 @@ public class GY85_I2C {
         readA();
         return accelByteCombo(accelBuffer[3], accelBuffer[2]); 
     }
-  
-    double getGyroX() { 
-        readG();
-        return byteCombo(gyroBuffer[0], gyroBuffer[1]); 
-    }
-
-    double getGyroY() { 
-        readG();
-        return byteCombo(gyroBuffer[2], gyroBuffer[3]); 
-    }
 
     double getGyroZ() { 
         readG();
-        return (byteCombo(gyroBuffer[4], gyroBuffer[5])) / Wiring.SENSOR_SCALE; 
+        return (byteCombo(gyroBuffer[0], gyroBuffer[1])) / Wiring.SENSOR_SCALE; 
     }
 
-    double getCompassX() { 
-        readC();
+    private double getCompassX() { 
         return byteCombo(compassBuffer[0], compassBuffer[1]); 
     }// - 458
 
-    double getCompassY() { 
-        readC();
+    private double getCompassY() { 
         return byteCombo(compassBuffer[4], compassBuffer[5]); 
     } //  - 93
 
-    double getCompassAngle() { return Math.toDegrees(atan2(getCompassY(), getCompassX())); }
+    double getCompassAngle() { 
+        readC();
+        return Math.toDegrees(atan2(getCompassY(), getCompassX())); 
+    }
     //double getCompassRadAngle() { return atan2(getCompassY(), getCompassX()); }
-    double getCompassRadAngle() { return Wiring.radianWrap(atan2(getCompassY(), getCompassX()) - initialHeading); }
+    double getCompassRadAngle(double initialHeading) { 
+        readC();
+        return Wiring.radianWrap(atan2(getCompassY(), getCompassX()) - initialHeading); 
+    }
+    
+    double getCompassRadAngle() { 
+        readC();
+        return Wiring.radianWrap(atan2(getCompassY(), getCompassX())); 
+    }
     
     public void readAll() {
         cread.read(3, compassByte, compassBuffer);
@@ -117,7 +115,7 @@ public class GY85_I2C {
     }
     
     public void readG() {
-        gread.read(29, gyroByte, gyroBuffer);
+        gread.read(33, gyroByte, gyroBuffer);
     }
     
     public int byteCombo(byte num1, byte num2) {
