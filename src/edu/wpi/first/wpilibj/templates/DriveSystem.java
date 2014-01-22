@@ -27,10 +27,9 @@ public class DriveSystem {
     double joyX;
     double joyZ;
     double errorInHeading;
-    double initialHeading;
-    double forwardY;
-    double rightX;
-    double clockwiseZ;
+    double forwardY = 0;
+    double rightX = 0;
+    double clockwiseZ = 0;
     double previousErrorX = 0;
     double previousErrorY = 0;
     double TbY = 0;
@@ -69,7 +68,7 @@ public class DriveSystem {
         IY = 0;
         time = new java.util.Timer();
         time.schedule(new DriveLoop(this), 0L, Wiring.DRIVE_POLL_RATE);
-        initialHeading = sen.getCompassRadAngle();
+        
     }
 
     public void driveSystemDenit() {
@@ -88,7 +87,7 @@ public class DriveSystem {
     }
 
     public void getInput() {
-        theta = Wiring.radianWrap(sen.getCompassRadAngle() - initialHeading);
+        theta = sen.getCompassRadAngle();
         joyY = -joy.getY() * Math.abs(joy.getY());
         joyX = joy.getX() * Math.abs(joy.getX());
         joyZ = joy.getZ() * Math.abs(joy.getZ()) / 2;
@@ -136,7 +135,7 @@ public class DriveSystem {
             previousErrorX = IX;
         }
         
-        clockwiseZ += clockwiseZ + Wiring.KpR * (6.28 * joyZ + GZ) + errorInHeading;
+        clockwiseZ += clockwiseZ + Wiring.KpR * (6.28 * joyZ - GZ) + errorInHeading;
 
         double lf, rf, lb, rb;
 
@@ -173,7 +172,7 @@ public class DriveSystem {
             ex.printStackTrace();
         }
     }
-
+                                                                     //stuff that does stuff (ha ha)
     public void PID_Drive() {
         GZ = sen.getGyroZ() * Wiring.G_SCALE;
 
@@ -186,10 +185,9 @@ public class DriveSystem {
         //max velocity times amount requested (-1, 1), minus current speed
         //then, the derivative of the speed (acceleration) is added to to the value of forwardY
         forwardY = clamp(forwardY);
-        forwardY = forwardY + Wiring.KpY * (Wiring.MAX_XY * joyY - VY);//PD expected range +/- 1.0
-        System.out.println((Wiring.MAX_XY * joyY) + ", " + (Wiring.MAX_XY * joyY - VY));
+        //forwardY = forwardY + Wiring.KpY * (Wiring.MAX_XY * joyY - VY);//PD expected range +/- 1.0
         rightX = clamp(rightX);
-        rightX = rightX + Wiring.KpX * (Wiring.MAX_XY * joyX - VX);	//PD expected range +/- 0.577
+        //rightX = rightX + Wiring.KpX * (Wiring.MAX_XY * joyX - VX);	//PD expected range +/- 0.577
         clockwiseZ = clamp(clockwiseZ);
         clockwiseZ = clockwiseZ + Wiring.KpR * (6.28 * joyZ + GZ) + errorInHeading; //replace 0 with KpR
 

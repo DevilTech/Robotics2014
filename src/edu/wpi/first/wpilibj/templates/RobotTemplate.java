@@ -32,7 +32,7 @@ public class RobotTemplate extends IterativeRobot {
             jaglb = new CANJaguar(12);
             jagrb = new CANJaguar(13);
             joy = new Joystick(1);
-            d = new DriveSystem(jagrf, jaglf, jagrb, jaglb, sensor, joy, enY, enX, Wiring.THB_C);
+            d = new DriveSystem(jagrf, jaglf, jagrb, jaglb, sensor, joy, enY, enX, Wiring.PID_C);
         } catch (CANTimeoutException ex) {
             ex.printStackTrace();
         }
@@ -59,16 +59,17 @@ public class RobotTemplate extends IterativeRobot {
         smartInit();
     }
 
-    public void disabled() {
+   public void disabledPeriodic() {
         smartPush();
         smartPull();
+        System.out.println(sensor.getCompassAngle());
     }
 
     public void testPeriodic() {
     }
     
     public void smartInit() {
-        SmartDashboard.putNumber("CW", d.clockwiseZ);
+        SmartDashboard.putNumber("CW", sensor.getCompassRadAngle());
         SmartDashboard.putNumber("GZ", d.GZ);
         SmartDashboard.putNumber("enX", enX.get());
         SmartDashboard.putNumber("enY", enY.get());
@@ -89,7 +90,7 @@ public class RobotTemplate extends IterativeRobot {
     }
 
     public void smartPush() {
-        SmartDashboard.putNumber("CW", d.clockwiseZ);
+        SmartDashboard.putNumber("CW",  sensor.getCompassRadAngle());
         SmartDashboard.putNumber("GZ", d.GZ);
         SmartDashboard.putNumber("enX", enX.get());
         SmartDashboard.putNumber("enY", enY.get());

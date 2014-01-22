@@ -40,7 +40,7 @@ public class GY85_I2C {
         cwrite = new I2C(DigitalModule.getInstance(1), 0x3C);
         cread = new I2C(DigitalModule.getInstance(1), 0x3D);
 
-        cwrite.write(0, 88);
+        cwrite.write(0, 0x54);
         cwrite.write(1, 64);
         cwrite.write(2, 0);
     }
@@ -135,31 +135,41 @@ public class GY85_I2C {
         return -0.001096995 + t * (1.041963708 + t * (-0.196333807 + t * (-0.060821409)));
     }
     
+    
     public double atan2(double y, double x) {
         double pi = Math.PI;
         double pi2 = Math.PI / 2;
-
         if (x >= 0) { /* right half-plane */
             if (y >= 0) { /* 1st quadrant */
                 if (y <= x) {
-                    if (x == 0) { return 0;  /* x & y both zero */ } 
-                    else { return f(y / x); }
-                } 
-                else { return pi2 - f(x / y); }
-            } 
-            else {  /* 4th quadrant */
-                if (-y <= x) { return -f(-y / x); } 
-                else { return -pi2 + f(-x / y); }
+                    if (x == 0) {
+                        return 0;  /* x & y both zero */
+                    } else {
+                        return f(y / x);
+                    }
+                } else {
+                    return pi2 - f(x / y);
+                }
+            } else {  /* 4th quadrant */
+                if (-y <= x) {
+                    return -f(-y / x);
+                } else {
+                    return -pi2 + f(-x / y);
+                }
             }
-        } 
-        else {  /* left half-plane */
+        } else {  /* left half-plane */
             if (y >= 0) {  /* 2nd quadrant */
-                if (y >= -x) { return pi2 + f(-x / y);} 
-                else { return pi - f(-y / x); }
-            } 
-            else {  /* 3rd quadrant */
-                if (y >= x) { return -pi + f(y / x); } 
-                else { return -pi2 - f(x / y); }
+                if (y >= -x) {
+                    return pi2 + f(-x / y);
+                } else {
+                    return pi - f(-y / x);
+                }
+            } else {  /* 3rd quadrant */
+                if (y >= x) {
+                    return -pi + f(y / x);
+                } else {
+                    return -pi2 - f(x / y);
+                }
             }
         }
     }
