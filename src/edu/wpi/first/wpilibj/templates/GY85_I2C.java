@@ -23,7 +23,7 @@ public class GY85_I2C {
     public GY85_I2C() {    
         compassByte = 6;
         gyroByte = 2;
-        accelByte = 6;
+        accelByte = 4;
         
         compassBuffer = new byte[compassByte];
         gyroBuffer = new byte[gyroByte];
@@ -34,47 +34,46 @@ public class GY85_I2C {
         setupAccel();
     }
 
-    private void setupCompass() {
+    private void setupCompass() { //HMC5883L
         cwrite = new I2C(DigitalModule.getInstance(1), 0x3C);
         cread = new I2C(DigitalModule.getInstance(1), 0x3D);
 
-        cwrite.write(0, 0x54);
-        cwrite.write(1, 64);
-        cwrite.write(2, 0);
+        cwrite.write(0, 0x54); //75Hz
+        cwrite.write(1, 0x58); //1.9 Ga
+        cwrite.write(2, 0); //Continuous Mode
         
     }
     
-    private void setupGyro() {
+    private void setupGyro() { //ITG3200
         gwrite = new I2C(DigitalModule.getInstance(1), 0xD1);
         gread = new I2C(DigitalModule.getInstance(1), 0xD0);
 
         gwrite.write(21, Wiring.SAMPLE_RATE);
-        gwrite.write(22, 0x1b);
+        gwrite.write(22, 0x1b); //2000dps, 42Hz
+        gwrite.write(62, 0x30); //sty x,y
     }
     
-    private void setupAccel() {
+    private void setupAccel() { //ADXL345
         awrite = new I2C(DigitalModule.getInstance(1), 0xA6);
         aread = new I2C(DigitalModule.getInstance(1), 0xA7);
 
-        awrite.write(44, 0x0A);
-        awrite.write(45, 0x08);
-        awrite.write(49, 0x00);
+        awrite.write(0x2C, 0x0A); //100 Hz
+        awrite.write(0x2D, 0x08); //Measure mode
+        awrite.write(0x31, 0x00); //10bit, sign EXT, 2G
     }
     
    
     double getAccelX() { 
-        readA();
         return accelByteCombo(accelBuffer[1], accelBuffer[0]); 
     }
 
     double getAccelY() { 
-        readA();
         return accelByteCombo(accelBuffer[3], accelBuffer[2]); 
     }
 
     double getGyroZ() { 
         readG();
-        return (byteCombo(gyroBuffer[0], gyroBuffer[1])) / Wiring.SENSOR_SCALE; 
+        return (byteCombo(gyroBuffer[0], gyroBuffer[1])); 
     }
 
     private double getCompassX() { 

@@ -22,12 +22,12 @@ public class DriveSystem {
     boolean FCMode = true;
     boolean hasBeenStarted = false;
     double theta;
-    double heading;
     double joyY;
     double joyX;
     double joyZ;
-    double errorInHeading;
-    double initialHeading;
+    double heading;
+    double errorInHeading = 0;
+    double initialHeading = 0;
     double forwardY = 0;
     double rightX = 0;
     double clockwiseZ = 0;
@@ -182,7 +182,8 @@ public class DriveSystem {
                                                                      //stuff that does stuff (ha ha)
     public void PID_Drive() {
         GZ = sen.getGyroZ() * Wiring.G_SCALE;
-
+        sen.readAll();
+        
         double VY = enY.getRate();
         double AY = sen.getAccelY() / Wiring.A_SCALE;// expected V range +/- maxXY
         double VX = enX.getRate();
@@ -192,18 +193,18 @@ public class DriveSystem {
         //max velocity times amount requested (-1, 1), minus current speed
         //then, the derivative of the speed (acceleration) is added to to the value of forwardY
         forwardY = clamp(forwardY);
-        //forwardY += forwardY + Wiring.KpY * (Wiring.MAX_XY * joyY - VY);//PD expected range +/- 1.0
+        //forwardY += Wiring.KpY * (Wiring.MAX_XY * joyY - VY);//PD expected range +/- 1.0
         rightX = clamp(rightX);
-        //rightX += rightX + Wiring.KpX * (Wiring.MAX_XY * joyX - VX);	//PD expected range +/- 0.577
+        //rightX += Wiring.KpX * (Wiring.MAX_XY * joyX - VX);	//PD expected range +/- 0.577
         clockwiseZ = clamp(clockwiseZ);
-        clockwiseZ = Wiring.KpR * (joyZ + GZ / Wiring.MAX_R) + errorInHeading; //replace 0 with KpR
+        clockwiseZ += Wiring.KpR * (joyZ + GZ); //replace 0 with KpR
 
         double lf, rf, lb, rb;
 
-        lf = forwardY + clockwiseZ * .37 + rightX ;
-        rf = forwardY - clockwiseZ * .37 - rightX;
-        lb = forwardY + clockwiseZ - rightX;
-        rb = forwardY - clockwiseZ + rightX;
+        lf = forwardY + (clockwiseZ + errorInHeading)* .36 + rightX ;
+        rf = forwardY - (clockwiseZ + errorInHeading)* .36 - rightX;
+        lb = forwardY + (clockwiseZ + errorInHeading) - rightX;
+        rb = forwardY - (clockwiseZ + errorInHeading) + rightX;
 
         double max = Math.abs(lf);
 
@@ -278,7 +279,7 @@ public class DriveSystem {
     }
     
     public boolean isSameSign(double one, double two){
-        return ((one>0)&&(two>0)) ? true : ((one<0)&&(two<0)) ? true : false;
+        return ((one<0)==(two<0));
     }
 
     private class DriveLoop extends TimerTask {

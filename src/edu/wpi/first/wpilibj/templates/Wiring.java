@@ -10,18 +10,18 @@ public class Wiring {
         return (d > Math.PI) ? d - 2 * Math.PI : (d < -Math.PI) ? d + 2 * Math.PI : d;
     }
 
-    static final int SAMPLE_RATE = 0;
+    static final int SAMPLE_RATE = 9; //10ms = 1KHz/10
     static final double SENSOR_SCALE = 1;
     static double dt = 0.01;
 
     //K is for PID control
     //P is proportion, D is derivative
     static double KpR = 0;//14.39 * dt / Math.PI;
-    static double KiR = 38.68 * dt;
-    static double KpY = 0.0987 * dt / Math.PI;
-    static double KdY = 0;
+    static double KiR = 38.68 * dt / Math.PI;
+    static double KpY = 0.0987 * dt;
+    static double KdY = 0; //0.04 * dt * dt
     static double KpX = 0.0127 * dt;
-    static double KdX = 0;
+    static double KdX = 0; //0.01 * dt * dt
 
     //T is for THB control
     //P is proportion  
