@@ -111,6 +111,8 @@ public class DriveSystem {
             double temp = joyY * Math.cos(theta) + joyX * Math.sin(theta);
             joyX = -forwardY * Math.sin(theta) + joyX * Math.cos(theta);
             joyY = temp;
+        } else {
+            errorInHeading = 0;
         }
     }
 
