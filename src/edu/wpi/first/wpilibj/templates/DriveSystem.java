@@ -1,10 +1,11 @@
 package edu.wpi.first.wpilibj.templates;
 ////REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE
-//import edu.wpi.first.wpilibj.CANJaguar;
+//import edu.wpi.first.wpilibj.Talon;
 //import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.CANJaguar;
+import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.can.CANTimeoutException;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.util.TimerTask;
@@ -16,7 +17,7 @@ import java.util.Timer;
  */
 public class DriveSystem {
 
-    CANJaguar fr, fl, br, bl;
+    Talon fr, fl, br, bl;
     GY85_I2C sen;
     Joystick joy;
     boolean FCMode = true;
@@ -43,7 +44,7 @@ public class DriveSystem {
     int driveType;
     java.util.Timer time;
 
-    public DriveSystem(CANJaguar frontRight, CANJaguar frontLeft, CANJaguar backRight, CANJaguar backLeft,
+    public DriveSystem(Talon frontRight, Talon frontLeft, Talon backRight, Talon backLeft,
             GY85_I2C sensor, Joystick joy, Encoder encoderY, Encoder encoderX, int driveType) {
         fr = frontRight;
         fl = frontLeft;
@@ -172,14 +173,12 @@ public class DriveSystem {
             rb /= max;
         }
         
-        try {
-            fl.setX(lf);
-            fr.setX(-rf);
-            bl.setX(lb);
-            br.setX(-rb);
-        } catch (CANTimeoutException ex) {
-            ex.printStackTrace();
-        }
+        
+            fl.set(lf);
+            fr.set(-rf);
+            bl.set(lb);
+            br.set(-rb);
+        
     }
                                                                      //stuff that does stuff (ha ha)
     public void PID_Drive() {
@@ -227,14 +226,12 @@ public class DriveSystem {
             rb /= max;
         }
 
-        try {
-            fl.setX(lf);
-            fr.setX(-rf);
-            bl.setX(lb);
-            br.setX(-rb);
-        } catch (CANTimeoutException ex) {
-            ex.printStackTrace();
-        }
+        
+            fl.set(lf);
+            fr.set(-rf);
+            bl.set(lb);
+            br.set(-rb);
+        
 
     }
 
@@ -265,15 +262,10 @@ public class DriveSystem {
             lb /= max;
             rb /= max;
         }
-
-        try {
-            fl.setX(lf);
-            fr.setX(-rf);
-            bl.setX(lb);
-            br.setX(-rb);
-        } catch (CANTimeoutException ex) {
-            ex.printStackTrace();
-        }
+            fl.set(lf);
+            fr.set(-rf);
+            bl.set(lb);
+            br.set(-rb);
     }
 
     public double clamp(double value) {

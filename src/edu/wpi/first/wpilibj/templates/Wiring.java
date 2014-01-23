@@ -36,4 +36,11 @@ public class Wiring {
     static final int PID_C = 0;
     static final int THB_C = 1;
     static final int OPEN_C = 2;
+    
+    static final int MOTOR_LF = 1;
+    static final int MOTOR_RF = 2;
+    static final int MOTOR_LB = 3;
+    static final int MOTOR_RB = 4;
+    
+    static final int PILOT_JOY = 1;
 }

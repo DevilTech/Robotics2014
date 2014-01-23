@@ -6,7 +6,7 @@
 /*----------------------------------------------------------------------------*/
 package edu.wpi.first.wpilibj.templates;
 
-import edu.wpi.first.wpilibj.CANJaguar;
+import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
@@ -18,24 +18,21 @@ public class RobotTemplate extends IterativeRobot {
 
     Encoder enX = new Encoder(1, 2);
     Encoder enY = new Encoder(3, 4);
-    CANJaguar jaglf, jagrf, jaglb, jagrb;
+    Talon talonlf, talonrf, talonlb, talonrb;
     GY85_I2C sensor = new GY85_I2C();
     DriveSystem d;
     Joystick joy;
 
-    public void robotInit() {
-        try {
+    public void robotInit() {   
             enX.start();
             enY.start();
-            jaglf = new CANJaguar(2);
-            jagrf = new CANJaguar(3);
-            jaglb = new CANJaguar(12);
-            jagrb = new CANJaguar(13);
-            joy = new Joystick(1);
-            d = new DriveSystem(jagrf, jaglf, jagrb, jaglb, sensor, joy, enY, enX, Wiring.PID_C);
-        } catch (CANTimeoutException ex) {
-            ex.printStackTrace();
-        }
+            talonlf = new Talon(Wiring.MOTOR_LF);
+            talonrf = new Talon(Wiring.MOTOR_RF);
+            talonlb = new Talon(Wiring.MOTOR_LB);
+            talonrb = new Talon(Wiring.MOTOR_RB);
+            joy = new Joystick(Wiring.PILOT_JOY);
+            d = new DriveSystem(talonrf, talonlf, talonrb, talonlb, sensor, joy, enY, enX, Wiring.PID_C);
+        
     }
 
     public void autonomousPeriodic() { }
