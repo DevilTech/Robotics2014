@@ -51,7 +51,7 @@ public class RobotTemplate extends IterativeRobot {
         d.getInput();
         smartPush();
         smartPull();   
-        System.out.println(d.GZ);
+       
     }
 
     public void disabledInit() {
@@ -62,7 +62,7 @@ public class RobotTemplate extends IterativeRobot {
    public void disabledPeriodic() {
         smartPush();
         smartPull();
-        System.out.println(sensor.getCompassAngle());
+        
     }
 
     public void testPeriodic() {
@@ -71,8 +71,8 @@ public class RobotTemplate extends IterativeRobot {
     public void smartInit() {
         SmartDashboard.putNumber("CW", sensor.getCompassRadAngle());
         SmartDashboard.putNumber("GZ", d.GZ);
-        SmartDashboard.putNumber("enX", enX.get());
-        SmartDashboard.putNumber("enY", enY.get());
+        SmartDashboard.putNumber("enX", enX.getRate());
+        SmartDashboard.putNumber("enY", enY.getRate());
         SmartDashboard.putNumber("errorH" , d.errorInHeading);
         SmartDashboard.putNumber("C", d.clockwiseZ);
         SmartDashboard.putNumber("R", d.rightX);
@@ -92,8 +92,8 @@ public class RobotTemplate extends IterativeRobot {
     public void smartPush() {
         SmartDashboard.putNumber("CW",  sensor.getCompassRadAngle());
         SmartDashboard.putNumber("GZ", d.GZ);
-        SmartDashboard.putNumber("enX", enX.get());
-        SmartDashboard.putNumber("enY", enY.get());
+        SmartDashboard.putNumber("enX", enX.getRate());
+        SmartDashboard.putNumber("enY", enY.getRate());
         SmartDashboard.putNumber("errorH" , d.errorInHeading);
         SmartDashboard.putNumber("C", d.clockwiseZ);
         SmartDashboard.putNumber("R", d.rightX);

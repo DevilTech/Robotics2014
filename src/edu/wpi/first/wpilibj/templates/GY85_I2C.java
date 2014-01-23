@@ -49,7 +49,7 @@ public class GY85_I2C {
         gread = new I2C(DigitalModule.getInstance(1), 0xD0);
 
         gwrite.write(21, Wiring.SAMPLE_RATE);
-        gwrite.write(22, 0x1A);
+        gwrite.write(22, 0x1b);
     }
     
     private void setupAccel() {

@@ -192,16 +192,16 @@ public class DriveSystem {
         //max velocity times amount requested (-1, 1), minus current speed
         //then, the derivative of the speed (acceleration) is added to to the value of forwardY
         forwardY = clamp(forwardY);
-        //forwardY = forwardY + Wiring.KpY * (Wiring.MAX_XY * joyY - VY);//PD expected range +/- 1.0
+        //forwardY += forwardY + Wiring.KpY * (Wiring.MAX_XY * joyY - VY);//PD expected range +/- 1.0
         rightX = clamp(rightX);
-        //rightX = rightX + Wiring.KpX * (Wiring.MAX_XY * joyX - VX);	//PD expected range +/- 0.577
+        //rightX += rightX + Wiring.KpX * (Wiring.MAX_XY * joyX - VX);	//PD expected range +/- 0.577
         clockwiseZ = clamp(clockwiseZ);
-        clockwiseZ = clockwiseZ + Wiring.KpR * (6.28 * joyZ + GZ) + errorInHeading; //replace 0 with KpR
+        clockwiseZ = Wiring.KpR * (joyZ + GZ / Wiring.MAX_R) + errorInHeading; //replace 0 with KpR
 
         double lf, rf, lb, rb;
 
-        lf = forwardY + clockwiseZ + rightX;
-        rf = forwardY - clockwiseZ - rightX;
+        lf = forwardY + clockwiseZ * .37 + rightX ;
+        rf = forwardY - clockwiseZ * .37 - rightX;
         lb = forwardY + clockwiseZ - rightX;
         rb = forwardY - clockwiseZ + rightX;
 

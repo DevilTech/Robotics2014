@@ -16,8 +16,8 @@ public class Wiring {
 
     //K is for PID control
     //P is proportion, D is derivative
-    static double KpR = 14.39 * dt / Math.PI;
-    static double KiR = 0;//38.68 * dt;
+    static double KpR = 0;//14.39 * dt / Math.PI;
+    static double KiR = 38.68 * dt;
     static double KpY = 0.0987 * dt / Math.PI;
     static double KdY = 0;
     static double KpX = 0.0127 * dt;
@@ -29,8 +29,9 @@ public class Wiring {
     static double TpX = .31 * dt;
     
     static final double MAX_XY = 132;
+    static final double MAX_R = 2 * Math.PI;
     static final double A_SCALE = 32.174 * 12 * .004;
-    static final double G_SCALE = Math.PI / (180 * 14.375);
+    static final double G_SCALE = (Math.PI / 180) / 14.375;
     static final long DRIVE_POLL_RATE = 10;
     static final int PID_C = 0;
     static final int THB_C = 1;
