@@ -38,7 +38,7 @@ public class GY85_I2C {
         cwrite = new I2C(DigitalModule.getInstance(1), 0x3C);
         cread = new I2C(DigitalModule.getInstance(1), 0x3D);
 
-        cwrite.write(0, 0x54); //75Hz
+        cwrite.write(0, 0x50); //75Hz
         cwrite.write(1, 0x58); //1.9 Ga
         cwrite.write(2, 0); //Continuous Mode
         

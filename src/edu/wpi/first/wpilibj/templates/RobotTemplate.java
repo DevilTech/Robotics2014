@@ -42,12 +42,14 @@ public class RobotTemplate extends IterativeRobot {
      */
     public void teleopInit() {
         d.driveSystemInit();
+        d.FCMode = false;
     }
 
     public void teleopPeriodic() {
         d.getInput();
         smartPush();
         smartPull();   
+        System.out.println(sensor.getCompassRadAngle());
        
     }
 

@@ -183,7 +183,8 @@ public class DriveSystem {
                                                                      //stuff that does stuff (ha ha)
     public void PID_Drive() {
         GZ = sen.getGyroZ() * Wiring.G_SCALE;
-        sen.readAll();
+        
+        sen.readA();
         
         double VY = enY.getRate();
         double AY = sen.getAccelY() / Wiring.A_SCALE;// expected V range +/- maxXY
@@ -198,7 +199,7 @@ public class DriveSystem {
         rightX = clamp(rightX);
         //rightX += Wiring.KpX * (Wiring.MAX_XY * joyX - VX);	//PD expected range +/- 0.577
         clockwiseZ = clamp(clockwiseZ);
-        clockwiseZ += Wiring.KpR * (joyZ + GZ); //replace 0 with KpR
+        clockwiseZ = .2;// Wiring.KpR * (joyZ + GZ); //replace 0 with KpR
 
         double lf, rf, lb, rb;
 
