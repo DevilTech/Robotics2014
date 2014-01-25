@@ -6,10 +6,6 @@ package edu.wpi.first.wpilibj.templates;
  */
 public class Wiring {
 
-    public static double radianWrap(double d) {
-        return (d > Math.PI) ? d - 2 * Math.PI : (d <= -Math.PI) ? d + 2 * Math.PI : d;
-    }
-
     static final int SAMPLE_RATE = 9; //10ms = 1KHz/10
     static final double SENSOR_SCALE = 1;
     static double dt = 0.01;

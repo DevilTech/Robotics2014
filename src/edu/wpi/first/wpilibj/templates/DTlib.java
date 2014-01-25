@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package testlibrary;
+package edu.wpi.first.wpilibj.templates;
 
 /**
  *
@@ -23,7 +23,8 @@ public class DTlib {
     public static boolean isSameSign(double one, double two){
         return ((one<0)==(two<0));
     }
-       public int byteCombo(byte num1, byte num2) {
+    
+    public static int byteCombo(byte num1, byte num2) {
         return ((num1 << 8) | (num2 & 0x000000ff)); 
     }
 

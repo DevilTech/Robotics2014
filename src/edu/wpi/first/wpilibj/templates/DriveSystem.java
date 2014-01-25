@@ -89,6 +89,7 @@ public class DriveSystem {
     private void runDrive() {
         sen.readA();
         sen.readG();
+        sen.readC();
         switch (driveType) {
             case 0: PID_Drive(); break;
             case 1: THB_Drive(); break;
@@ -97,7 +98,7 @@ public class DriveSystem {
     }
 
     public void getInput() {
-        sen.readC();
+        
         theta = sen.getCompassRadAngle(initialHeading);
         joyY = -joy.getY() * Math.abs(joy.getY());
         joyX = joy.getX() * Math.abs(joy.getX());
@@ -108,7 +109,7 @@ public class DriveSystem {
                 heading = theta;
                 errorInHeading = 0;
             } else {
-                errorInHeading = Wiring.radianWrap(heading - theta) * Wiring.KiR;
+                errorInHeading = DTlib.radianWrap(heading - theta) * Wiring.KiR;
             }
             //takes values from joysticks and changes the values to the correct
             //vector based on compass input
@@ -134,15 +135,15 @@ public class DriveSystem {
         forwardY += Wiring.TpY * IY;
         rightX += Wiring.TpX * IX;
         
-        clamp(forwardY);
-        clamp(rightX);
+        forwardY = DTlib.clamp(forwardY);
+        rightX = DTlib.clamp(rightX);
         
-        if(!isSameSign(previousErrorY, IY)){
+        if(!DTlib.isSameSign(previousErrorY, IY)){
             forwardY = 0.5 * (forwardY + TbY);
             TbY = forwardY;
             previousErrorY = IY;
         }
-        if(!isSameSign(previousErrorX, IX)){
+        if(!DTlib.isSameSign(previousErrorX, IX)){
             rightX = 0.5 * (rightX + TbX);
             TbX = rightX;
             previousErrorX = IX;
@@ -176,11 +177,10 @@ public class DriveSystem {
             rb /= max;
         }
         
-            fl.set(lf);
-            fr.set(-rf);
-            bl.set(lb);
-            br.set(-rb);
-        
+        fl.set(lf);
+        fr.set(-rf);
+        bl.set(lb);
+        br.set(-rb);
     }
                                                  //stuff that does stuff (ha ha)
     public void PID_Drive() {
@@ -194,12 +194,12 @@ public class DriveSystem {
         //adds to forwardY the amount in which we want to move in y direction in in/s
         //max velocity times amount requested (-1, 1), minus current speed
         //then, the derivative of the speed (acceleration) is added to to the value of forwardY
-        forwardY = clamp(forwardY);
-        //forwardY += Wiring.KpY * (Wiring.MAX_XY * joyY - VY);//PD expected range +/- 1.0
-        rightX = clamp(rightX);
-        //rightX += Wiring.KpX * (Wiring.MAX_XY * joyX - VX);	//PD expected range +/- 0.577
-        clockwiseZ = clamp(clockwiseZ);
-        clockwiseZ = .19;// Wiring.KpR * (joyZ + GZ); //replace 0 with KpR
+        forwardY = DTlib.clamp(forwardY);
+        forwardY += Wiring.KpY * (Wiring.MAX_XY * joyY - VY);//PD expected range +/- 1.0
+        rightX = DTlib.clamp(rightX);
+        rightX += Wiring.KpX * (Wiring.MAX_XY * joyX - VX);	//PD expected range +/- 0.577
+        clockwiseZ = DTlib.clamp(clockwiseZ);
+        clockwiseZ += Wiring.KpR * (joyZ + GZ); //replace 0 with KpR
 
         double lf, rf, lb, rb;
 
@@ -227,10 +227,10 @@ public class DriveSystem {
             rb /= max;
         }
         
-            fl.set(lf);
-            fr.set(-rf);
-            bl.set(lb);
-            br.set(-rb);
+        fl.set(lf);
+        fr.set(-rf);
+        bl.set(lb);
+        br.set(-rb);
     }
 
     public void openLoop() {
@@ -260,18 +260,11 @@ public class DriveSystem {
             lb /= max;
             rb /= max;
         }
-            fl.set(lf);
-            fr.set(-rf);
-            bl.set(lb);
-            br.set(-rb);
-    }
-
-    public double clamp(double value) {
-        return (value > 1) ? 1 : (value < -1) ? -1 : value;
-    }
-    
-    public boolean isSameSign(double one, double two){
-        return ((one<0)==(two<0));
+        
+        fl.set(lf);
+        fr.set(-rf);
+        bl.set(lb);
+        br.set(-rb);
     }
 
     private class DriveLoop extends TimerTask {

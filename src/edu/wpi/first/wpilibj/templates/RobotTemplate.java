@@ -22,6 +22,7 @@ public class RobotTemplate extends IterativeRobot {
     GY85_I2C sensor = new GY85_I2C();
     DriveSystem d;
     Joystick joy;
+    double previousValue = 0;
 
     public void robotInit() {   
         enX.start();
@@ -31,21 +32,19 @@ public class RobotTemplate extends IterativeRobot {
         talonlb = new Talon(Wiring.MOTOR_LB);
         talonrb = new Talon(Wiring.MOTOR_RB);
         joy = new Joystick(Wiring.PILOT_JOY);
-        d = new DriveSystem(talonrf, talonlf, talonrb, talonlb, sensor, joy, enY, enX, Wiring.OPEN_C);
+        d = new DriveSystem(talonrf, talonlf, talonrb, talonlb, sensor, joy, enY, enX, Wiring.PID_C);
     }
 
     public void autonomousPeriodic() { }
 
     public void teleopInit() {
         d.driveSystemInit();
-        d.FCMode = false;
     }
 
     public void teleopPeriodic() {
         d.getInput();
         smartPush();
         smartPull();
-        //System.out.println(sensor.getCompassStatus());
     }
 
     public void disabledInit() {
@@ -62,17 +61,8 @@ public class RobotTemplate extends IterativeRobot {
     public void testPeriodic() { }
     
     public void smartInit() {
-        SmartDashboard.putNumber("CW", sensor.getCompassRadAngle());
-        SmartDashboard.putNumber("GZ", d.GZ);
-        SmartDashboard.putNumber("enX", enX.getRate());
-        SmartDashboard.putNumber("enY", enY.getRate());
-        SmartDashboard.putNumber("errorH" , d.errorInHeading);
-        SmartDashboard.putNumber("C", d.clockwiseZ);
-        SmartDashboard.putNumber("R", d.rightX);
-        SmartDashboard.putNumber("F", d.forwardY); //here
-        SmartDashboard.putNumber("heading", d.heading);
-        SmartDashboard.putNumber("theta", d.theta);
-        
+        smartPush();
+                
         SmartDashboard.putNumber("kpR", Wiring.KpR);
         SmartDashboard.putNumber("kpR", Wiring.KpR);
         SmartDashboard.putNumber("kpX", Wiring.KpX);
@@ -84,6 +74,8 @@ public class RobotTemplate extends IterativeRobot {
 
     public void smartPush() {
         SmartDashboard.putNumber("CW",  sensor.getCompassRadAngle());
+        SmartDashboard.putNumber("cX", sensor.getCompassX());
+        SmartDashboard.putNumber("cY", sensor.getCompassY());
         SmartDashboard.putNumber("GZ", d.GZ);
         SmartDashboard.putNumber("enX", enX.getRate());
         SmartDashboard.putNumber("enY", enY.getRate());
@@ -103,4 +95,6 @@ public class RobotTemplate extends IterativeRobot {
         Wiring.KdY = SmartDashboard.getNumber("kdY");
         Wiring.KiR = SmartDashboard.getNumber("KiR");
     }
+    
+    
 }
