@@ -24,22 +24,18 @@ public class RobotTemplate extends IterativeRobot {
     Joystick joy;
 
     public void robotInit() {   
-            enX.start();
-            enY.start();
-            talonlf = new Talon(Wiring.MOTOR_LF);
-            talonrf = new Talon(Wiring.MOTOR_RF);
-            talonlb = new Talon(Wiring.MOTOR_LB);
-            talonrb = new Talon(Wiring.MOTOR_RB);
-            joy = new Joystick(Wiring.PILOT_JOY);
-            d = new DriveSystem(talonrf, talonlf, talonrb, talonlb, sensor, joy, enY, enX, Wiring.PID_C);
-        System.out.println("1");
+        enX.start();
+        enY.start();
+        talonlf = new Talon(Wiring.MOTOR_LF);
+        talonrf = new Talon(Wiring.MOTOR_RF);
+        talonlb = new Talon(Wiring.MOTOR_LB);
+        talonrb = new Talon(Wiring.MOTOR_RB);
+        joy = new Joystick(Wiring.PILOT_JOY);
+        d = new DriveSystem(talonrf, talonlf, talonrb, talonlb, sensor, joy, enY, enX, Wiring.OPEN_C);
     }
 
     public void autonomousPeriodic() { }
 
-    /**
-     * This function is called periodically during operator control
-     */
     public void teleopInit() {
         d.driveSystemInit();
         d.FCMode = false;
@@ -63,8 +59,7 @@ public class RobotTemplate extends IterativeRobot {
         smartPull();
     }
 
-    public void testPeriodic() {
-    }
+    public void testPeriodic() { }
     
     public void smartInit() {
         SmartDashboard.putNumber("CW", sensor.getCompassRadAngle());

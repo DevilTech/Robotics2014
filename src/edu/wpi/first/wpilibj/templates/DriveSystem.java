@@ -63,15 +63,15 @@ public class DriveSystem {
 
     public void driveSystemInit() {
         if(!hasBeenStarted){
-        hasBeenStarted = true;
-        forwardY = 0;
-        rightX = 0;
-        clockwiseZ = 0;
-        IX = 0;
-        IY = 0;
-        time = new java.util.Timer();
-        time.schedule(new DriveLoop(this), 0L, Wiring.DRIVE_POLL_RATE);
-        initialHeading = sen.getCompassRadAngle();
+            hasBeenStarted = true;
+            forwardY = 0;
+            rightX = 0;
+            clockwiseZ = 0;
+            IX = 0;
+            IY = 0;
+            time = new java.util.Timer();
+            time.schedule(new DriveLoop(this), 0L, Wiring.DRIVE_POLL_RATE);
+            initialHeading = sen.getCompassRadAngle();
         }
         else{
             System.out.println("Drive system already init");
@@ -113,7 +113,7 @@ public class DriveSystem {
             //takes values from joysticks and changes the values to the correct
             //vector based on compass input
             double temp = joyY * Math.cos(theta) + joyX * Math.sin(theta);
-            joyX = -forwardY * Math.sin(theta) + joyX * Math.cos(theta);
+            joyX = -joyY * Math.sin(theta) + joyX * Math.cos(theta);
             joyY = temp;
         } else {
             errorInHeading = 0;
@@ -176,14 +176,13 @@ public class DriveSystem {
             rb /= max;
         }
         
-        
             fl.set(lf);
             fr.set(-rf);
             bl.set(lb);
             br.set(-rb);
         
     }
-                                                                     //stuff that does stuff (ha ha)
+                                                 //stuff that does stuff (ha ha)
     public void PID_Drive() {
         GZ = sen.getGyroZ() * Wiring.G_SCALE;
         
@@ -232,7 +231,6 @@ public class DriveSystem {
             fr.set(-rf);
             bl.set(lb);
             br.set(-rb);
-
     }
 
     public void openLoop() {

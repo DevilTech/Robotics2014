@@ -104,7 +104,7 @@ public class GY85_I2C {
     
     double getCompassRadAngle() { 
 //        readC();
-        return Wiring.radianWrap(atan2(getCompassY(), getCompassX())); 
+        return atan2(getCompassY(), getCompassX()); 
     }
     
     String getCompassStatus() {
