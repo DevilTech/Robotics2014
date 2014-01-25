@@ -17,7 +17,7 @@ public class GY85_I2C {
     
     private byte compassBuffer[], cStatusBuffer[], gyroBuffer[], accelBuffer[];
     private int compassByte, cStatusByte, gyroByte, accelByte;
-    
+    private double compassX, compassY, accelX, accelY, gyroZ;
     private static final double kGsPerLSB = 0.00390625;
         
     public GY85_I2C() {
@@ -66,43 +66,38 @@ public class GY85_I2C {
     
    
     double getAccelX() { 
-        return DTlib.accelByteCombo(accelBuffer[1], accelBuffer[0]); 
+        return accelX;
     }
 
     double getAccelY() { 
-        return DTlib.accelByteCombo(accelBuffer[3], accelBuffer[2]); 
+        return accelY;
     }
 
     double getGyroZ() { 
-        //readG();
-        return (DTlib.byteCombo(gyroBuffer[0], gyroBuffer[1])); 
+        return gyroZ;
     }
 
      double getCompassX() {
-        double tempX = DTlib.byteCombo(compassBuffer[0], compassBuffer[1]);
-        if(tempX == -4096) { System.out.println("OVERFLOW!"); }
-        return tempX;
+        return compassX;
     }// - 458
 
      double getCompassY() { 
-        double tempY = DTlib.byteCombo(compassBuffer[4], compassBuffer[5]); 
-        if(tempY == -4096) { System.out.println("OVERFLOW!"); }
-        return tempY;
+        return compassY;
     } //  - 93
 
     double getCompassAngle() { 
         //readC();
-        return Math.toDegrees(DTlib.atan2(getCompassY(), getCompassX())); 
+        return Math.toDegrees(DTlib.atan2(compassY, compassX)); 
     }
     //double getCompassRadAngle() { return atan2(getCompassY(), getCompassX()); }
     double getCompassRadAngle(double initialHeading) { 
         //readC();
-        return DTlib.radianWrap(DTlib.atan2(getCompassY(), getCompassX()) - initialHeading); 
+        return DTlib.radianWrap(DTlib.atan2(compassY, compassX) - initialHeading); 
     }
     
     double getCompassRadAngle() { 
 //        readC();
-        return DTlib.atan2(getCompassY(), getCompassX()); 
+        return DTlib.atan2(compassY, compassX); 
     }
     
     String getCompassStatus() {
@@ -123,6 +118,8 @@ public class GY85_I2C {
     
     public void readA() {
         aread.read(50, accelByte, accelBuffer);
+        accelX = DTlib.accelByteCombo(accelBuffer[1], accelBuffer[0]); 
+        accelY = DTlib.accelByteCombo(accelBuffer[3], accelBuffer[2]);
     }
     
     public void readC() {
@@ -130,9 +127,17 @@ public class GY85_I2C {
         if((cStatusBuffer[0] & 0x1) == 1) {
             cread.read(3, compassByte, compassBuffer);
         }
+        double tempX = DTlib.byteCombo(compassBuffer[0], compassBuffer[1]);
+        if(tempX == -4096) { System.out.println("OVERFLOW!"); }
+        compassX = tempX;
+        
+        double tempY = DTlib.byteCombo(compassBuffer[4], compassBuffer[5]); 
+        if(tempY == -4096) { System.out.println("OVERFLOW!"); }
+        compassY = tempY;
     }
     
     public void readG() {
         gread.read(33, gyroByte, gyroBuffer);
+        gyroZ = (DTlib.byteCombo(gyroBuffer[0], gyroBuffer[1])); 
     }
 }

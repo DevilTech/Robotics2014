@@ -62,11 +62,12 @@ public class RobotTemplate extends IterativeRobot {
     
     public void smartInit() {
         smartPush();
-                
+        
+        SmartDashboard.putNumber("dt", Wiring.dt);
         SmartDashboard.putNumber("kpR", Wiring.KpR);
         SmartDashboard.putNumber("kpR", Wiring.KpR);
         SmartDashboard.putNumber("kpX", Wiring.KpX);
-        SmartDashboard.putNumber("kpY", Wiring.KpY);
+        SmartDashboard.putNumber("kpY", Wiring.KpY*100);
         SmartDashboard.putNumber("kdX", Wiring.KdX);
         SmartDashboard.putNumber("kdY", Wiring.KdY);
         SmartDashboard.putNumber("KiR", Wiring.KiR);
@@ -74,8 +75,8 @@ public class RobotTemplate extends IterativeRobot {
 
     public void smartPush() {
         SmartDashboard.putNumber("CW",  sensor.getCompassRadAngle());
-        SmartDashboard.putNumber("cX", sensor.getCompassX());
-        SmartDashboard.putNumber("cY", sensor.getCompassY());
+        SmartDashboard.putNumber("aX", sensor.getAccelX());
+        SmartDashboard.putNumber("aY", sensor.getAccelY());
         SmartDashboard.putNumber("GZ", d.GZ);
         SmartDashboard.putNumber("enX", enX.getRate());
         SmartDashboard.putNumber("enY", enY.getRate());
@@ -88,9 +89,10 @@ public class RobotTemplate extends IterativeRobot {
     }
 
     public void smartPull() {
+        Wiring.dt = SmartDashboard.getNumber("dt");
         Wiring.KpR = SmartDashboard.getNumber("kpR");
         Wiring.KpX = SmartDashboard.getNumber("kpX");
-        Wiring.KpY = SmartDashboard.getNumber("kpY");
+        Wiring.KpY = SmartDashboard.getNumber("kpY")/100;
         Wiring.KdX = SmartDashboard.getNumber("kdX");
         Wiring.KdY = SmartDashboard.getNumber("kdY");
         Wiring.KiR = SmartDashboard.getNumber("KiR");

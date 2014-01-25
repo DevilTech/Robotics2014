@@ -197,9 +197,10 @@ public class DriveSystem {
         forwardY = DTlib.clamp(forwardY);
         forwardY += Wiring.KpY * (Wiring.MAX_XY * joyY - VY);//PD expected range +/- 1.0
         rightX = DTlib.clamp(rightX);
+        //
         rightX += Wiring.KpX * (Wiring.MAX_XY * joyX - VX);	//PD expected range +/- 0.577
         clockwiseZ = DTlib.clamp(clockwiseZ);
-        clockwiseZ += Wiring.KpR * (joyZ + GZ); //replace 0 with KpR
+       // clockwiseZ += Wiring.KpR * (joyZ + GZ); //replace 0 with KpR
 
         double lf, rf, lb, rb;
 
