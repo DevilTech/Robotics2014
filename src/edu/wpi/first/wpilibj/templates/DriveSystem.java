@@ -87,6 +87,8 @@ public class DriveSystem {
     }
 
     private void runDrive() {
+        sen.readA();
+        sen.readG();
         switch (driveType) {
             case 0: PID_Drive(); break;
             case 1: THB_Drive(); break;
@@ -95,6 +97,7 @@ public class DriveSystem {
     }
 
     public void getInput() {
+        sen.readC();
         theta = sen.getCompassRadAngle(initialHeading);
         joyY = -joy.getY() * Math.abs(joy.getY());
         joyX = joy.getX() * Math.abs(joy.getX());
@@ -184,12 +187,10 @@ public class DriveSystem {
     public void PID_Drive() {
         GZ = sen.getGyroZ() * Wiring.G_SCALE;
         
-        sen.readA();
-        
         double VY = enY.getRate();
         double AY = sen.getAccelY() / Wiring.A_SCALE;// expected V range +/- maxXY
         double VX = enX.getRate();
-        double AX = sen.getAccelX() / Wiring.A_SCALE;	// expected A range +/- 28.6
+        double AX = sen.getAccelX() / Wiring.A_SCALE;// expected A range +/- 28.6
 
         //adds to forwardY the amount in which we want to move in y direction in in/s
         //max velocity times amount requested (-1, 1), minus current speed
@@ -199,7 +200,7 @@ public class DriveSystem {
         rightX = clamp(rightX);
         //rightX += Wiring.KpX * (Wiring.MAX_XY * joyX - VX);	//PD expected range +/- 0.577
         clockwiseZ = clamp(clockwiseZ);
-        clockwiseZ = .2;// Wiring.KpR * (joyZ + GZ); //replace 0 with KpR
+        clockwiseZ = .19;// Wiring.KpR * (joyZ + GZ); //replace 0 with KpR
 
         double lf, rf, lb, rb;
 
@@ -226,13 +227,11 @@ public class DriveSystem {
             lb /= max;
             rb /= max;
         }
-
         
             fl.set(lf);
             fr.set(-rf);
             bl.set(lb);
             br.set(-rb);
-        
 
     }
 

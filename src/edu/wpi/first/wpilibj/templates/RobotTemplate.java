@@ -32,7 +32,7 @@ public class RobotTemplate extends IterativeRobot {
             talonrb = new Talon(Wiring.MOTOR_RB);
             joy = new Joystick(Wiring.PILOT_JOY);
             d = new DriveSystem(talonrf, talonlf, talonrb, talonlb, sensor, joy, enY, enX, Wiring.PID_C);
-        
+        System.out.println("1");
     }
 
     public void autonomousPeriodic() { }
@@ -48,9 +48,8 @@ public class RobotTemplate extends IterativeRobot {
     public void teleopPeriodic() {
         d.getInput();
         smartPush();
-        smartPull();   
-        System.out.println(sensor.getCompassRadAngle());
-       
+        smartPull();
+        //System.out.println(sensor.getCompassStatus());
     }
 
     public void disabledInit() {
@@ -59,9 +58,9 @@ public class RobotTemplate extends IterativeRobot {
     }
 
    public void disabledPeriodic() {
+        sensor.readAll();
         smartPush();
         smartPull();
-        
     }
 
     public void testPeriodic() {
