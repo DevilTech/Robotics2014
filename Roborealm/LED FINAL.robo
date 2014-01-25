@@ -1,0 +1,70 @@
+<head><version>2.59.0</version></head>
+<Axis_Internet_Camera>
+  <auto_back_light>TRUE</auto_back_light>
+  <auto_exposure>FALSE</auto_exposure>
+  <auto_white_balance>TRUE</auto_white_balance>
+  <brightness_value>50</brightness_value>
+  <color_level_value>50</color_level_value>
+  <compression_index>5</compression_index>
+  <contrast_value>50</contrast_value>
+  <exposure_value>50</exposure_value>
+  <ip_address>10.15.59.11</ip_address>
+  <is_active>TRUE</is_active>
+  <password>admin</password>
+  <port>80</port>
+  <sharpness_value>50</sharpness_value>
+  <username>root</username>
+</Axis_Internet_Camera>
+<Crop>
+  <auto_crop>FALSE</auto_crop>
+  <max_auto_crop>20</max_auto_crop>
+  <scroll_y_offset>7</scroll_y_offset>
+  <tolerance>1</tolerance>
+  <x_end>632</x_end>
+  <x_start>65</x_start>
+  <y_end>214</y_end>
+  <y_start>116</y_start>
+  <zoom>8</zoom>
+</Crop>
+<Threshold>
+  <end>255</end>
+  <hysteresis>0</hysteresis>
+  <start>244</start>
+</Threshold>
+<Movement>
+  <anti_auto_adjustment>FALSE</anti_auto_adjustment>
+  <continuous>TRUE</continuous>
+  <difference>42</difference>
+  <difference_channel>1</difference_channel>
+  <freeze_difference>0</freeze_difference>
+  <freeze_percent>0</freeze_percent>
+  <low_difference>8</low_difference>
+  <reference_frame>Previous Frame</reference_frame>
+  <remove_global_movement>FALSE</remove_global_movement>
+  <rgb_precent_threshold>20</rgb_precent_threshold>
+  <set_still_black>1</set_still_black>
+  <window_size>5</window_size>
+</Movement>
+<Display_Text>
+  <border_color>red</border_color>
+  <data_source>2</data_source>
+  <dim_background>FALSE</dim_background>
+  <display_as_annotation>FALSE</display_as_annotation>
+  <font_color>white</font_color>
+  <font_size>Normal (10pt)</font_size>
+  <static_text>Type in text here</static_text>
+  <text_variable>MOVEMENT_PIXELS</text_variable>
+  <x_coord>21</x_coord>
+  <x_percent>50</x_percent>
+  <y_coord>12</y_coord>
+  <y_percent>50</y_percent>
+</Display_Text>
+<NetworkTables>
+  <delay>100</delay>
+  <filter_type_index>0</filter_type_index>
+  <hostname>10.15.59.2</hostname>
+  <port>1735</port>
+  <prefix>/SmartDashboard/</prefix>
+  <variables_to_send>MOVEMENT_PIXELS</variables_to_send>
+  <variable_type_index>0</variable_type_index>
+</NetworkTables>
