@@ -120,68 +120,7 @@ public class DriveSystem {
             errorInHeading = 0;
         }
     }
-
-    public void THB_Drive() {
-        GZ = sen.getGyroZ() * Wiring.G_SCALE;
-
-        double VY = enY.getRate();
-        double AY = sen.getAccelY() / Wiring.A_SCALE;// expected V range +/- maxXY
-        double VX = enX.getRate();
-        double AX = sen.getAccelX() / Wiring.A_SCALE;	// expected A range +/- 28.6
-
-        IY = joyY - VY;
-        IX = joyX - VX;
-
-        forwardY += Wiring.TpY * IY;
-        rightX += Wiring.TpX * IX;
-        
-        forwardY = DTlib.clamp(forwardY);
-        rightX = DTlib.clamp(rightX);
-        
-        if(!DTlib.isSameSign(previousErrorY, IY)){
-            forwardY = 0.5 * (forwardY + TbY);
-            TbY = forwardY;
-            previousErrorY = IY;
-        }
-        if(!DTlib.isSameSign(previousErrorX, IX)){
-            rightX = 0.5 * (rightX + TbX);
-            TbX = rightX;
-            previousErrorX = IX;
-        }
-        
-        clockwiseZ += clockwiseZ + Wiring.KpR * (6.28 * joyZ - GZ) + errorInHeading;
-
-        double lf, rf, lb, rb;
-
-        lf = forwardY + clockwiseZ + rightX;
-        rf = forwardY - clockwiseZ - rightX;
-        lb = forwardY + clockwiseZ - rightX;
-        rb = forwardY - clockwiseZ + rightX;
-
-        double max = Math.abs(lf);
-
-        if (Math.abs(rf) > max) {
-            max = Math.abs(rf);
-        }
-        if (Math.abs(lb) > max) {
-            max = Math.abs(lb);
-        }
-        if (Math.abs(rb) > max) {
-            max = Math.abs(rb);
-        }
-
-        if (max > 1) {
-            lf /= max;
-            rf /= max;
-            lb /= max;
-            rb /= max;
-        }
-        
-        fl.set(lf);
-        fr.set(-rf);
-        bl.set(lb);
-        br.set(-rb);
-    }
+   
                                                  //stuff that does stuff (ha ha)
     public void PID_Drive() {
         GZ = sen.getGyroZ() * Wiring.G_SCALE;
@@ -197,41 +136,23 @@ public class DriveSystem {
         forwardY = DTlib.clamp(forwardY);
         forwardY += Wiring.KpY * (Wiring.MAX_XY * joyY - VY);//PD expected range +/- 1.0
         rightX = DTlib.clamp(rightX);
-        //
-        rightX += Wiring.KpX * (Wiring.MAX_XY * joyX - VX);	//PD expected range +/- 0.577
+        //rightX += Wiring.KpX * (Wiring.MAX_XY * joyX - VX);	//PD expected range +/- 0.577
         clockwiseZ = DTlib.clamp(clockwiseZ);
        // clockwiseZ += Wiring.KpR * (joyZ + GZ); //replace 0 with KpR
-
+        
+        double tempCZ = clockwiseZ + errorInHeading;
+        double tempFY = forwardY - Wiring.KdY * AY;
+        double tempRX = rightX - Wiring.KdX * AX;
+        
         double lf, rf, lb, rb;
 
-        lf = forwardY + (clockwiseZ + errorInHeading)* .36 + rightX ;
-        rf = forwardY - (clockwiseZ + errorInHeading)* .36 - rightX;
-        lb = forwardY + (clockwiseZ + errorInHeading) - rightX;
-        rb = forwardY - (clockwiseZ + errorInHeading) + rightX;
+        lf = tempFY + tempCZ * .36 + tempRX;
+        rf = tempFY - tempCZ * .36 - tempRX;
+        lb = tempFY + tempCZ - tempRX;
+        rb = tempFY - tempCZ + tempRX;
 
-        double max = Math.abs(lf);
-
-        if (Math.abs(rf) > max) {
-            max = Math.abs(rf);
-        }
-        if (Math.abs(lb) > max) {
-            max = Math.abs(lb);
-        }
-        if (Math.abs(rb) > max) {
-            max = Math.abs(rb);
-        }
-
-        if (max > 1) {
-            lf /= max;
-            rf /= max;
-            lb /= max;
-            rb /= max;
-        }
+        calculateMotorSpeed(lf,rf,lb,rb);
         
-        fl.set(lf);
-        fr.set(-rf);
-        bl.set(lb);
-        br.set(-rb);
     }
 
     public void openLoop() {
@@ -243,6 +164,12 @@ public class DriveSystem {
         lb = joyY + joyZ - joyX;
         rb = joyY - joyZ + joyX;
 
+        calculateMotorSpeed(lf,rf,lb,rb);
+        
+    }
+    
+    public void calculateMotorSpeed(double lf, double rf, double lb, double rb){
+       
         double max = Math.abs(lf);
 
         if (Math.abs(rf) > max) {
@@ -285,5 +212,46 @@ public class DriveSystem {
             hasBeenStarted = true;
             d.runDrive();
         }
+    }
+    
+     //probably not needed
+    public void THB_Drive() {
+        GZ = sen.getGyroZ() * Wiring.G_SCALE;
+
+        double VY = enY.getRate();
+        double AY = sen.getAccelY() / Wiring.A_SCALE;// expected V range +/- maxXY
+        double VX = enX.getRate();
+        double AX = sen.getAccelX() / Wiring.A_SCALE;	// expected A range +/- 28.6
+
+        IY = joyY - VY;
+        IX = joyX - VX;
+
+        forwardY += Wiring.TpY * IY;
+        rightX += Wiring.TpX * IX;
+        
+        forwardY = DTlib.clamp(forwardY);
+        rightX = DTlib.clamp(rightX);
+        
+        if(!DTlib.isSameSign(previousErrorY, IY)){
+            forwardY = 0.5 * (forwardY + TbY);
+            TbY = forwardY;
+            previousErrorY = IY;
+        }
+        if(!DTlib.isSameSign(previousErrorX, IX)){
+            rightX = 0.5 * (rightX + TbX);
+            TbX = rightX;
+            previousErrorX = IX;
+        }
+        
+        clockwiseZ += clockwiseZ + Wiring.KpR * (6.28 * joyZ - GZ) + errorInHeading;
+
+        double lf, rf, lb, rb;
+
+        lf = forwardY + clockwiseZ + rightX;
+        rf = forwardY - clockwiseZ - rightX;
+        lb = forwardY + clockwiseZ - rightX;
+        rb = forwardY - clockwiseZ + rightX;
+
+        calculateMotorSpeed(lf,rf,lb,rb);
     }
 }

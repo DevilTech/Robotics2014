@@ -25,8 +25,7 @@ public class RobotTemplate extends IterativeRobot {
     double previousValue = 0;
 
     public void robotInit() {   
-        enX.start();
-        enY.start();
+        setupEncoders();
         talonlf = new Talon(Wiring.MOTOR_LF);
         talonrf = new Talon(Wiring.MOTOR_RF);
         talonlb = new Talon(Wiring.MOTOR_LB);
@@ -66,7 +65,7 @@ public class RobotTemplate extends IterativeRobot {
         SmartDashboard.putNumber("dt", Wiring.dt);
         SmartDashboard.putNumber("kpR", Wiring.KpR);
         SmartDashboard.putNumber("kpR", Wiring.KpR);
-        SmartDashboard.putNumber("kpX", Wiring.KpX);
+        SmartDashboard.putNumber("kpX", Wiring.KpX*100);
         SmartDashboard.putNumber("kpY", Wiring.KpY*100);
         SmartDashboard.putNumber("kdX", Wiring.KdX);
         SmartDashboard.putNumber("kdY", Wiring.KdY);
@@ -91,12 +90,17 @@ public class RobotTemplate extends IterativeRobot {
     public void smartPull() {
         Wiring.dt = SmartDashboard.getNumber("dt");
         Wiring.KpR = SmartDashboard.getNumber("kpR");
-        Wiring.KpX = SmartDashboard.getNumber("kpX");
+        Wiring.KpX = SmartDashboard.getNumber("kpX")/100;
         Wiring.KpY = SmartDashboard.getNumber("kpY")/100;
         Wiring.KdX = SmartDashboard.getNumber("kdX");
         Wiring.KdY = SmartDashboard.getNumber("kdY");
         Wiring.KiR = SmartDashboard.getNumber("KiR");
     }
     
-    
+    public void setupEncoders(){
+        enX.start();
+        enY.start();
+        enX.setDistancePerPulse(8.64360 / 90);
+        enY.setDistancePerPulse(8.64360 / 90);
+    }
 }

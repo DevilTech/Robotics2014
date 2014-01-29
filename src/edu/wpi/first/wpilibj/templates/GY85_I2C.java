@@ -126,14 +126,21 @@ public class GY85_I2C {
         cread.read(9, cStatusByte, cStatusBuffer);
         if((cStatusBuffer[0] & 0x1) == 1) {
             cread.read(3, compassByte, compassBuffer);
-        }
+        
         double tempX = DTlib.byteCombo(compassBuffer[0], compassBuffer[1]);
-        if(tempX == -4096) { System.out.println("OVERFLOW!"); }
-        compassX = tempX;
+        if(tempX == -4096) { 
+            System.out.println("OVERFLOW!"); 
+        }else{
+             compassX = tempX;
+        }
         
         double tempY = DTlib.byteCombo(compassBuffer[4], compassBuffer[5]); 
-        if(tempY == -4096) { System.out.println("OVERFLOW!"); }
-        compassY = tempY;
+        if(tempY == -4096) { 
+            System.out.println("OVERFLOW!"); 
+        }else{
+            compassY = tempY;
+            }
+        }
     }
     
     public void readG() {
