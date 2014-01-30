@@ -88,7 +88,7 @@ public class RobotTemplate extends IterativeRobot {
     }
 
     public void smartPull() {
-        Wiring.dt = SmartDashboard.getNumber("dt");
+        Wiring.dt  = SmartDashboard.getNumber("dt");
         Wiring.KpR = SmartDashboard.getNumber("kpR");
         Wiring.KpX = SmartDashboard.getNumber("kpX")/100;
         Wiring.KpY = SmartDashboard.getNumber("kpY")/100;
@@ -100,7 +100,7 @@ public class RobotTemplate extends IterativeRobot {
     public void setupEncoders(){
         enX.start();
         enY.start();
-        enX.setDistancePerPulse(8.64360 / 90);
-        enY.setDistancePerPulse(8.64360 / 90);
+        enX.setDistancePerPulse(2.75 * Math.PI / 90);
+        enY.setDistancePerPulse(2.75 * Math.PI / 90);
     }
 }

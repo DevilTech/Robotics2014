@@ -134,11 +134,11 @@ public class DriveSystem {
         //max velocity times amount requested (-1, 1), minus current speed
         //then, the derivative of the speed (acceleration) is added to to the value of forwardY
         forwardY = DTlib.clamp(forwardY);
-        forwardY = 1;//Wiring.KpY * (Wiring.MAX_XY * joyY - VY);//PD expected range +/- 1.0
+        //forwardY += Wiring.KpY * (Wiring.MAX_XY * joyY - VY);//PD expected range +/- 1.0
         rightX = DTlib.clamp(rightX);
         //rightX += Wiring.KpX * (Wiring.MAX_XY * joyX - VX);	//PD expected range +/- 0.577
         clockwiseZ = DTlib.clamp(clockwiseZ);
-       // clockwiseZ += Wiring.KpR * (joyZ + GZ); //replace 0 with KpR
+        clockwiseZ += Wiring.KpR * (joyZ + GZ); //replace 0 with KpR
         
         double tempCZ = clockwiseZ + errorInHeading;
         double tempFY = forwardY - Wiring.KdY * AY;
