@@ -31,13 +31,14 @@ public class RobotTemplate extends IterativeRobot {
         talonlb = new Talon(Wiring.MOTOR_LB);
         talonrb = new Talon(Wiring.MOTOR_RB);
         joy = new Joystick(Wiring.PILOT_JOY);
-        d = new DriveSystem(talonrf, talonlf, talonrb, talonlb, sensor, joy, enY, enX, Wiring.PID_C);
+        d = new DriveSystem(talonrf, talonlf, talonrb, talonlb, sensor, joy, enY, enX, Wiring.OPEN_C);
     }
 
     public void autonomousPeriodic() { }
 
     public void teleopInit() {
         d.driveSystemInit();
+        
     }
 
     public void teleopPeriodic() {
