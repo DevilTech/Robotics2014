@@ -52,7 +52,8 @@ public class GY85_I2C {
 
         gwrite.write(21, Wiring.SAMPLE_RATE);
         gwrite.write(22, 0x1b); //2000dps, 42Hz
-        gwrite.write(62, 0x30); //sty x,y
+        gwrite.write(62, 0x33); //sty x, y, clock set to z
+        
     }
 
     private void setupAccel() { //ADXL345
@@ -63,6 +64,10 @@ public class GY85_I2C {
         awrite.write(0x2D, 0x08); //Measure mode
         awrite.write(0x31, 0x00); //10bit, sign EXT, 2G
     }
+    
+    private void zeroAll(){
+        
+    }  
 
     double getAccelX() {
         return accelX * kGsPerLSB;
