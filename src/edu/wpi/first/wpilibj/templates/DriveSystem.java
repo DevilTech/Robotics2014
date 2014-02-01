@@ -120,6 +120,26 @@ public class DriveSystem {
             errorInHeading = 0;
         }
     }
+    
+    public void getHat(){
+        //axis numbers are complete guesses
+        if(joy.getRawAxis(6) == 1)
+        {
+            heading =  DTlib.radianWrap(initialHeading - (Math.PI/2));
+        }
+        else if(joy.getRawAxis(1) == -1)
+        {
+            heading = DTlib.radianWrap(initialHeading + (Math.PI/2)); 
+        }
+        else if(joy.getRawAxis(7) == 1)
+        {
+            heading = initialHeading;
+        }
+        else if(joy.getRawAxis(7) == -1)
+        {
+            heading = DTlib.radianWrap(initialHeading + Math.PI);
+        }
+    }
    
                                                  //stuff that does stuff (ha ha)
     public void PID_Drive() {
