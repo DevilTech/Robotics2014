@@ -1,8 +1,11 @@
 package edu.wpi.first.wpilibj.templates;
 
+
 import edu.wpi.first.wpilibj.ADXL345_I2C;
 import edu.wpi.first.wpilibj.DigitalModule;
 import edu.wpi.first.wpilibj.I2C;
+
+import Competition.Wiring;
 
 /**
  *
@@ -19,6 +22,7 @@ public class GY85_I2C {
     private double compassX, compassY, accelX, accelY, gyroZ;
     private static final double kGsPerLSB = 0.00390625;
     private static final double DegreesPerLSB  = 14.375;
+    private static final double offsetScale = 4; 
 
     public GY85_I2C() {
 
@@ -63,6 +67,9 @@ public class GY85_I2C {
         awrite.write(0x2C, 0x0A); //100 Hz
         awrite.write(0x2D, 0x08); //Measure mode
         awrite.write(0x31, 0x00); //10bit, sign EXT, 2G
+        readA();
+        awrite.write(0x1E, (int) (accelX / offsetScale)); //x offset
+        awrite.write(0x1F, (int) (accelY / offsetScale)); //y offset
     }
     
     private void zeroAll(){

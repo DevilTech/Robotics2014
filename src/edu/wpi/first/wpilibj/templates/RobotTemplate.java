@@ -6,18 +6,19 @@
 /*----------------------------------------------------------------------------*/
 package edu.wpi.first.wpilibj.templates;
 
+
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
-
-import edu.wpi.first.wpilibj.can.CANTimeoutException;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import Competition.Wiring;
 
 public class RobotTemplate extends IterativeRobot {
 
-    Encoder enX = new Encoder(1, 2);
-    Encoder enY = new Encoder(3, 4);
+    Encoder enX = new Encoder(Wiring.ENCODER_X[0], Wiring.ENCODER_X[1]);
+    Encoder enY = new Encoder(Wiring.ENCODER_Y[0], Wiring.ENCODER_Y[1]);
     Talon talonlf, talonrf, talonlb, talonrb;
     GY85_I2C sensor = new GY85_I2C();
     DriveSystem d;
@@ -31,18 +32,27 @@ public class RobotTemplate extends IterativeRobot {
         talonlb = new Talon(Wiring.MOTOR_LB);
         talonrb = new Talon(Wiring.MOTOR_RB);
         joy = new Joystick(Wiring.PILOT_JOY);
-        d = new DriveSystem(talonrf, talonlf, talonrb, talonlb, sensor, joy, enY, enX, Wiring.OPEN_C);
+        d = new DriveSystem(talonrf, talonlf, talonrb, talonlb, sensor, joy, enY, enX, Wiring.PID_C);
+    }
+    
+    public void autonomousInit(){
+        enY.reset();
+        d.driveSystemInit();
     }
 
-    public void autonomousPeriodic() { }
-
+    public void autonomousPeriodic() { 
+        d.setSpeed(0,((48 - enY.getDistance())/96), 0);
+        d.calculateInput();
+    }
+    
     public void teleopInit() {
-        d.driveSystemInit();
+        
         
     }
-
+   
     public void teleopPeriodic() {
-        d.getInput();
+        d.getJoy();
+        d.calculateInput();
         smartPush();
         smartPull();
     }
@@ -50,6 +60,7 @@ public class RobotTemplate extends IterativeRobot {
     public void disabledInit() {
         d.driveSystemDenit();
         smartInit();
+        
     }
 
    public void disabledPeriodic() {
@@ -74,12 +85,12 @@ public class RobotTemplate extends IterativeRobot {
     }
 
     public void smartPush() {
-        SmartDashboard.putNumber("CW",  sensor.getCompassRadAngle());
+        SmartDashboard.putNumber("CW", sensor.getCompassRadAngle());
         SmartDashboard.putNumber("aX", sensor.getAccelX());
         SmartDashboard.putNumber("aY", sensor.getAccelY());
         SmartDashboard.putNumber("GZ", d.GZ);
         SmartDashboard.putNumber("enX", enX.getRate());
-        SmartDashboard.putNumber("enY", enY.getRate());
+        SmartDashboard.putNumber("enY", enY.getDistance());
         SmartDashboard.putNumber("errorH" , d.errorInHeading);
         SmartDashboard.putNumber("C", d.clockwiseZ);
         SmartDashboard.putNumber("R", d.rightX);

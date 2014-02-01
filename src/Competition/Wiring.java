@@ -1,25 +1,28 @@
-package Test;
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package Competition;
 
 /**
  *
- * @author jeremy
+ * @author robotics
  */
 public class Wiring {
-
     public static final int SAMPLE_RATE = 9; //10ms = 1KHz/10
     public static final double SENSOR_SCALE = 1;
-    public static double dt = 0.02;
-    public static final double MAX_XY = 132;
+    public static double dt = 0.01;
+    public static final double MAX_XY = 180;
     public static final double MAX_R = 2 * Math.PI;
  
     //K is for PID control
     //P is proportion, D is derivative
-    public static double KpR = 14.39 * dt / (2 * Math.PI);
-    public static double KiR = 38.68 * dt / (2 * Math.PI);
-    public static double KpY = 5 / MAX_XY * dt;
-    public static double KdY = 0.31 / MAX_XY; 
-    public static double KpX = 1.6 / MAX_XY * dt;
-    public static double KdX = .44 / MAX_XY; //0.01 * dt * dt
+    public static double KpR = 12.86 * dt / (2 * Math.PI);
+    public static double KiR = 29.19 * dt / (2 * Math.PI);
+    public static double KpY = 3 / MAX_XY * dt;                 //3
+    public static double KdY = 1.01 / MAX_XY;                   //1.01
+    public static double KpX = 13.4 / MAX_XY * dt;              //13.4
+    public static double KdX = .49 / MAX_XY; //0.01 * dt * dt   //.49
 
     //T is for THB control
     //P is proportion  
@@ -43,5 +46,5 @@ public class Wiring {
     
     public static final int PILOT_JOY = 1;
     
-    public static final double CENTER_OF_ROTATION = .36;
+    public static final double CENTER_OF_ROTATION = .608;
 }

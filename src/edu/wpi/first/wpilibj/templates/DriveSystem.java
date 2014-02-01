@@ -2,6 +2,7 @@ package edu.wpi.first.wpilibj.templates;
 ////REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE
 //import edu.wpi.first.wpilibj.Talon;
 //import edu.wpi.first.wpilibj.Encoder;
+
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
@@ -10,6 +11,8 @@ import edu.wpi.first.wpilibj.can.CANTimeoutException;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.util.TimerTask;
 import java.util.Timer;
+
+import Competition.Wiring;
 
 /**
  *
@@ -23,9 +26,9 @@ public class DriveSystem {
     boolean FCMode = true;
     boolean hasBeenStarted = false;
     double theta;
-    double joyY;
-    double joyX;
-    double joyZ;
+    double speedY = 0;
+    double speedX = 0;
+    double speedZ = 0;
     double heading;
     double errorInHeading = 0;
     double initialHeading = 0;
@@ -43,6 +46,7 @@ public class DriveSystem {
     double IX;
     int driveType;
     java.util.Timer time;
+    Button butt;
 
     public DriveSystem(Talon frontRight, Talon frontLeft, Talon backRight, Talon backLeft,
             GY85_I2C sensor, Joystick joy, Encoder encoderY, Encoder encoderX, int driveType) {
@@ -59,10 +63,12 @@ public class DriveSystem {
         enX = encoderX;
 
         this.driveType = driveType;
+        
+        butt = new Button();
     }
 
     public void driveSystemInit() {
-        if(!hasBeenStarted){
+        if (!hasBeenStarted) {
             hasBeenStarted = true;
             forwardY = 0;
             rightX = 0;
@@ -72,11 +78,10 @@ public class DriveSystem {
             time = new java.util.Timer();
             time.schedule(new DriveLoop(this), 0L, Wiring.DRIVE_POLL_RATE);
             initialHeading = sen.getCompassRadAngle();
-        }
-        else{
+        } else {
             System.out.println("Drive system already init");
         }
-        
+
     }
 
     public void driveSystemDenit() {
@@ -91,60 +96,72 @@ public class DriveSystem {
         sen.readG();
         sen.readC();
         switch (driveType) {
-            case 0: PID_Drive(); break;
-            case 1: THB_Drive(); break;
-            case 2: openLoop(); break;
+            case 0:
+                PID_Drive();
+                break;
+            case 1:
+                THB_Drive();
+                break;
+            case 2:
+                openLoop();
+                break;
         }
     }
 
-    public void getInput() {
-        
+    public void calculateInput() {
+
         theta = sen.getCompassRadAngle(initialHeading);
-        joyY = -joy.getY() * Math.abs(joy.getY());
-        joyX = joy.getX() * Math.abs(joy.getX());
-        joyZ = joy.getZ() * Math.abs(joy.getZ()) / 2;
+        if (butt.getReHit(joy.getRawButton(2))) {
+            FCMode = (FCMode) ? false : true;
+        }
 
         if (FCMode) {
-            if (Math.abs(joy.getZ()) > .01) {
+            if (Math.abs(speedZ) > .001) {
                 heading = theta;
                 errorInHeading = 0;
             } else {
                 errorInHeading = DTlib.radianWrap(heading - theta) * Wiring.KiR;
             }
+            getHat();
             //takes values from joysticks and changes the values to the correct
             //vector based on compass input
-            double temp = joyY * Math.cos(theta) + joyX * Math.sin(theta);
-            joyX = -joyY * Math.sin(theta) + joyX * Math.cos(theta);
-            joyY = temp;
+            double temp = speedY * Math.cos(theta) + speedX * Math.sin(theta);
+            speedX = -speedY * Math.sin(theta) + speedX * Math.cos(theta);
+            speedY = temp;
         } else {
             errorInHeading = 0;
         }
     }
     
-    public void getHat(){
+    public void getJoy(){
+        speedY = -joy.getY() * Math.abs(joy.getY());
+        speedX = joy.getX() * Math.abs(joy.getX());
+        speedZ = joy.getZ() * Math.abs(joy.getZ()) / 2;
+    }
+    
+    public void setSpeed(double x, double y, double z){
+        speedY = y;
+        speedX = x;
+        speedZ = z;
+    }
+
+    public void getHat() {
         //axis numbers are complete guesses
-        if(joy.getRawAxis(6) == 1)
-        {
-            heading =  DTlib.radianWrap(initialHeading - (Math.PI/2));
-        }
-        else if(joy.getRawAxis(1) == -1)
-        {
-            heading = DTlib.radianWrap(initialHeading + (Math.PI/2)); 
-        }
-        else if(joy.getRawAxis(7) == 1)
-        {
+        if (joy.getRawAxis(5) == 1) {
+            heading = DTlib.radianWrap(initialHeading - (Math.PI / 2));
+        } else if (joy.getRawAxis(5) == -1) {
+            heading = DTlib.radianWrap(initialHeading + (Math.PI / 2));
+        } else if (joy.getRawAxis(6) == -1) {
             heading = initialHeading;
-        }
-        else if(joy.getRawAxis(7) == -1)
-        {
+        } else if (joy.getRawAxis(6) == 1) {
             heading = DTlib.radianWrap(initialHeading + Math.PI);
         }
     }
-   
-                                                 //stuff that does stuff (ha ha)
+
+    //stuff that does stuff (ha ha)
     public void PID_Drive() {
         GZ = sen.getGyroZ() * Wiring.G_SCALE;
-        
+
         double VY = enY.getRate();
         double AY = sen.getAccelY() / Wiring.A_SCALE;// expected V range +/- maxXY
         double VX = enX.getRate();
@@ -154,43 +171,43 @@ public class DriveSystem {
         //max velocity times amount requested (-1, 1), minus current speed
         //then, the derivative of the speed (acceleration) is added to to the value of forwardY
         forwardY = DTlib.clamp(forwardY);
-        
-        forwardY += Wiring.KpY * (Wiring.MAX_XY * joyY - VY);//PD expected range +/- 1.0
+
+        forwardY += Wiring.KpY * (Wiring.MAX_XY * speedY - VY);//PD expected range +/- 1.0
         rightX = DTlib.clamp(rightX);
-        rightX += Wiring.KpX * (Wiring.MAX_XY * -joyX - VX);	//PD expected range +/- 0.577
+        rightX += Wiring.KpX * (Wiring.MAX_XY * -speedX - VX) * .577;	//PD expected range +/- 0.577
         clockwiseZ = DTlib.clamp(clockwiseZ);
-        clockwiseZ += Wiring.KpR * (joyZ + GZ); //replace 0 with KpR
-        
-        double tempCZ = clockwiseZ + errorInHeading;
+        clockwiseZ += Wiring.KpR * (speedZ + GZ);
+
+        double tempCZ = clockwiseZ+ errorInHeading;
         double tempFY = forwardY - Wiring.KdY * AY;
         double tempRX = rightX - Wiring.KdX * AX;
-        
+
         double lf, rf, lb, rb;
 
-        lf = tempFY + tempCZ * .36 + tempRX;
-        rf = tempFY - tempCZ * .36 - tempRX;
+        lf = tempFY + tempCZ * Wiring.CENTER_OF_ROTATION + tempRX;
+        rf = tempFY - tempCZ * Wiring.CENTER_OF_ROTATION - tempRX;
         lb = tempFY + tempCZ - tempRX;
         rb = tempFY - tempCZ + tempRX;
 
-        calculateMotorSpeed(lf,rf,lb,rb);
-        
+        calculateMotorSpeed(lf, rf, lb, rb);
+
     }
 
     public void openLoop() {
 
         double lf, rf, lb, rb;
 
-        lf = joyY + joyZ + joyX;
-        rf = joyY - joyZ - joyX;
-        lb = joyY + joyZ - joyX;
-        rb = joyY - joyZ + joyX;
+        lf = speedY + speedZ + speedX;
+        rf = speedY - speedZ - speedX;
+        lb = speedY + speedZ - speedX;
+        rb = speedY - speedZ + speedX;
 
-        calculateMotorSpeed(lf,rf,lb,rb);
-        
+        calculateMotorSpeed(lf, rf, lb, rb);
+
     }
-    
-    public void calculateMotorSpeed(double lf, double rf, double lb, double rb){
-       
+
+    public void calculateMotorSpeed(double lf, double rf, double lb, double rb) {
+
         double max = Math.abs(lf);
 
         if (Math.abs(rf) > max) {
@@ -209,7 +226,7 @@ public class DriveSystem {
             lb /= max;
             rb /= max;
         }
-        
+
         fl.set(lf);
         fr.set(-rf);
         bl.set(lb);
@@ -234,8 +251,8 @@ public class DriveSystem {
             d.runDrive();
         }
     }
-    
-     //probably not needed
+
+    //probably not needed
     public void THB_Drive() {
         GZ = sen.getGyroZ() * Wiring.G_SCALE;
 
@@ -244,27 +261,27 @@ public class DriveSystem {
         double VX = enX.getRate();
         double AX = sen.getAccelX() / Wiring.A_SCALE;	// expected A range +/- 28.6
 
-        IY = joyY - VY;
-        IX = joyX - VX;
+        IY = speedY - VY;
+        IX = speedX - VX;
 
         forwardY += Wiring.TpY * IY;
         rightX += Wiring.TpX * IX;
-        
+
         forwardY = DTlib.clamp(forwardY);
         rightX = DTlib.clamp(rightX);
-        
-        if(!DTlib.isSameSign(previousErrorY, IY)){
+
+        if (!DTlib.isSameSign(previousErrorY, IY)) {
             forwardY = 0.5 * (forwardY + TbY);
             TbY = forwardY;
             previousErrorY = IY;
         }
-        if(!DTlib.isSameSign(previousErrorX, IX)){
+        if (!DTlib.isSameSign(previousErrorX, IX)) {
             rightX = 0.5 * (rightX + TbX);
             TbX = rightX;
             previousErrorX = IX;
         }
-        
-        clockwiseZ += clockwiseZ + Wiring.KpR * (6.28 * joyZ - GZ) + errorInHeading;
+
+        clockwiseZ += clockwiseZ + Wiring.KpR * (6.28 * speedZ - GZ) + errorInHeading;
 
         double lf, rf, lb, rb;
 
@@ -273,6 +290,6 @@ public class DriveSystem {
         lb = forwardY + clockwiseZ - rightX;
         rb = forwardY - clockwiseZ + rightX;
 
-        calculateMotorSpeed(lf,rf,lb,rb);
+        calculateMotorSpeed(lf, rf, lb, rb);
     }
 }
