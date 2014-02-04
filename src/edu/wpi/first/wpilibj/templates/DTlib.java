@@ -39,6 +39,12 @@ public class DTlib {
         return -0.001096995 + t * (1.041963708 + t * (-0.196333807 + t * (-0.060821409)));
     }
     
+    public static void nanPrint(String scream, double input){
+        if(Double.isNaN(input)){
+            System.out.println(scream);
+        }
+    }
+    
     public static double atan2(double y, double x) {
         double pi = Math.PI;
         double pi2 = Math.PI / 2;

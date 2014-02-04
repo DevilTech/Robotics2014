@@ -108,16 +108,15 @@ public class DriveSystem {
 
     public void calculateInput() {
         theta = sen.getCompassRadAngle(initialHeading);
-        System.out.println(sen.getCompassRadAngle(initialHeading));
         if (FCButt.getReHit()) {
-            FCMode = (FCMode) ? false : true;
+            FCMode = (FCMode && driveType == Wiring.OPEN_C) ? false : true;
         }
         if (openButt.getReHit()) {
-            driveType = (driveType == 0) ? 1 : 0;
+            driveType = (driveType == Wiring.PID_C) ? Wiring.OPEN_C : Wiring.PID_C;
         }
 
         if (FCMode) {
-            if (Math.abs(speedZ) > .001) {
+            if (Math.abs(speedZ) > .01) {
                 heading = theta;
                 errorInHeading = 0;
             } else {
@@ -137,7 +136,7 @@ public class DriveSystem {
     public void getJoy(){
         speedY = -joy.getY() * Math.abs(joy.getY());
         speedX = joy.getX() * Math.abs(joy.getX());
-        speedZ = joy.getZ() * Math.abs(joy.getZ()) / 2;
+        speedZ = joy.getZ() * Math.abs(joy.getZ());
     }
     
     public void setSpeed(double x, double y, double z){
@@ -165,8 +164,16 @@ public class DriveSystem {
         GZ = sen.getGyroZ() * Wiring.G_SCALE;
 
         double VY = enY.getRate();
-        double AY = sen.getAccelY() / Wiring.A_SCALE;// expected V range +/- maxXY
         double VX = enX.getRate();
+        
+        //checking for NaN
+        //chief delphi said it can return NaN, Verifed(ish) by us
+        if(Double.isNaN(VX) || Double.isNaN(VY)){
+            System.out.println("get a freaking bucket");
+            return;
+        }
+        
+        double AY = sen.getAccelY() / Wiring.A_SCALE;// expected V range +/- maxXY
         double AX = sen.getAccelX() / Wiring.A_SCALE;// expected A range +/- 28.6
 
         //adds to forwardY the amount in which we want to move in y direction in in/s
@@ -175,9 +182,9 @@ public class DriveSystem {
         forwardY = DTlib.clamp(forwardY);
         forwardY += Wiring.KpY * (Wiring.MAX_XY * speedY - VY);//PD expected range +/- 1.0
         rightX = DTlib.clamp(rightX);
-        rightX += Wiring.KpX * (Wiring.MAX_XY * speedX - VX) * .577;	//PD expected range +/- 0.577
+        rightX += Wiring.KpX * (Wiring.MAX_XY * speedX - VX);	//PD expected range +/- 0.577
         clockwiseZ = DTlib.clamp(clockwiseZ);
-        clockwiseZ += Wiring.KpR * (speedZ + GZ);
+        clockwiseZ += Wiring.KpR * (Wiring.MAX_R * speedZ + GZ);
 
         double tempCZ = clockwiseZ+ errorInHeading;
         double tempFY = forwardY - Wiring.KdY * AY;
@@ -198,10 +205,10 @@ public class DriveSystem {
 
         double lf, rf, lb, rb;
 
-        lf = speedY + speedZ + speedX;
-        rf = speedY - speedZ - speedX;
-        lb = speedY + speedZ - speedX;
-        rb = speedY - speedZ + speedX;
+        lf = speedY + speedZ + speedX * .577;
+        rf = speedY - speedZ - speedX * .577;
+        lb = speedY + speedZ - speedX * .577;
+        rb = speedY - speedZ + speedX * .577;
 
         calculateMotorSpeed(lf, rf, lb, rb);
 
@@ -220,10 +227,6 @@ public class DriveSystem {
         if (Math.abs(rb) > max) {
             max = Math.abs(rb);
         }
-        
-        if(Double.isNaN(max)){
-            System.out.println("HOLY MOTHER OF GOD IT HURTS");
-        }
 
         if (max > 1) {
             lf /= max;
@@ -236,7 +239,6 @@ public class DriveSystem {
         fr.set(-rf);
         bl.set(lb);
         br.set(-rb);
-        System.out.println(lf);
     }
 
     private class DriveLoop extends TimerTask {
