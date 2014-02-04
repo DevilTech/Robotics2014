@@ -46,7 +46,7 @@ public class RobotTemplate extends IterativeRobot {
     }
     
     public void teleopInit() {
-        
+        d.driveSystemInit();
         
     }
    
@@ -92,9 +92,11 @@ public class RobotTemplate extends IterativeRobot {
         SmartDashboard.putNumber("enX", enX.getRate());
         SmartDashboard.putNumber("enY", enY.getDistance());
         SmartDashboard.putNumber("errorH" , d.errorInHeading);
+        /*
         SmartDashboard.putNumber("C", d.clockwiseZ);
         SmartDashboard.putNumber("R", d.rightX);
         SmartDashboard.putNumber("F", d.forwardY); //here
+         */
         SmartDashboard.putNumber("heading", d.heading);
         SmartDashboard.putNumber("theta", d.theta);
     }

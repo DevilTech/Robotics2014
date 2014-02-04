@@ -68,8 +68,10 @@ public class GY85_I2C {
         awrite.write(0x2D, 0x08); //Measure mode
         awrite.write(0x31, 0x00); //10bit, sign EXT, 2G
         readA();
-        awrite.write(0x1E, (int) (accelX / offsetScale)); //x offset
-        awrite.write(0x1F, (int) (accelY / offsetScale)); //y offset
+        byte ax = (byte)(((int)-accelX)/4);
+        byte ay = (byte)(((int)-accelY)/4);
+        awrite.write(0x1E, ax); //x offset
+        awrite.write(0x1F, ay); //y offset
     }
     
     private void zeroAll(){
