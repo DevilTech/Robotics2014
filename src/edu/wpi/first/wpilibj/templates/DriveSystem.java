@@ -20,7 +20,7 @@ public class DriveSystem {
 
     Talon fr, fl, br, bl;
     GY85_I2C sen;
-    Joystick joy;
+    Happystick control;
     boolean FCMode = true;
     boolean hasBeenStarted = false;
     double theta;
@@ -44,11 +44,9 @@ public class DriveSystem {
     double IX;
     int driveType;
     java.util.Timer time;
-    Button FCButt;
-    Button openButt;
 
     public DriveSystem(Talon frontRight, Talon frontLeft, Talon backRight, Talon backLeft,
-            GY85_I2C sensor, Joystick joy, Encoder encoderY, Encoder encoderX, int driveType) {
+            GY85_I2C sensor, Happystick control, Encoder encoderY, Encoder encoderX, int driveType) {
         fr = frontRight;
         fl = frontLeft;
         br = backRight;
@@ -56,15 +54,13 @@ public class DriveSystem {
 
         sen = sensor;
 
-        this.joy = joy;
+        this.control = control;
 
         enY = encoderY;
         enX = encoderX;
 
         this.driveType = driveType;
         
-        FCButt = new Button(joy, 2);
-        openButt = new Button(joy, 1);
     }
 
     public void driveSystemInit() {
@@ -108,21 +104,22 @@ public class DriveSystem {
 
     public void calculateInput() {
         theta = sen.getCompassRadAngle(initialHeading);
-        if (FCButt.getReHit()) {
+        if (control.getFCSwitch()) {
             FCMode = (FCMode && driveType == Wiring.OPEN_C) ? false : true;
         }
-        if (openButt.getReHit()) {
+        if (control.getLoopSwitch()) {
             driveType = (driveType == Wiring.PID_C) ? Wiring.OPEN_C : Wiring.PID_C;
         }
 
         if (FCMode) {
-            if (Math.abs(speedZ) > .01) {
+            if (Math.abs(speedZ) > .01 && !getHat()) {
                 heading = theta;
                 errorInHeading = 0;
             } else {
                 errorInHeading = DTlib.radianWrap(heading - theta) * Wiring.KiR;
+                speedZ = 0;
             }
-            getHat();
+            
             //takes values from joysticks and changes the values to the correct
             //vector based on compass input
             double temp = speedY * Math.cos(theta) + speedX * Math.sin(theta);
@@ -134,9 +131,9 @@ public class DriveSystem {
     }
     
     public void getJoy(){
-        speedY = -joy.getY() * Math.abs(joy.getY());
-        speedX = joy.getX() * Math.abs(joy.getX());
-        speedZ = joy.getZ() * Math.abs(joy.getZ());
+        speedY = control.getForward() * Math.abs(control.getForward());
+        speedX = control.getRight() * Math.abs(control.getRight());
+        speedZ = control.getRotation() * Math.abs(control.getRotation());
     }
     
     public void setSpeed(double x, double y, double z){
@@ -145,16 +142,22 @@ public class DriveSystem {
         speedZ = z;
     }
 
-    public void getHat() {
+    public boolean getHat() {
         //axis numbers are complete guesses
-        if (joy.getRawAxis(5) == 1) {
+        if (control.getHATLeft()) {
             heading = Math.PI / 2;
-        } else if (joy.getRawAxis(5) == -1) {
-            heading = Math.PI / 2;
-        } else if (joy.getRawAxis(6) == -1) {
+            return true;
+        } else if (control.getHATRight()) {
+            heading = -Math.PI / 2;
+            return true;
+        } else if (control.getHATUp()) {
             heading = 0;
-        } else if (joy.getRawAxis(6) == 1) {
+            return true;
+        } else if (control.getHATDown()) {
             heading = Math.PI;
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -186,7 +189,7 @@ public class DriveSystem {
         clockwiseZ = DTlib.clamp(clockwiseZ);
         clockwiseZ += Wiring.KpR * (Wiring.MAX_R * speedZ + GZ);
 
-        double tempCZ = clockwiseZ+ errorInHeading;
+        double tempCZ = clockwiseZ + errorInHeading;
         double tempFY = forwardY - Wiring.KdY * AY;
         double tempRX = rightX - Wiring.KdX * AX;
 
@@ -202,13 +205,19 @@ public class DriveSystem {
     }
 
     public void openLoop() {
-
+        
+        clockwiseZ = Wiring.KpR * (Wiring.MAX_R * speedZ + GZ);
+        
+        double tempCZ = clockwiseZ + errorInHeading;
+        double tempFY = speedY;
+        double tempRX = speedX * .577;
+        
         double lf, rf, lb, rb;
 
-        lf = speedY + speedZ + speedX * .577;
-        rf = speedY - speedZ - speedX * .577;
-        lb = speedY + speedZ - speedX * .577;
-        rb = speedY - speedZ + speedX * .577;
+        lf = tempFY + tempCZ + tempRX;
+        rf = tempFY - tempCZ - tempRX;
+        lb = tempFY + tempCZ - tempRX;
+        rb = tempFY - tempCZ + tempRX;
 
         calculateMotorSpeed(lf, rf, lb, rb);
 
