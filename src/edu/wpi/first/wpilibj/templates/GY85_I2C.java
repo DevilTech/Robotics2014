@@ -72,11 +72,7 @@ public class GY85_I2C {
         byte ay = (byte)(((int)-accelY)/4);
         awrite.write(0x1E, ax); //x offset
         awrite.write(0x1F, ay); //y offset
-    }
-    
-    private void zeroAll(){
-        
-    }  
+    } 
 
     double getAccelX() {
         return accelX * kGsPerLSB;

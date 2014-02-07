@@ -64,7 +64,6 @@ public class RobotTemplate extends IterativeRobot {
     
     public void teleopInit() {
         d.driveSystemInit();
-        
     }
    
     public void teleopPeriodic() {
@@ -77,7 +76,6 @@ public class RobotTemplate extends IterativeRobot {
     public void disabledInit() {
         d.driveSystemDenit();
         smartInit();
-        
     }
 
    public void disabledPeriodic() {

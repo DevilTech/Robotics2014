@@ -16,9 +16,8 @@ public class Control {
     public int hatUp, hatDown, hatRight, hatLeft;
     public int hatVertical, hatHorizontal;
 
-    private Control (){
+    private Control (){};
         
-    }
     public static Control getXbox(){
         Control xbox = new Control();
         xbox.rotationAxis = 3;
@@ -51,6 +50,4 @@ public class Control {
         pilot.hatVertical = 6;
         return pilot;
     }
-    
-   
 }

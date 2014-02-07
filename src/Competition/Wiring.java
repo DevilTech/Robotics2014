@@ -26,7 +26,6 @@ public class Wiring extends WiringParent{
     public static double KdX = .49 / MAX_XY; //0.01 * dt * dt   //.49
     public static double KfX = MAX_XY / 308;
 
-    
     public static final int MOTOR_LF = 1;
     public static final int MOTOR_RF = 2;
     public static final int MOTOR_LB = 3;

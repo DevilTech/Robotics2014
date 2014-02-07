@@ -60,7 +60,6 @@ public class DriveSystem {
         enX = encoderX;
 
         this.driveType = driveType;
-        
     }
 
     public void driveSystemInit() {
@@ -77,7 +76,6 @@ public class DriveSystem {
         } else {
             System.out.println("Drive system already init");
         }
-
     }
 
     public void driveSystemDenit() {
@@ -121,7 +119,7 @@ public class DriveSystem {
                 errorInHeading = DTlib.radianWrap(heading - theta) * Wiring.KiR;
                 speedZ = 0;
             }
-            
+
             //takes values from joysticks and changes the values to the correct
             //vector based on compass input
             double temp = speedY * Math.cos(theta) + speedX * Math.sin(theta);
@@ -131,14 +129,14 @@ public class DriveSystem {
             errorInHeading = 0;
         }
     }
-    
-    public void getJoy(){
+
+    public void getJoy() {
         speedY = control.getForward() * Math.abs(control.getForward());
         speedX = control.getRight() * Math.abs(control.getRight());
         speedZ = control.getRotation() * Math.abs(control.getRotation());
     }
-    
-    public void setSpeed(double x, double y, double z, double r){
+
+    public void setSpeed(double x, double y, double z, double r) {
         speedY = y;
         speedX = x;
         speedZ = z;
@@ -171,14 +169,14 @@ public class DriveSystem {
 
         double VY = enY.getRate();
         double VX = enX.getRate();
-        
+
         //checking for NaN
         //chief delphi said it can return NaN, Verifed(ish) by us
-        if(Double.isNaN(VX) || Double.isNaN(VY)){
+        if (Double.isNaN(VX) || Double.isNaN(VY)) {
             System.out.println("get a freaking bucket");
             return;
         }
-        
+
         double AY = sen.getAccelY() / Wiring.A_SCALE;// expected V range +/- maxXY
         double AX = sen.getAccelX() / Wiring.A_SCALE;// expected A range +/- 28.6
 
@@ -187,10 +185,10 @@ public class DriveSystem {
         //then, the derivative of the speed (acceleration) is added to to the value of forwardY
         forwardY = DTlib.clamp(forwardY);
         forwardY += Wiring.KpY * (Wiring.MAX_XY * speedY - VY);//PD expected range +/- 1.0
-        
+
         rightX = DTlib.clamp(rightX);
         rightX += Wiring.KpX * (Wiring.MAX_XY * speedX - VX);	//PD expected range +/- 0.577
-        
+
         clockwiseZ = (Wiring.KfR * speedZ) + (Wiring.KpR * (Wiring.MAX_R * speedZ + GZ));
 
         double tempCZ = clockwiseZ + errorInHeading;
@@ -203,19 +201,18 @@ public class DriveSystem {
         rf = tempFY - tempCZ * Wiring.CENTER_OF_ROTATION - tempRX;
         lb = tempFY + tempCZ - tempRX;
         rb = tempFY - tempCZ + tempRX;
-        
-        calculateMotorSpeed(lf, rf, lb, rb);
 
+        calculateMotorSpeed(lf, rf, lb, rb);
     }
 
     public void halfOpen() {
-        
+
         clockwiseZ = Wiring.KpR * (Wiring.MAX_R * speedZ + GZ);
-        
+
         double tempCZ = clockwiseZ + errorInHeading;
         double tempFY = speedY;
         double tempRX = speedX * .577;
-        
+
         double lf, rf, lb, rb;
 
         lf = tempFY + tempCZ + tempRX;
@@ -224,15 +221,14 @@ public class DriveSystem {
         rb = tempFY - tempCZ + tempRX;
 
         calculateMotorSpeed(lf, rf, lb, rb);
-
     }
-    
-    public void openLoop(){
-        
+
+    public void openLoop() {
+
         double tempCZ = speedZ;
         double tempFY = speedY;
         double tempRX = speedX;
-        
+
         double lf, rf, lb, rb;
 
         lf = tempFY + tempCZ + tempRX;
@@ -241,7 +237,6 @@ public class DriveSystem {
         rb = tempFY - tempCZ + tempRX;
 
         calculateMotorSpeed(lf, rf, lb, rb);
-        
     }
 
     public void calculateMotorSpeed(double lf, double rf, double lb, double rb) {
@@ -257,7 +252,6 @@ public class DriveSystem {
         if (Math.abs(rb) > max) {
             max = Math.abs(rb);
         }
-
         if (max > 1) {
             lf /= max;
             rf /= max;
@@ -289,6 +283,4 @@ public class DriveSystem {
             d.runDrive();
         }
     }
-
-    
 }
