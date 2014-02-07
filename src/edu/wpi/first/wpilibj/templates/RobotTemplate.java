@@ -6,7 +6,6 @@
 /*----------------------------------------------------------------------------*/
 package edu.wpi.first.wpilibj.templates;
 
-
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -33,9 +32,9 @@ public class RobotTemplate extends IterativeRobot {
     boolean hasReached6;
     Compressor compressor;
 
-    public void robotInit() {   
+    public void robotInit() {
         setupEncoders();
-        compressor = new Compressor(1,1);
+        compressor = new Compressor(1, 1);
         compressor.start();
         talonlf = new Talon(Wiring.MOTOR_LF);
         talonrf = new Talon(Wiring.MOTOR_RF);
@@ -45,33 +44,33 @@ public class RobotTemplate extends IterativeRobot {
         d = new DriveSystem(talonrf, talonlf, talonrb, talonlb, sensor, control, enY, enX, Wiring.OPEN_C);
         g = new Gatherer();
     }
-    
-    public void autonomousInit(){
+
+    public void autonomousInit() {
         enY.reset();
         d.driveSystemInit();
     }
 
     public void autonomousPeriodic() {
-        if(enY.getDistance() < 24 && !hasReached2){
-            d.setSpeed(0,((24 - enY.getDistance())/48), 0, (45 * Math.PI / 180));
-        }else if (!hasReached2){
+        if (enY.getDistance() < 24 && !hasReached2) {
+            d.setSpeed(0, ((24 - enY.getDistance()) / 48), 0, (45 * Math.PI / 180));
+        } else if (!hasReached2) {
             hasReached2 = !hasReached2;
-        }else if (enX.getDistance() < 36 && !hasReached3){
-            d.setSpeed(((36-enX.getDistance())/72),0,0,(45 * Math.PI / 180));
-        }else if (!hasReached3){
+        } else if (enX.getDistance() < 36 && !hasReached3) {
+            d.setSpeed(((36 - enX.getDistance()) / 72), 0, 0, (45 * Math.PI / 180));
+        } else if (!hasReached3) {
             hasReached3 = !hasReached3;
-        }else if (enX.getDistance() < 72 && !hasReached6){
-            d.setSpeed(((-72+enX.getDistance())/144),0,0,(45 * Math.PI / 180));
-        }else if (!hasReached6){
+        } else if (enX.getDistance() < 72 && !hasReached6) {
+            d.setSpeed(((-72 + enX.getDistance()) / 144), 0, 0, (45 * Math.PI / 180));
+        } else if (!hasReached6) {
             hasReached6 = !hasReached6;
         }
         d.calculateInput();
     }
-    
+
     public void teleopInit() {
         d.driveSystemInit();
     }
-   
+
     public void teleopPeriodic() {
         d.getJoy();
         d.calculateInput();
@@ -84,34 +83,35 @@ public class RobotTemplate extends IterativeRobot {
         smartInit();
     }
 
-   public void disabledPeriodic() {
-       sensor.readAll();
+    public void disabledPeriodic() {
+        sensor.readAll();
         smartPush();
         smartPull();
     }
 
-    public void testPeriodic() { }
-    
-    public void gathererButtonCheck(){
-        if(control.getGather()){
+    public void testPeriodic() {
+    }
+
+    public void gathererButtonCheck() {
+        if (control.getGather()) {
             g.down();
             g.startIn();
-        }else if(control.getReverseGather()){
+        } else if (control.getReverseGather()) {
             g.up();
             g.startOut();
-        }else{
+        } else {
             g.up();
         }
     }
-    
+
     public void smartInit() {
         smartPush();
-        
+
         SmartDashboard.putNumber("dt", Wiring.dt);
         SmartDashboard.putNumber("kpR", Wiring.KpR);
         SmartDashboard.putNumber("kpR", Wiring.KpR);
-        SmartDashboard.putNumber("kpX", Wiring.KpX*100);
-        SmartDashboard.putNumber("kpY", Wiring.KpY*100);
+        SmartDashboard.putNumber("kpX", Wiring.KpX * 100);
+        SmartDashboard.putNumber("kpY", Wiring.KpY * 100);
         SmartDashboard.putNumber("kdX", Wiring.KdX);
         SmartDashboard.putNumber("kdY", Wiring.KdY);
         SmartDashboard.putNumber("KiR", Wiring.KiR);
@@ -124,33 +124,32 @@ public class RobotTemplate extends IterativeRobot {
         SmartDashboard.putNumber("GZ", d.GZ);
         SmartDashboard.putNumber("enX", enX.getRate());
         SmartDashboard.putNumber("enY", enY.getDistance());
-        SmartDashboard.putNumber("errorH" , d.errorInHeading);
+        SmartDashboard.putNumber("errorH", d.errorInHeading);
         /*
-        SmartDashboard.putNumber("C", d.clockwiseZ);
-        SmartDashboard.putNumber("R", d.rightX);
-        SmartDashboard.putNumber("F", d.forwardY); //here
+         SmartDashboard.putNumber("C", d.clockwiseZ);
+         SmartDashboard.putNumber("R", d.rightX);
+         SmartDashboard.putNumber("F", d.forwardY); //here
          */
         SmartDashboard.putNumber("heading", d.heading);
         SmartDashboard.putNumber("theta", d.theta);
     }
 
     public void smartPull() {
-        Wiring.dt  = SmartDashboard.getNumber("dt");
+        Wiring.dt = SmartDashboard.getNumber("dt");
         Wiring.KpR = SmartDashboard.getNumber("kpR");
-        Wiring.KpX = SmartDashboard.getNumber("kpX")/100;
-        Wiring.KpY = SmartDashboard.getNumber("kpY")/100;
+        Wiring.KpX = SmartDashboard.getNumber("kpX") / 100;
+        Wiring.KpY = SmartDashboard.getNumber("kpY") / 100;
         Wiring.KdX = SmartDashboard.getNumber("kdX");
         Wiring.KdY = SmartDashboard.getNumber("kdY");
         Wiring.KiR = SmartDashboard.getNumber("KiR");
 
-   
+
     }
-    public void setupEncoders(){
+
+    public void setupEncoders() {
         enX.start();
         enY.start();
         enX.setDistancePerPulse(2.75 * Math.PI / 90);
         enY.setDistancePerPulse(2.75 * Math.PI / 90);
     }
 }
-
-
