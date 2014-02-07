@@ -14,6 +14,8 @@ public class Happystick {
     Button PIDButt;
     Button revButt;
     Button gathButt;
+    Button leftButt;
+    Button rightButt;
     boolean gathExtend = false;
     boolean gathSpinOut = false;
     boolean gathSpinIn = false;
@@ -69,6 +71,14 @@ public class Happystick {
     
     public boolean getReverseGather(){
         return revButt.isPressed();
+    }
+    
+    public boolean getLeftHook(){
+        return true;
+    }
+    
+    public boolean getRightHook(){
+        return true;
     }
     
     

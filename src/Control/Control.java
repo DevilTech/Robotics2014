@@ -16,6 +16,8 @@ public class Control {
     public int hatUp, hatDown, hatRight, hatLeft;
     public int hatVertical, hatHorizontal;
     public int gathSwitch, revSwitch;
+    public int leftHook, rightHook;
+    public boolean useZAxisHook = false;
 
     private Control (){};
         
@@ -34,6 +36,7 @@ public class Control {
         xbox.hatVertical = 6;
         xbox.gathSwitch = 6;
         xbox.revSwitch = 5;
+        xbox.useZAxisHook = true;
         return xbox;
     }
     

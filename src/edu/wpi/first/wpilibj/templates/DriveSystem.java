@@ -10,6 +10,7 @@ import java.util.TimerTask;
 
 
 import Competition.Wiring;
+import edu.wpi.first.wpilibj.Timer;
 
 /**
  *
@@ -43,6 +44,7 @@ public class DriveSystem {
     double IX;
     int driveType;
     java.util.Timer time;
+    double prevTime = 0;
 
     public DriveSystem(GY85_I2C sensor, Happystick control, Encoder encoderY, Encoder encoderX, int driveType) {
         fr = new Talon(Wiring.MOTOR_RF);
@@ -261,6 +263,12 @@ public class DriveSystem {
         fr.set(-rf);
         bl.set(lb);
         br.set(-rb);
+    }
+    
+    public void timeTest(){
+        double time = Timer.getFPGATimestamp();
+        System.out.println(time-prevTime);
+        prevTime=time;
     }
 
     private class DriveLoop extends TimerTask {

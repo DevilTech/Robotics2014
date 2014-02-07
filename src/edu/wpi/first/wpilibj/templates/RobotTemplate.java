@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import Competition.Wiring;
 import Control.Control;
+import edu.wpi.first.wpilibj.Timer;
 
 public class RobotTemplate extends IterativeRobot {
 
@@ -30,6 +31,7 @@ public class RobotTemplate extends IterativeRobot {
     boolean hasReached3;
     boolean hasReached6;
     Compressor compressor;
+    double prevTime = 0;
 
     public void robotInit() {
         setupEncoders();
@@ -138,8 +140,12 @@ public class RobotTemplate extends IterativeRobot {
         Wiring.KdX = SmartDashboard.getNumber("kdX");
         Wiring.KdY = SmartDashboard.getNumber("kdY");
         Wiring.KiR = SmartDashboard.getNumber("KiR");
-
-
+    }
+    
+    public void timeTest(){
+        double time = Timer.getFPGATimestamp();
+        System.out.println(time-prevTime);
+        prevTime=time;
     }
 
     public void setupEncoders() {
