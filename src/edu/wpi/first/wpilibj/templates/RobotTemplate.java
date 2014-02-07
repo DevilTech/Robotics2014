@@ -26,6 +26,9 @@ public class RobotTemplate extends IterativeRobot {
     Joystick joy;
     double previousValue = 0;
     Happystick control;
+    boolean hasReached2;
+    boolean hasReached3;
+    boolean hasReached6;
 
     public void robotInit() {   
         setupEncoders();
@@ -42,8 +45,20 @@ public class RobotTemplate extends IterativeRobot {
         d.driveSystemInit();
     }
 
-    public void autonomousPeriodic() { 
-        d.setSpeed(0,((48 - enY.getDistance())/96), 0);
+    public void autonomousPeriodic() {
+        if(enY.getDistance() < 24 && !hasReached2){
+            d.setSpeed(0,((24 - enY.getDistance())/48), 0, (45 * Math.PI / 180));
+        }else if (!hasReached2){
+            hasReached2 = !hasReached2;
+        }else if (enX.getDistance() < 36 && !hasReached3){
+            d.setSpeed(((36-enX.getDistance())/72),0,0,(45 * Math.PI / 180));
+        }else if (!hasReached3){
+            hasReached3 = !hasReached3;
+        }else if (enX.getDistance() < 72 && !hasReached6){
+            d.setSpeed(((-72+enX.getDistance())/144),0,0,(45 * Math.PI / 180));
+        }else if (!hasReached6){
+            hasReached6 = !hasReached6;
+        }
         d.calculateInput();
     }
     

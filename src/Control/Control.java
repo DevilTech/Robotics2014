@@ -24,8 +24,14 @@ public class Control {
         xbox.rotationAxis = 3;
         xbox.forwardAxis = 1;
         xbox.rightAxis = 2;
-        xbox.FCSwitch = 1;
+        xbox.FCSwitch = 3;
         xbox.PIDSwitch = 2;
+        xbox.hatUp = 1;
+        xbox.hatDown = -1;
+        xbox.hatLeft = -1;
+        xbox.hatRight = 1;
+        xbox.hatHorizontal = 5;
+        xbox.hatVertical = 6;
         return xbox;
     }
     
@@ -45,4 +51,6 @@ public class Control {
         pilot.hatVertical = 6;
         return pilot;
     }
+    
+   
 }

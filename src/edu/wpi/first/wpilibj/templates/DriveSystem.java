@@ -98,7 +98,9 @@ public class DriveSystem {
             case 1:
                 openLoop();
                 break;
-
+            case 2:
+                halfOpen();
+                break;
         }
     }
 
@@ -136,10 +138,11 @@ public class DriveSystem {
         speedZ = control.getRotation() * Math.abs(control.getRotation());
     }
     
-    public void setSpeed(double x, double y, double z){
+    public void setSpeed(double x, double y, double z, double r){
         speedY = y;
         speedX = x;
         speedZ = z;
+        heading = r;
     }
 
     public boolean getHat() {
@@ -184,14 +187,15 @@ public class DriveSystem {
         //then, the derivative of the speed (acceleration) is added to to the value of forwardY
         forwardY = DTlib.clamp(forwardY);
         forwardY += Wiring.KpY * (Wiring.MAX_XY * speedY - VY);//PD expected range +/- 1.0
+        
         rightX = DTlib.clamp(rightX);
         rightX += Wiring.KpX * (Wiring.MAX_XY * speedX - VX);	//PD expected range +/- 0.577
-        clockwiseZ = DTlib.clamp(clockwiseZ);
-        clockwiseZ += Wiring.KpR * (Wiring.MAX_R * speedZ + GZ);
+        
+        clockwiseZ = (Wiring.KfR * speedZ) + (Wiring.KpR * (Wiring.MAX_R * speedZ + GZ));
 
         double tempCZ = clockwiseZ + errorInHeading;
-        double tempFY = forwardY - Wiring.KdY * AY;
-        double tempRX = rightX - Wiring.KdX * AX;
+        double tempFY = (Wiring.KfY * speedY) + forwardY - (Wiring.KdY * AY);
+        double tempRX = (Wiring.KfX * speedX) + rightX - (Wiring.KdX * AX);
 
         double lf, rf, lb, rb;
 
@@ -204,7 +208,7 @@ public class DriveSystem {
 
     }
 
-    public void openLoop() {
+    public void halfOpen() {
         
         clockwiseZ = Wiring.KpR * (Wiring.MAX_R * speedZ + GZ);
         
@@ -221,6 +225,23 @@ public class DriveSystem {
 
         calculateMotorSpeed(lf, rf, lb, rb);
 
+    }
+    
+    public void openLoop(){
+        
+        double tempCZ = speedZ;
+        double tempFY = speedY;
+        double tempRX = speedX;
+        
+        double lf, rf, lb, rb;
+
+        lf = tempFY + tempCZ + tempRX;
+        rf = tempFY - tempCZ - tempRX;
+        lb = tempFY + tempCZ - tempRX;
+        rb = tempFY - tempCZ + tempRX;
+
+        calculateMotorSpeed(lf, rf, lb, rb);
+        
     }
 
     public void calculateMotorSpeed(double lf, double rf, double lb, double rb) {

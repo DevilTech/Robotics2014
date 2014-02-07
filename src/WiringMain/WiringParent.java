@@ -20,6 +20,7 @@ public class WiringParent {
     public static final long DRIVE_POLL_RATE = (long) (1000 * dt);
     public static final int PID_C = 0;
     public static final int OPEN_C = 1;
+    public static final int HALF_C = 2;
     
     public static final int[] ENCODER_X = {1,2};
     public static final int[] ENCODER_Y = {3,4};
