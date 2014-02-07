@@ -10,6 +10,7 @@ package edu.wpi.first.wpilibj.templates;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -30,16 +31,19 @@ public class RobotTemplate extends IterativeRobot {
     boolean hasReached2;
     boolean hasReached3;
     boolean hasReached6;
+    Compressor compressor;
 
     public void robotInit() {   
         setupEncoders();
+        compressor = new Compressor(1,1);
+        compressor.start();
         talonlf = new Talon(Wiring.MOTOR_LF);
         talonrf = new Talon(Wiring.MOTOR_RF);
         talonlb = new Talon(Wiring.MOTOR_LB);
         talonrb = new Talon(Wiring.MOTOR_RB);
         control = new Happystick(1, Control.getXbox());
         d = new DriveSystem(talonrf, talonlf, talonrb, talonlb, sensor, control, enY, enX, Wiring.OPEN_C);
-        g = new Gatherer(Wiring.MOTOR_GATHERER_RIGHT, Wiring.MOTOR_GATHERER_LEFT, Wiring.SOLENOID_GATHERER_IN, Wiring.SOLENOID_GATHERER_OUT);
+        g = new Gatherer();
     }
     
     public void autonomousInit(){
@@ -81,7 +85,7 @@ public class RobotTemplate extends IterativeRobot {
     }
 
    public void disabledPeriodic() {
-        sensor.readAll();
+       sensor.readAll();
         smartPush();
         smartPull();
     }
@@ -90,19 +94,20 @@ public class RobotTemplate extends IterativeRobot {
     
     public void gathererButtonCheck(){
         if(control.gathExtend){
-            g.extend();
+            g.up();
         }else{
-            g.retract();
+            g.down();
         }
         
         if (control.gathSpinIn){
-            g.spinIn();
+            g.startForward();
         }else if (control.gathSpinOut){
-            g.spinOut();
+            g.startReverse();
         }else{
-            g.spinStop();
-        }
+            g.stop();
     }
+    }
+    
     public void smartInit() {
         smartPush();
         
@@ -141,8 +146,9 @@ public class RobotTemplate extends IterativeRobot {
         Wiring.KdX = SmartDashboard.getNumber("kdX");
         Wiring.KdY = SmartDashboard.getNumber("kdY");
         Wiring.KiR = SmartDashboard.getNumber("KiR");
+
+   
     }
-    
     public void setupEncoders(){
         enX.start();
         enY.start();
@@ -150,3 +156,5 @@ public class RobotTemplate extends IterativeRobot {
         enY.setDistancePerPulse(2.75 * Math.PI / 90);
     }
 }
+
+

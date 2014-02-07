@@ -36,5 +36,8 @@ public class Wiring extends WiringParent{
     public static final int SOLENOID_GATHERER_OUT = 1;
     public static final int SOLENOID_GATHERER_IN = 2;
     
+    public static final double GATHERER_SPEED_FORWARD = 1;
+    public static final double GATHERER_SPEED_REVERSE = 1;
+    
     public static final double CENTER_OF_ROTATION = .608;
 }
