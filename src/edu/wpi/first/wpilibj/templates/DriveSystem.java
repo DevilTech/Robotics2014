@@ -10,7 +10,6 @@ import java.util.TimerTask;
 
 
 import Competition.Wiring;
-import edu.wpi.first.wpilibj.Timer;
 
 /**
  *
@@ -45,12 +44,11 @@ public class DriveSystem {
     int driveType;
     java.util.Timer time;
 
-    public DriveSystem(Talon frontRight, Talon frontLeft, Talon backRight, Talon backLeft,
-            GY85_I2C sensor, Happystick control, Encoder encoderY, Encoder encoderX, int driveType) {
-        fr = frontRight;
-        fl = frontLeft;
-        br = backRight;
-        bl = backLeft;
+    public DriveSystem(GY85_I2C sensor, Happystick control, Encoder encoderY, Encoder encoderX, int driveType) {
+        fr = new Talon(Wiring.MOTOR_RF);
+        fl = new Talon(Wiring.MOTOR_LF);
+        br = new Talon(Wiring.MOTOR_RB);
+        bl = new Talon(Wiring.MOTOR_LB);
 
         sen = sensor;
 

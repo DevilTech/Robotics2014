@@ -20,7 +20,6 @@ public class RobotTemplate extends IterativeRobot {
 
     Encoder enX = new Encoder(Wiring.ENCODER_X[0], Wiring.ENCODER_X[1]);
     Encoder enY = new Encoder(Wiring.ENCODER_Y[0], Wiring.ENCODER_Y[1]);
-    Talon talonlf, talonrf, talonlb, talonrb;
     GY85_I2C sensor = new GY85_I2C();
     DriveSystem d;
     Gatherer g;
@@ -36,12 +35,9 @@ public class RobotTemplate extends IterativeRobot {
         setupEncoders();
         compressor = new Compressor(1, 1);
         compressor.start();
-        talonlf = new Talon(Wiring.MOTOR_LF);
-        talonrf = new Talon(Wiring.MOTOR_RF);
-        talonlb = new Talon(Wiring.MOTOR_LB);
-        talonrb = new Talon(Wiring.MOTOR_RB);
+
         control = new Happystick(1, Control.getXbox());
-        d = new DriveSystem(talonrf, talonlf, talonrb, talonlb, sensor, control, enY, enX, Wiring.OPEN_C);
+        d = new DriveSystem(sensor, control, enY, enX, Wiring.OPEN_C);
         g = new Gatherer();
     }
 
