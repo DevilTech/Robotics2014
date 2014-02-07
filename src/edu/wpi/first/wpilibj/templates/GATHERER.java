@@ -6,53 +6,53 @@
 
 package edu.wpi.first.wpilibj.templates;
 
-import edu.wpi.first.wpilibj.Jaguar;
+import Competition.Wiring;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.Talon;
 
 
 /**
  *
  * @author Nate Baker
  */
-public class GATHERER 
-{
+public class Gatherer{
     Solenoid armUp;
     Solenoid armDown;
-    Jaguar armMotorL;
-    Jaguar armMotorR;
-    public GATHERER()
+    Talon armMotorL;
+    Talon armMotorR;
+    public Gatherer()
     {
-        armMotorL = new Jaguar(WIRING.gathererMotorL);
-        armMotorR = new Jaguar(WIRING.gathererMotorR);
-        armUp = new Solenoid(WIRING.gathererUp);
-        armDown = new Solenoid(WIRING.gathererDown);
+        armMotorL = new Talon(Wiring.MOTOR_GATHERER_LEFT);
+        armMotorR = new Talon(Wiring.MOTOR_GATHERER_RIGHT);
+        armUp = new Solenoid(Wiring.SOLENOID_GATHERER_IN);
+        armDown = new Solenoid(Wiring.SOLENOID_GATHERER_OUT);
         armUp.set(true);
         armDown.set(false);
     }
-    public void gathererUp() //Lifts arms of gatherer up
+    public void up() //Lifts arms of gatherer up
     {
         armUp.set(true);
         armDown.set(false);
     }
-    public void gathererDown() //Lowers arms of gatherer
+    public void down() //Lowers arms of gatherer
     {
         armUp.set(false);
         armDown.set(true);
     }
-    public void gathererStartForward() //Starts the motors of gatherer forward
+    public void startForward() //Starts the motors of gatherer forward
     {
-        armMotorL.set(WIRING.gathererSpeedForward);
-        armMotorR.set(WIRING.gathererSpeedForward);
+        armMotorL.set(Wiring.GATHERER_SPEED_FORWARD);
+        armMotorR.set(Wiring.GATHERER_SPEED_FORWARD);
     }
-    public void gathererStop() //Stops the motors of gatherer
+    public void stop() //Stops the motors of gatherer
     {
         armMotorL.set(0);
         armMotorR.set(0);
     }
-    public void gathererStartReverse() //Starts the motors of gatherer in reverse
+    public void startReverse() //Starts the motors of gatherer in reverse
     {
-        armMotorL.set(WIRING.gathererSpeedReverse);
-        armMotorR.set(WIRING.gathererSpeedReverse);
+        armMotorL.set(Wiring.GATHERER_SPEED_REVERSE);
+        armMotorR.set(Wiring.GATHERER_SPEED_REVERSE);
         
     }
 }
