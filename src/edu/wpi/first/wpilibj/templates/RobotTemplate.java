@@ -17,7 +17,9 @@ import Competition.Wiring;
 import Control.Control;
 import edu.wpi.first.wpilibj.Timer;
 
+
 public class RobotTemplate extends IterativeRobot {
+
 
     Encoder enX = new Encoder(Wiring.ENCODER_X[0], Wiring.ENCODER_X[1]);
     Encoder enY = new Encoder(Wiring.ENCODER_Y[0], Wiring.ENCODER_Y[1]);
@@ -32,6 +34,8 @@ public class RobotTemplate extends IterativeRobot {
     boolean hasReached6;
     Compressor compressor;
     double prevTime = 0;
+    Shooter shooter;
+    boolean shootonce;
 
     public void robotInit() {
         setupEncoders();
@@ -41,6 +45,7 @@ public class RobotTemplate extends IterativeRobot {
         control = new Happystick(1, Control.getXbox());
         d = new DriveSystem(sensor, control, enY, enX, Wiring.OPEN_C);
         g = new Gatherer();
+        shooter = new Shooter();
     }
 
     public void autonomousInit() {
@@ -49,6 +54,14 @@ public class RobotTemplate extends IterativeRobot {
     }
 
     public void autonomousPeriodic() {
+        
+    }
+    
+    public void autoOffense(){
+        shooter.Cock();
+    }
+    
+    public void autoDeffense(){
         if (enY.getDistance() < 24 && !hasReached2) {
             d.setSpeed(0, ((24 - enY.getDistance()) / 48), 0, (45 * Math.PI / 180));
         } else if (!hasReached2) {
@@ -67,6 +80,7 @@ public class RobotTemplate extends IterativeRobot {
 
     public void teleopInit() {
         d.driveSystemInit();
+        shootonce = true;
     }
 
     public void teleopPeriodic() {
@@ -74,7 +88,8 @@ public class RobotTemplate extends IterativeRobot {
         d.calculateInput();
         smartPush();
         smartPull();
-    }
+    }      
+  
 
     public void disabledInit() {
         d.driveSystemDenit();
@@ -99,6 +114,20 @@ public class RobotTemplate extends IterativeRobot {
             g.startOut();
         } else {
             g.up();
+        }
+    }
+    
+    public void shooterButtonCheck(){
+        shooter.Cock();
+        if (control.getShoot() && shootonce) 
+        {
+            shooter.shoot();
+            shootonce = false;
+        }
+        if (shooter.unCocked.get() >= 1)
+        {
+            shootonce = true;
+            shooter.unCocked.reset();
         }
     }
 

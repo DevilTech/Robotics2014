@@ -40,4 +40,15 @@ public class Wiring extends WiringParent{
     public static final double GATHERER_SPEED_REVERSE = 1;
     
     public static final double CENTER_OF_ROTATION = .608;
+    
+    
+    public static final int MOTOR_SHOOTER = 3;
+    
+    public static final int COCKED = 1;
+    public static final int UNCOCKED = 4;
+    public static final int TENSIONED = 3;
+    public static final int DETENSIONED = 2;
+    
+    public static final int TENSION_SOLENOID = 1;
+    
 }

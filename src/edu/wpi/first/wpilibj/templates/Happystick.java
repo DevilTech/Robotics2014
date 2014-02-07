@@ -16,9 +16,11 @@ public class Happystick {
     Button gathButt;
     Button leftButt;
     Button rightButt;
+    Button shootButt;
     boolean gathExtend = false;
     boolean gathSpinOut = false;
     boolean gathSpinIn = false;
+    
     
     public Happystick(int joyNum, Control controller){
         joy = new Joystick(joyNum);
@@ -27,6 +29,7 @@ public class Happystick {
         PIDButt = new Button(joy, this.controller.PIDSwitch);
         gathButt = new Button(joy, this.controller.gathSwitch);
         revButt = new Button(joy, this.controller.revSwitch);
+        shootButt = new Button(joy, this.controller.shoot);
     }
     
     public double getRotation(){
@@ -74,11 +77,15 @@ public class Happystick {
     }
     
     public boolean getLeftHook(){
-        return true;
+        return false;
     }
     
     public boolean getRightHook(){
-        return true;
+        return false;
+    }
+    
+    public boolean getShoot(){
+        return shootButt.getReHit();
     }
     
     
