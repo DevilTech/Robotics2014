@@ -93,19 +93,15 @@ public class RobotTemplate extends IterativeRobot {
     public void testPeriodic() { }
     
     public void gathererButtonCheck(){
-        if(control.gathExtend){
-            g.up();
-        }else{
+        if(control.getGather()){
             g.down();
-        }
-        
-        if (control.gathSpinIn){
-            g.startForward();
-        }else if (control.gathSpinOut){
-            g.startReverse();
+            g.startIn();
+        }else if(control.getReverseGather()){
+            g.up();
+            g.startOut();
         }else{
-            g.stop();
-    }
+            g.up();
+        }
     }
     
     public void smartInit() {

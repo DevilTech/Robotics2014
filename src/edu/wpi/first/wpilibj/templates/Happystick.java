@@ -12,9 +12,8 @@ public class Happystick {
     Control controller;
     Button FCButt;
     Button PIDButt;
-    Button rexButt;
-    Button SpOButt;
-    Button SpIButt;
+    Button revButt;
+    Button gathButt;
     boolean gathExtend = false;
     boolean gathSpinOut = false;
     boolean gathSpinIn = false;
@@ -24,9 +23,8 @@ public class Happystick {
         this.controller = controller;
         FCButt = new Button(joy, this.controller.FCSwitch);
         PIDButt = new Button(joy, this.controller.PIDSwitch);
-        rexButt = new Button(joy, this.controller.rexSwitch);
-        SpOButt = new Button(joy, this.controller.SpOSwitch);
-        SpIButt =  new Button(joy, this.controller.SpISwitch);
+        gathButt = new Button(joy, this.controller.gathSwitch);
+        revButt = new Button(joy, this.controller.revSwitch);
     }
     
     public double getRotation(){
@@ -65,19 +63,14 @@ public class Happystick {
         return (joy.getRawAxis(controller.hatHorizontal) == controller.hatLeft);
     }
     
-    public boolean getGathExtension(){
-       gathExtend = (rexButt.getReHit()) ? !gathExtend : gathExtend;
-       return gathExtend;
+    public boolean getGather(){
+       return gathButt.isPressed();
     }
     
-    public boolean getSpinOut(){
-        gathSpinOut = (SpOButt.getReHit()) ? !gathSpinOut : gathSpinOut;
-        return gathSpinOut;
+    public boolean getReverseGather(){
+        return revButt.isPressed();
     }
     
-    public boolean getSpinIn(){
-        gathSpinIn = (SpIButt.getReHit()) ? !gathSpinIn : gathSpinIn;
-        return gathSpinIn;
-    }
+    
             
 }
