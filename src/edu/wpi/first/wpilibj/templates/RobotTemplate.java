@@ -23,6 +23,7 @@ public class RobotTemplate extends IterativeRobot {
     Talon talonlf, talonrf, talonlb, talonrb;
     GY85_I2C sensor = new GY85_I2C();
     DriveSystem d;
+    Gatherer g;
     Joystick joy;
     double previousValue = 0;
     Happystick control;
@@ -36,8 +37,9 @@ public class RobotTemplate extends IterativeRobot {
         talonrf = new Talon(Wiring.MOTOR_RF);
         talonlb = new Talon(Wiring.MOTOR_LB);
         talonrb = new Talon(Wiring.MOTOR_RB);
-        control = new Happystick(1, Control.getPilot());
+        control = new Happystick(1, Control.getXbox());
         d = new DriveSystem(talonrf, talonlf, talonrb, talonlb, sensor, control, enY, enX, Wiring.OPEN_C);
+        g = new Gatherer(Wiring.MOTOR_GATHERER_RIGHT, Wiring.MOTOR_GATHERER_LEFT, Wiring.SOLENOID_GATHERER_IN, Wiring.SOLENOID_GATHERER_OUT);
     }
     
     public void autonomousInit(){
@@ -86,6 +88,21 @@ public class RobotTemplate extends IterativeRobot {
 
     public void testPeriodic() { }
     
+    public void gathererButtonCheck(){
+        if(control.gathExtend){
+            g.extend();
+        }else{
+            g.retract();
+        }
+        
+        if (control.gathSpinIn){
+            g.spinIn();
+        }else if (control.gathSpinOut){
+            g.spinOut();
+        }else{
+            g.spinStop();
+        }
+    }
     public void smartInit() {
         smartPush();
         

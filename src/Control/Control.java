@@ -15,6 +15,7 @@ public class Control {
     public int invertY = 1, invertX = 1, invertR = 1;
     public int hatUp, hatDown, hatRight, hatLeft;
     public int hatVertical, hatHorizontal;
+    public int SpOSwitch, SpISwitch, rexSwitch;
 
     private Control (){};
         
@@ -31,6 +32,9 @@ public class Control {
         xbox.hatRight = 1;
         xbox.hatHorizontal = 5;
         xbox.hatVertical = 6;
+        xbox.SpISwitch = 6;
+        xbox.SpOSwitch = 5;
+        xbox.rexSwitch = 1;
         return xbox;
     }
     

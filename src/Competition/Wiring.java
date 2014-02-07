@@ -31,5 +31,10 @@ public class Wiring extends WiringParent{
     public static final int MOTOR_LB = 3;
     public static final int MOTOR_RB = 4;
     
+    public static final int MOTOR_GATHERER_LEFT = 5;
+    public static final int MOTOR_GATHERER_RIGHT = 6;
+    public static final int SOLENOID_GATHERER_OUT = 1;
+    public static final int SOLENOID_GATHERER_IN = 2;
+    
     public static final double CENTER_OF_ROTATION = .608;
 }
