@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import Competition.Wiring;
+import Test.Wiring;
 import Control.Control;
 import edu.wpi.first.wpilibj.Timer;
 
@@ -39,13 +39,15 @@ public class RobotTemplate extends IterativeRobot {
 
     public void robotInit() {
         setupEncoders();
-        compressor = new Compressor(1, 1);
-        compressor.start();
-
+        if(!Wiring.isTest){
+            compressor = new Compressor(1, 1);
+            compressor.start();
+            g = new Gatherer();
+            shooter = new Shooter();
+        }
         control = new Happystick(1, Control.getXbox());
         d = new DriveSystem(sensor, control, enY, enX, Wiring.OPEN_C);
-        g = new Gatherer();
-        shooter = new Shooter();
+        
     }
 
     public void autonomousInit() {

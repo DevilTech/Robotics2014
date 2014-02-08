@@ -11,7 +11,9 @@ import WiringMain.WiringParent;
  * @author robotics
  */
 public class Wiring extends WiringParent{
-
+    
+    public static final boolean isTest = false;
+    
     public static final double MAX_XY = 170;
  
     //K is for PID control
@@ -51,4 +53,8 @@ public class Wiring extends WiringParent{
     
     public static final int TENSION_SOLENOID = 1;
     
+    public static final double CF_HOOK = .255;
+    public static final double FF_HOOK = .588;
+    public static final double CB_HOOK = 1;
+    public static final double FB_HOOK = -.187;
 }

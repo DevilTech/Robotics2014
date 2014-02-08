@@ -19,12 +19,14 @@ public class Control {
     public int leftHook, rightHook;
     public int shoot;
     public boolean useZAxisHook = false;
+    public int hookAxis;
+    public double hookAxisSens;
 
     private Control (){};
         
     public static Control getXbox(){
         Control xbox = new Control();
-        xbox.rotationAxis = 3;
+        xbox.rotationAxis = 4;
         xbox.forwardAxis = 1;
         xbox.rightAxis = 2;
         xbox.FCSwitch = 3;
@@ -38,7 +40,9 @@ public class Control {
         xbox.gathSwitch = 6;
         xbox.revSwitch = 5;
         xbox.useZAxisHook = true;
+        xbox.hookAxis = 3;
         xbox.shoot = 1;
+        xbox.hookAxisSens = .1;
         return xbox;
     }
     

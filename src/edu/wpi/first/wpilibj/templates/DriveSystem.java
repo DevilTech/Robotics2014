@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.Talon;
 import java.util.TimerTask;
 
 
-import Competition.Wiring;
+import Test.Wiring;
 import edu.wpi.first.wpilibj.Timer;
 
 /**
@@ -144,7 +144,7 @@ public class DriveSystem {
     }
 
     public boolean getHat() {
-        //axis numbers are complete guesses
+
         if (control.getHATLeft()) {
             heading = Math.PI / 2;
             return true;
@@ -160,6 +160,20 @@ public class DriveSystem {
         } else {
             return false;
         }
+    }
+    
+    public boolean getHooks(){
+        if(control.getLeftHook()){
+            calculateMotorSpeed(Wiring.CF_HOOK, Wiring.FF_HOOK, Wiring.CB_HOOK, Wiring.FB_HOOK);
+            return true;
+        }else if(control.getRightHook()){
+            calculateMotorSpeed(Wiring.FF_HOOK, Wiring.CF_HOOK, Wiring.FB_HOOK, Wiring.CB_HOOK);
+            return true;
+        }else{
+            return false;
+        }
+        
+        //lf, rf, lb, rb
     }
 
     //stuff that does stuff (ha ha)

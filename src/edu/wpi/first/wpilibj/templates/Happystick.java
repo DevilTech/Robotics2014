@@ -32,16 +32,24 @@ public class Happystick {
         shootButt = new Button(joy, this.controller.shoot);
     }
     
+    public double getAxis(int num){
+        if (num != 0){
+            return joy.getRawAxis(num);
+        }else{
+            return 0;
+        }
+        
+    }
     public double getRotation(){
-        return joy.getRawAxis(controller.rotationAxis) * controller.invertR;
+        return getAxis(controller.rotationAxis) * controller.invertR;
     }
     
     public double getForward(){
-        return joy.getRawAxis(controller.forwardAxis) * controller.invertY;
+        return getAxis(controller.forwardAxis) * controller.invertY;
     }
     
     public double getRight(){
-        return joy.getRawAxis(controller.rightAxis) * controller.invertX;
+        return getAxis(controller.rightAxis) * controller.invertX;
     }
     
     public boolean getFCSwitch(){
@@ -53,15 +61,15 @@ public class Happystick {
     }
     
     public boolean getHATUp(){
-        return (joy.getRawAxis(controller.hatVertical) == controller.hatUp);
+        return (getAxis(controller.hatVertical) == controller.hatUp);
     }
     
     public boolean getHATDown(){
-        return (joy.getRawAxis(controller.hatVertical) == controller.hatDown);
+        return (getAxis(controller.hatVertical) == controller.hatDown);
     }
     
     public boolean getHATRight(){
-        return (joy.getRawAxis(controller.hatHorizontal) == controller.hatRight);
+        return (getAxis(controller.hatHorizontal) == controller.hatRight);
     }
     
     public boolean getHATLeft(){
@@ -77,11 +85,21 @@ public class Happystick {
     }
     
     public boolean getLeftHook(){
-        return false;
+        if (getAxis(controller.hookAxis) > controller.hookAxisSens){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
     
     public boolean getRightHook(){
-        return false;
+        if (getAxis(controller.hookAxis) < -controller.hookAxisSens){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
     
     public boolean getShoot(){
