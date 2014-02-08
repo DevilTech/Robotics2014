@@ -52,6 +52,9 @@ public class Wiring extends WiringParent{
     public static final int DETENSIONED = 2;
     
     public static final int TENSION_SOLENOID = 1;
+    public static final int DEFENSIVE_ARM_UP = 2;
+    public static final int DEFENSIVE_ARM_DOWN = 3;
+    
     
     public static final double CF_HOOK = -.255;
     public static final double FF_HOOK = -.588;

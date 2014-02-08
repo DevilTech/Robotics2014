@@ -21,6 +21,7 @@ public class Control {
     public boolean useZAxisHook = false;
     public int hookAxis;
     public double hookAxisSens;
+    public int defenseButton;
 
     private Control (){};
         
@@ -44,6 +45,7 @@ public class Control {
         xbox.hookAxis = 3;
         xbox.shoot = 1;
         xbox.hookAxisSens = .1;
+        xbox.defenseButton = 1;
         return xbox;
     }
     

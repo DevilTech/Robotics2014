@@ -29,6 +29,7 @@ public class RobotTemplate extends IterativeRobot {
     Joystick joy;
     double previousValue = 0;
     Happystick control;
+    Happystick coPilot;
     boolean hasReached2;
     boolean hasReached3;
     boolean hasReached6;
@@ -36,6 +37,7 @@ public class RobotTemplate extends IterativeRobot {
     double prevTime = 0;
     Shooter shooter;
     boolean shootonce;
+    DefensiveArm arm;
 
     public void robotInit() {
         setupEncoders();
@@ -46,6 +48,7 @@ public class RobotTemplate extends IterativeRobot {
             shooter = new Shooter();
         }
         control = new Happystick(1, Control.getXbox());
+        coPilot = new Happystick(2, Control.getXbox());
         d = new DriveSystem(sensor, control, enY, enX, Wiring.OPEN_C);
         
     }
@@ -105,6 +108,7 @@ public class RobotTemplate extends IterativeRobot {
     }
 
     public void testPeriodic() {
+        
     }
 
     public void gathererButtonCheck() {
@@ -133,6 +137,22 @@ public class RobotTemplate extends IterativeRobot {
         }
     }
 
+    public void defenseCheck() {
+        
+        if(coPilot.getArmRaise())
+        {
+            if(arm.up.get())
+            {
+                arm.goDown();
+            }
+            else
+            {
+                arm.goUp();
+            }
+        }
+        
+    }
+    
     public void smartInit() {
         smartPush();
 
