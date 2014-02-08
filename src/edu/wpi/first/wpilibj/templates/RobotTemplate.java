@@ -86,7 +86,6 @@ public class RobotTemplate extends IterativeRobot {
     }
 
     public void teleopPeriodic() {
-        timeTest();
         d.getJoy();
         d.calculateInput();
         smartPush();

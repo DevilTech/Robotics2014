@@ -45,6 +45,10 @@ public class DriveSystem {
     int driveType;
     java.util.Timer time;
     double prevTime = 0;
+    double directLF = 0;
+    double directRF = 0;
+    double directLB = 0;
+    double directRB = 0;
 
     public DriveSystem(GY85_I2C sensor, Happystick control, Encoder encoderY, Encoder encoderX, int driveType) {
         fr = new Talon(Wiring.MOTOR_RF);
@@ -89,7 +93,6 @@ public class DriveSystem {
         sen.readA();
         sen.readG();
         sen.readC();
-        timeTest();
         switch (driveType) {
             case 0:
                 PID_Drive();
@@ -105,15 +108,10 @@ public class DriveSystem {
 
     public void calculateInput() {
         theta = sen.getCompassRadAngle(initialHeading);
-        if (control.getFCSwitch()) {
-            FCMode = (FCMode && driveType == Wiring.OPEN_C) ? false : true;
-        }
-        if (control.getLoopSwitch()) {
-            driveType = (driveType == Wiring.PID_C) ? Wiring.OPEN_C : Wiring.PID_C;
-        }
+        
 
         if (FCMode) {
-            if (Math.abs(speedZ) > .01 && !getHat()) {
+            if (Math.abs(speedZ) > .01) {
                 heading = theta;
                 errorInHeading = 0;
             } else {
@@ -132,9 +130,26 @@ public class DriveSystem {
     }
 
     public void getJoy() {
-        speedY = control.getForward() * Math.abs(control.getForward());
-        speedX = control.getRight() * Math.abs(control.getRight());
-        speedZ = control.getRotation() * Math.abs(control.getRotation());
+        if (control.getFCSwitch()) {
+            FCMode = (FCMode && driveType == Wiring.OPEN_C) ? false : true;
+        }
+        if (control.getLoopSwitch()) {
+            driveType = (driveType == Wiring.PID_C) ? Wiring.OPEN_C : Wiring.PID_C;
+        }
+        
+        if (getHooks()) {
+            speedX = 0;
+            speedZ = 0;
+            speedY = 0;
+        } else if (getHat()) {
+            speedZ = 0;
+            speedX = control.getRight() * Math.abs(control.getRight());
+            speedZ = control.getRotation() * Math.abs(control.getRotation());
+        } else {
+            speedY = control.getForward() * Math.abs(control.getForward());
+            speedX = control.getRight() * Math.abs(control.getRight());
+            speedZ = control.getRotation() * Math.abs(control.getRotation());
+        }
     }
 
     public void setSpeed(double x, double y, double z, double r) {
@@ -162,18 +177,28 @@ public class DriveSystem {
             return false;
         }
     }
-    
-    public boolean getHooks(){
-        if(control.getLeftHook()){
-            calculateMotorSpeed(Wiring.CF_HOOK, Wiring.FF_HOOK, Wiring.CB_HOOK, Wiring.FB_HOOK);
+
+    public boolean getHooks() {
+        if (control.getLeftHook()) {
+            directLF = Wiring.CF_HOOK;
+            directRF = Wiring.FF_HOOK;
+            directLB = Wiring.CB_HOOK;
+            directRB = Wiring.FB_HOOK;
             return true;
-        }else if(control.getRightHook()){
-            calculateMotorSpeed(Wiring.FF_HOOK, Wiring.CF_HOOK, Wiring.FB_HOOK, Wiring.CB_HOOK);
+        } else if (control.getRightHook()) {
+            directLF = Wiring.FF_HOOK;
+            directRF = Wiring.CF_HOOK;
+            directLB = Wiring.FB_HOOK;
+            directRB = Wiring.CB_HOOK;
             return true;
-        }else{
+        } else {
+            directLF = 0;
+            directRF = 0;
+            directLB = 0;
+            directRB = 0;
             return false;
         }
-        
+
         //lf, rf, lb, rb
     }
 
@@ -255,7 +280,10 @@ public class DriveSystem {
     }
 
     public void calculateMotorSpeed(double lf, double rf, double lb, double rb) {
-
+        lf += directLF;
+        rf += directRF;
+        lb += directLB;
+        rb += directRB;
         double max = Math.abs(lf);
 
         if (Math.abs(rf) > max) {
@@ -279,11 +307,11 @@ public class DriveSystem {
         bl.set(lb);
         br.set(-rb);
     }
-    
-    public void timeTest(){
+
+    public void timeTest() {
         double time = Timer.getFPGATimestamp();
-        System.out.print(time-prevTime + "     ");
-        prevTime=time;
+        System.out.print(time - prevTime + "     ");
+        prevTime = time;
     }
 
     private class DriveLoop extends TimerTask {

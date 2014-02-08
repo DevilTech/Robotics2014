@@ -21,11 +21,11 @@ public class Wiring extends WiringParent{
     public static double KpR = 2.5 * dt;/// Math.PI;
     public static double KiR = 5.39 * dt;///  Math.PI;
     public static double KfR = MAX_R / 11.18;
-    public static double KpY = 3.1 / MAX_XY * dt;                 //3
-    public static double KdY = .98 / MAX_XY;                   //1.01
+    public static double KpY = 13.5 / MAX_XY * dt;                 //3
+    public static double KdY = .49 / MAX_XY;                   //1.01
     public static double KfY = MAX_XY / 182;
-    public static double KpX = 13.5 / MAX_XY * dt;              //13.4
-    public static double KdX = .49 / MAX_XY; //0.01 * dt * dt   //.49
+    public static double KpX = 3.1 / MAX_XY * dt;              //13.4
+    public static double KdX = .98 / MAX_XY; //0.01 * dt * dt   //.49
     public static double KfX = MAX_XY / 308;
 
     public static final int MOTOR_LF = 1;
@@ -53,8 +53,8 @@ public class Wiring extends WiringParent{
     
     public static final int TENSION_SOLENOID = 1;
     
-    public static final double CF_HOOK = .255;
-    public static final double FF_HOOK = .588;
-    public static final double CB_HOOK = 1;
-    public static final double FB_HOOK = -.187;
+    public static final double CF_HOOK = -.255;
+    public static final double FF_HOOK = -.588;
+    public static final double CB_HOOK = .187;
+    public static final double FB_HOOK = -1;
 }

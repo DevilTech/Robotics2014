@@ -31,9 +31,8 @@ public class Wiring extends WiringParent{
     
     public static final double CENTER_OF_ROTATION = .36;
     
-    // these are for comp. chassis
-    public static final double CF_HOOK = .255;
-    public static final double FF_HOOK = .588;
-    public static final double CB_HOOK = 1;
-    public static final double FB_HOOK = -.187;
+    public static final double CF_HOOK = -.236;
+    public static final double FF_HOOK = -.495;
+    public static final double CB_HOOK = .268;
+    public static final double FB_HOOK = -1;
 }
