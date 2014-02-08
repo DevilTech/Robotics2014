@@ -89,6 +89,7 @@ public class DriveSystem {
         sen.readA();
         sen.readG();
         sen.readC();
+        timeTest();
         switch (driveType) {
             case 0:
                 PID_Drive();
@@ -281,7 +282,7 @@ public class DriveSystem {
     
     public void timeTest(){
         double time = Timer.getFPGATimestamp();
-        System.out.println(time-prevTime);
+        System.out.print(time-prevTime + "     ");
         prevTime=time;
     }
 

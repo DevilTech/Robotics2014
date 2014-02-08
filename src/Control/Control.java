@@ -27,8 +27,9 @@ public class Control {
     public static Control getXbox(){
         Control xbox = new Control();
         xbox.rotationAxis = 4;
-        xbox.forwardAxis = 1;
-        xbox.rightAxis = 2;
+        xbox.forwardAxis = 2;
+        xbox.invertY = -1;
+        xbox.rightAxis = 1;
         xbox.FCSwitch = 3;
         xbox.PIDSwitch = 2;
         xbox.hatUp = 1;
