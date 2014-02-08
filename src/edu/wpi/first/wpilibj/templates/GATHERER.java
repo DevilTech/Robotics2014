@@ -15,8 +15,10 @@ import edu.wpi.first.wpilibj.Talon;
  */
 public class Gatherer {
 
-    Solenoid armUp;
-    Solenoid armDown;
+    Solenoid armLeftUp;
+    Solenoid armLeftDown;
+    Solenoid armRightUp;
+    Solenoid armRightDown;
     Talon armMotorL;
     Talon armMotorR;
 
@@ -24,22 +26,29 @@ public class Gatherer {
     {
         armMotorL = new Talon(Wiring.MOTOR_GATHERER_LEFT);
         armMotorR = new Talon(Wiring.MOTOR_GATHERER_RIGHT);
-        armUp = new Solenoid(Wiring.SOLENOID_GATHERER_IN);
-        armDown = new Solenoid(Wiring.SOLENOID_GATHERER_OUT);
-        armUp.set(true);
-        armDown.set(false);
+        armLeftUp = new Solenoid(Wiring.SOLENOID_GATHERER_LEFT_IN);
+        armLeftDown = new Solenoid(Wiring.SOLENOID_GATHERER_LEFT_OUT);
+        armRightUp = new Solenoid(Wiring.SOLENOID_GATHERER_RIGHT_IN);
+        armRightDown = new Solenoid(Wiring.SOLENOID_GATHERER_RIGHT_OUT);
+        armLeftUp.set(true);
+        armRightUp.set(true);
+        armLeftDown.set(false);
+        armRightDown.set(false);
     }
 
     public void up() //Lifts arms of gatherer up
     {
-        armUp.set(true);
-        armDown.set(false);
+        armLeftUp.set(true);
+        armRightUp.set(true);
+        armLeftDown.set(false);
+        armRightDown.set(false);
     }
-
     public void down() //Lowers arms of gatherer
     {
-        armUp.set(false);
-        armDown.set(true);
+        armLeftUp.set(false);
+        armRightUp.set(false);
+        armLeftDown.set(true);
+        armRightDown.set(true);
     }
 
     public void startIn() //Starts the motors of gatherer forward

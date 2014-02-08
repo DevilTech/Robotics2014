@@ -15,6 +15,8 @@ public class Wiring extends WiringParent{
     public static final boolean isTest = false;
     
     public static final double MAX_XY = 170;
+    
+    public static final int CAMERA_SERVO = 1;
  
     //K is for PID control
     //P is proportion, D is derivative
@@ -35,8 +37,10 @@ public class Wiring extends WiringParent{
     
     public static final int MOTOR_GATHERER_LEFT = 5;
     public static final int MOTOR_GATHERER_RIGHT = 6;
-    public static final int SOLENOID_GATHERER_OUT = 1;
-    public static final int SOLENOID_GATHERER_IN = 2;
+    public static final int SOLENOID_GATHERER_LEFT_OUT = 1;
+    public static final int SOLENOID_GATHERER_LEFT_IN = 2;
+    public static final int SOLENOID_GATHERER_RIGHT_OUT = 3;
+    public static final int SOLENOID_GATHERER_RIGHT_IN = 4;
     
     public static final double GATHERER_SPEED_FORWARD = 1;
     public static final double GATHERER_SPEED_REVERSE = 1;
