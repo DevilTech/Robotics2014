@@ -173,7 +173,7 @@ public class RobotTemplate extends IterativeRobot {
         SmartDashboard.putNumber("aX", sensor.getAccelX());
         SmartDashboard.putNumber("aY", sensor.getAccelY());
         SmartDashboard.putNumber("GZ", d.GZ);
-        SmartDashboard.putNumber("enX", enX.getRate());
+        SmartDashboard.putNumber("enX", enX.getDistance());
         SmartDashboard.putNumber("enY", enY.getDistance());
         SmartDashboard.putNumber("errorH", d.errorInHeading);
         /*
