@@ -15,10 +15,9 @@ import edu.wpi.first.wpilibj.Talon;
  */
 public class Gatherer {
 
-    Solenoid armLeftUp;
-    Solenoid armLeftDown;
-    Solenoid armRightUp;
-    Solenoid armRightDown;
+
+    Solenoid armUp;
+    Solenoid armDown;
     Talon armMotorL;
     Talon armMotorR;
 
@@ -26,35 +25,27 @@ public class Gatherer {
     {
         armMotorL = new Talon(Wiring.MOTOR_GATHERER_LEFT);
         armMotorR = new Talon(Wiring.MOTOR_GATHERER_RIGHT);
-        armLeftUp = new Solenoid(Wiring.SOLENOID_GATHERER_LEFT_IN);
-        armLeftDown = new Solenoid(Wiring.SOLENOID_GATHERER_LEFT_OUT);
-        armRightUp = new Solenoid(Wiring.SOLENOID_GATHERER_RIGHT_IN);
-        armRightDown = new Solenoid(Wiring.SOLENOID_GATHERER_RIGHT_OUT);
-        armLeftUp.set(true);
-        armRightUp.set(true);
-        armLeftDown.set(false);
-        armRightDown.set(false);
+        armUp = new Solenoid(Wiring.SOLENOID_GATHERER_IN);
+        armDown = new Solenoid(Wiring.SOLENOID_GATHERER_OUT);
+        armUp.set(true);
+        armDown.set(false);
     }
 
     public void up() //Lifts arms of gatherer up
     {
-        armLeftUp.set(true);
-        armRightUp.set(true);
-        armLeftDown.set(false);
-        armRightDown.set(false);
+        armUp.set(true);
+        armDown.set(false);
     }
     public void down() //Lowers arms of gatherer
     {
-        armLeftUp.set(false);
-        armRightUp.set(false);
-        armLeftDown.set(true);
-        armRightDown.set(true);
+        armUp.set(false);
+        armDown.set(true);
     }
 
-    public void startIn() //Starts the motors of gatherer forward
+    public void startIn() //Starts the motors of gatherer in
     {
         armMotorL.set(Wiring.GATHERER_SPEED_FORWARD);
-        armMotorR.set(Wiring.GATHERER_SPEED_FORWARD);
+        armMotorR.set(-Wiring.GATHERER_SPEED_FORWARD);
     }
 
     public void stop() //Stops the motors of gatherer
@@ -66,7 +57,7 @@ public class Gatherer {
     public void startOut() //Starts the motors of gatherer in reverse
     {
         armMotorL.set(Wiring.GATHERER_SPEED_REVERSE);
-        armMotorR.set(Wiring.GATHERER_SPEED_REVERSE);
+        armMotorR.set(-Wiring.GATHERER_SPEED_REVERSE);
 
     }
 }

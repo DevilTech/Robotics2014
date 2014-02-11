@@ -91,6 +91,7 @@ public class RobotTemplate extends IterativeRobot {
     public void teleopPeriodic() {
         d.getJoy();
         d.calculateInput();
+        gathererButtonCheck();
         smartPush();
         smartPull();
     }      
@@ -120,6 +121,7 @@ public class RobotTemplate extends IterativeRobot {
             g.startOut();
         } else {
             g.up();
+            g.stop();
         }
     }
     
