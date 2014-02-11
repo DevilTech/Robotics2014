@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import Test.Wiring;
+import Competition.Wiring;
 import Control.Control;
 import edu.wpi.first.wpilibj.Timer;
 
@@ -42,7 +42,7 @@ public class RobotTemplate extends IterativeRobot {
     public void robotInit() {
         setupEncoders();
         if(!Wiring.isTest){
-            compressor = new Compressor(1, 1);
+            compressor = new Compressor(Wiring.COMPRESSER_PRESSURE_SWITCH, Wiring.COMPRESSER_RELAY);
             compressor.start();
             g = new Gatherer();
             shooter = new Shooter();

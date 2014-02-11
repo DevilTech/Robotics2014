@@ -22,7 +22,7 @@ public class Camera
     
     public Camera()
     {
-        servo = new Servo(Wiring.CAMERA_SERVO
+        servo = new Servo(Wiring.CAMERA_SERVO);
         lowMotion = 50.0;
         highMotion = 75.0;
         motionPercent = 0.0;
