@@ -18,7 +18,7 @@ public class Wiring extends WiringParent{
     
     public static final int CAMERA_SERVO = 1;
     
-    public static final int COMPRESSER_RELAY = 1;
+    public static final int COMPRESSER_RELAY = 7;
     public static final int COMPRESSER_PRESSURE_SWITCH = 1;
  
     //K is for PID control
