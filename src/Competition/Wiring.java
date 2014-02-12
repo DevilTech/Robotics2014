@@ -18,8 +18,8 @@ public class Wiring extends WiringParent{
     
     public static final int CAMERA_SERVO = 1;
     
-    public static final int COMPRESSER_RELAY = 7;
-    public static final int COMPRESSER_PRESSURE_SWITCH = 14;
+    public static final int COMPRESSOR_RELAY = 8;
+    public static final int COMPRESSOR_PRESSURE_SWITCH = 14;
  
     //K is for PID control
     //P is proportion, D is derivative
@@ -40,8 +40,10 @@ public class Wiring extends WiringParent{
     
     public static final int MOTOR_GATHERER_LEFT = 5;
     public static final int MOTOR_GATHERER_RIGHT = 6;
-    public static final int SOLENOID_GATHERER_OUT = 1;
-    public static final int SOLENOID_GATHERER_IN = 2;
+    
+    public static final int SOLENOID_GATHERER_OUT = 3;
+    public static final int SOLENOID_GATHERER_IN = 4;
+    public static final int SOLENOID_SHOOTER_TENSIONED = 1;
     
     public static final double GATHERER_SPEED_FORWARD = 1;
     public static final double GATHERER_SPEED_REVERSE = -1;
@@ -55,8 +57,6 @@ public class Wiring extends WiringParent{
     public static final int UNCOCKED = 8;
     public static final int TENSIONED = 7;
     public static final int DETENSIONED = 6;
-    
-    public static final int TENSION_SOLENOID = 3;
     
     public static final int DEFENSIVE_ARM_UP = 2;
     public static final int DEFENSIVE_ARM_DOWN = 3;

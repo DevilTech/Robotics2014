@@ -28,7 +28,7 @@ public class RobotTemplate extends IterativeRobot {
     Gatherer g;
     Joystick joy;
     double previousValue = 0;
-    Happystick control;
+    Happystick driver;
     Happystick coPilot;
     boolean hasReached2;
     boolean hasReached3;
@@ -42,14 +42,14 @@ public class RobotTemplate extends IterativeRobot {
     public void robotInit() {
         setupEncoders();
         if(!Wiring.isTest){
-            compressor = new Compressor(Wiring.COMPRESSER_PRESSURE_SWITCH, Wiring.COMPRESSER_RELAY);
+            compressor = new Compressor(Wiring.COMPRESSOR_PRESSURE_SWITCH, Wiring.COMPRESSOR_RELAY);
             compressor.start();
             g = new Gatherer();
             shooter = new Shooter();
         }
-        control = new Happystick(1, Control.getXbox());
+        driver = new Happystick(1, Control.getXbox());
         coPilot = new Happystick(2, Control.getXbox());
-        d = new DriveSystem(sensor, control, enY, enX, Wiring.OPEN_C);
+        d = new DriveSystem(sensor, driver, enY, enX, Wiring.OPEN_C);
         
     }
 
@@ -113,10 +113,10 @@ public class RobotTemplate extends IterativeRobot {
     }
 
     public void gathererButtonCheck() {
-        if (control.getGather()) {
+        if (driver.getGather()) {
             g.down();
             g.startIn();
-        } else if (control.getReverseGather()) {
+        } else if (driver.getReverseGather()) {
             g.up();
             g.startOut();
         } else {
@@ -127,7 +127,7 @@ public class RobotTemplate extends IterativeRobot {
     
     public void shooterButtonCheck(){
         shooter.Cock();
-        if (control.getShoot() && shootonce) 
+        if (driver.getShoot() && shootonce) 
         {
             shooter.shoot();
             shootonce = false;

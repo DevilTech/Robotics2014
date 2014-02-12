@@ -26,7 +26,7 @@ public class Shooter {
     public Shooter()
     {
         motor = new Jaguar(Wiring.MOTOR_SHOOTER);
-        tension = new Solenoid(Wiring.TENSION_SOLENOID);
+        tension = new Solenoid(Wiring.SOLENOID_SHOOTER_TENSIONED);
         tensioned = new Counter(Wiring.TENSIONED);
         deTensioned = new Counter(Wiring.DETENSIONED);
         tension.set(false);
