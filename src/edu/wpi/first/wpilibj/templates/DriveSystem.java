@@ -107,9 +107,9 @@ public class DriveSystem {
     }
 
     public void calculateInput() {
+        
         theta = sen.getCompassRadAngle(initialHeading);
         
-
         if (FCMode) {
             if (Math.abs(speedZ) > .01) {
                 heading = theta;
@@ -205,7 +205,7 @@ public class DriveSystem {
     //stuff that does stuff (ha ha)
     public void PID_Drive() {
 
-        GZ = sen.getGyroZ() * Wiring.G_SCALE;
+        GZ = -sen.getGyroZ() * Wiring.G_SCALE;
 
         double VY = enY.getRate();
         double VX = enX.getRate();
@@ -217,8 +217,8 @@ public class DriveSystem {
             return;
         }
 
-        double AY = sen.getAccelY() / Wiring.A_SCALE;// expected V range +/- maxXY
-        double AX = sen.getAccelX() / Wiring.A_SCALE;// expected A range +/- 28.6
+        double AY = -sen.getAccelY() / Wiring.A_SCALE;// expected V range +/- maxXY
+        double AX = -sen.getAccelX() / Wiring.A_SCALE;// expected A range +/- 28.6
 
         //adds to forwardY the amount in which we want to move in y direction in in/s
         //max velocity times amount requested (-1, 1), minus current speed
@@ -231,7 +231,7 @@ public class DriveSystem {
 
         clockwiseZ = (Wiring.KfR * speedZ) + (Wiring.KpR * (Wiring.MAX_R * speedZ + GZ));
 
-        double tempCZ = clockwiseZ + errorInHeading;
+        double tempCZ = clockwiseZ - errorInHeading;
         double tempFY = (Wiring.KfY * speedY) + forwardY - (Wiring.KdY * AY);
         double tempRX = (Wiring.KfX * speedX) + rightX - (Wiring.KdX * AX);
 
@@ -246,10 +246,12 @@ public class DriveSystem {
     }
 
     public void halfOpen() {
+        
+        GZ = -sen.getGyroZ() * Wiring.G_SCALE;
 
         clockwiseZ = Wiring.KpR * (Wiring.MAX_R * speedZ + GZ);
 
-        double tempCZ = clockwiseZ + errorInHeading;
+        double tempCZ = clockwiseZ - errorInHeading;
         double tempFY = speedY;
         double tempRX = speedX * .577;
 
