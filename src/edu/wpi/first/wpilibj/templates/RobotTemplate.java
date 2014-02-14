@@ -39,7 +39,6 @@ public class RobotTemplate extends IterativeRobot {
         
     }
     public void autonomousPeriodic() {
-        shooter.Cock();
         //if (SmartDashboard.getBoolean("HotGoal")) shooter.shoot();
     }
 
@@ -47,27 +46,12 @@ public class RobotTemplate extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopInit(){
-        shootonce = true;
     }
     public void teleopPeriodic() {
-        shooter.Cock();
-        if (joystick.getRawButton(1) && shootonce) 
+        shooter.keepCocked();
+        if (joystick.getRawButton(1)) 
         {
             shooter.shoot();
-            shootonce = false;
-        }
-        if (shooter.unCocked.get() >= 1)
-        {
-            shootonce = true;
-            shooter.unCocked.reset();
         }
     }
-    
-    /**
-     * This function is called periodically during test mode
-     */
-    public void testPeriodic() {
-    
-    }
-    
 }

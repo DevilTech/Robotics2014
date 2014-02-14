@@ -13,16 +13,17 @@ public class Wiring {
     //Joystick
     public static final int joystick = 1;
     
-    //Motors
-    public static final int shooterMotor = 3;
-    
     // Solenoids
     public static final int tension = 1;
+    public static final int shootIn = 1;
+    public static final int shootOut = 2;
+    public static final int preTensionIn = 3;
+    public static final int preTensionOut = 4;
     
     //Digital Sensors
-    public static final int cocked = 1;
-    public static final int unCocked = 4;
+    public static final int up = 1;
+    public static final int down = 2;
     public static final int tensioned = 3;
-    public static final int deTensioned = 2;
+    public static final int deTensioned = 4;
 }
 

@@ -6,100 +6,99 @@
 package edu.wpi.first.wpilibj.templates;
 
 import edu.wpi.first.wpilibj.Counter;
+import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.Jaguar;
 
 /**
  *
  *
  */
 public class Shooter {
-    Jaguar motor;
-    Solenoid tension;
+    Relay tension;
+    Counter up;
+    Counter down;
     Counter tensioned;
     Counter deTensioned;
-    Counter cocked;
-    Counter unCocked;
     int state = 0;
+    Solenoid preTensionIn;
+    Solenoid preTensionOut;
+    Solenoid shootIn;
+    Solenoid shootOut;
     
     public Shooter()
     {
-        motor = new Jaguar(Wiring.shooterMotor);
-        tension = new Solenoid(Wiring.tension);
+        preTensionIn = new Solenoid(Wiring.preTensionIn);
+        preTensionOut = new Solenoid(Wiring.preTensionOut);
+        shootIn = new Solenoid(Wiring.shootIn);
+        shootOut = new Solenoid(Wiring.shootOut);
+        tension = new Relay(Wiring.tension);
         tensioned = new Counter(Wiring.tensioned);
+        up = new Counter(Wiring.up);
+        down = new Counter(Wiring.down);
         deTensioned = new Counter(Wiring.deTensioned);
-        tension.set(false);
-        cocked = new Counter(Wiring.cocked);
-        unCocked = new Counter(Wiring.unCocked);
+        tension.set(Relay.Value.kOff);
+        shootIn.set(true);
+        shootOut.set(false);
+        preTensionIn.set(true);
+        preTensionOut.set(false);
         tensioned.start();
+        up.start();
+        down.start();
         deTensioned.start();
-        cocked.start();
-        unCocked.start();
     }
     
-    public void Cock()
+    public void keepCocked()
     {
-        //System.out.println("Got This far.");
         switch (state)
         {
-        case 0:   
-            System.out.println("Checking Position...");
-            if (unCocked.get() >= 1 && deTensioned.get() >= 1 && !tension.get()) 
-            {
-                state = 1;
+            case 0:
+                System.out.println("checking position...");
+                if (up.get() >= 1 && deTensioned.get() >= 1) {state = 1;}
+                if (down.get() >= 1 && deTensioned.get() >= 1) {state = 2;}
+                if (down.get() >= 1 && tensioned.get() >= 1) {state = 3;}
+                if (up.get() >= 1 && tensioned.get() >= 1) {state = 4;}
                 resetAllCounters();
-            }
-            if (cocked.get() >= 1 && deTensioned.get() >= 1 && !tension.get()) 
-            {
-                state = 2;
-                resetAllCounters();
-            }
-            if (cocked.get() >= 1 && tensioned.get() >= 1 && tension.get()) 
-            {
-                state = 3;
-                resetAllCounters();
-            }
-            if (unCocked.get() >= 1 && tensioned.get() >= 1 && tension.get()) 
-            {
-                state = 4;
-                resetAllCounters();
-            }
-            break;
-        case 1:
-            System.out.println("Cocking...");
-            motor.set(0.6);
-            if (cocked.get() >= 1) 
-            {
-                state = 2;
-                resetAllCounters();
-            }
-            break;
-        case 2:
-            System.out.println("Tensioning...");
-            tension.set(true);
-            motor.set(0);
-            if(tensioned.get() >= 1) 
-            {
-                state = 3;
-                resetAllCounters();
-            }
-            break;
-        case 3:
-            System.out.println("Ready To Shoot...");
-            break;
-        case 4:
-            if (unCocked.get() >= 1)
-            {
-                motor.set(0);
-                tension.set(false);
-                System.out.println("Done Shooting...");
-                state = 1;
-                resetAllCounters();
-            }
-            break;
-        default:
-            state = 0;
-            break;
+                break;
+            case 1:
+                if (deTensioned.get() >= 1)
+                {
+                preTensionOut.set(true);
+                preTensionIn.set(false);
+                }
+                System.out.println("pretensioning and waiting for arm");
+                if (down.get() >= 1)
+                {
+                    state = 2;
+                    resetAllCounters();
+                }
+                break;
+            case 2:
+                tension.set(Relay.Value.kForward);
+                preTensionIn.set(true);
+                preTensionOut.set(false);
+                System.out.println("tensioning");
+                if (tensioned.get() >= 1)
+                {
+                    state = 3;
+                    resetAllCounters();
+                }
+                break;
+            case 3:
+                System.out.println("ready to shoot");
+                break;
+            case 4:
+                if (up.get() >= 1)
+                System.out.println("detensioning and releasing shooter piston");
+                {
+                    shootIn.set(true);
+                    shootOut.set(false);
+                    state = 1;
+                    resetAllCounters();
+                }
+                break;
+            default:
+                state = 0;
+                break;
         }
     }
     
@@ -107,8 +106,8 @@ public class Shooter {
     {
         if (state == 3)
         {
-            motor.set(-.6);
-            System.out.println("Shooting...");
+            shootOut.set(true);
+            shootIn.set(false);
             state = 4;
         }
         else
@@ -118,8 +117,8 @@ public class Shooter {
     }
     public void resetAllCounters()
     {
-        cocked.reset();
-        unCocked.reset();
+        up.reset();
+        down.reset();
         tensioned.reset();
         deTensioned.reset();
     }
