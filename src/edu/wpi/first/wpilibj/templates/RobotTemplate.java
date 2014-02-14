@@ -58,12 +58,10 @@ public class RobotTemplate extends IterativeRobot {
         d.driveSystemInit();
     }
 
-    public void autonomousPeriodic() {
-        
+    public void autonomousPeriodic() {     
     }
     
     public void autoOffense(){
-        shooter.Cock();
     }
     
     public void autoDeffense(){
@@ -87,6 +85,7 @@ public class RobotTemplate extends IterativeRobot {
         d.driveSystemInit();
         shootonce = true;
     }
+ 
 
     public void teleopPeriodic() {
         d.getJoy();
@@ -126,17 +125,13 @@ public class RobotTemplate extends IterativeRobot {
     }
     
     public void shooterButtonCheck(){
-        shooter.Cock();
-        if (driver.getShoot() && shootonce) 
-        {
+
+        if (driver.getShoot()){
             shooter.shoot();
-            shootonce = false;
+        }else{
+            shooter.keepCocked();
         }
-        if (shooter.unCocked.get() >= 1)
-        {
-            shootonce = true;
-            shooter.unCocked.reset();
-        }
+
     }
 
     public void defenseCheck() {
@@ -207,4 +202,7 @@ public class RobotTemplate extends IterativeRobot {
         enX.setDistancePerPulse(2.75 * Math.PI / 90);
         enY.setDistancePerPulse(2.75 * Math.PI / 90);
     }
-}
+
+    }
+
+
