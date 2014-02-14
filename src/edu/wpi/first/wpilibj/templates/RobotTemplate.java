@@ -17,9 +17,7 @@ import Competition.Wiring;
 import Control.Control;
 import edu.wpi.first.wpilibj.Timer;
 
-
 public class RobotTemplate extends IterativeRobot {
-
 
     Encoder enX = new Encoder(Wiring.ENCODER_X[0], Wiring.ENCODER_X[1]);
     Encoder enY = new Encoder(Wiring.ENCODER_Y[0], Wiring.ENCODER_Y[1]);
@@ -49,8 +47,7 @@ public class RobotTemplate extends IterativeRobot {
         }
         driver = new Happystick(1, Control.getXbox());
         coPilot = new Happystick(2, Control.getXbox());
-        d = new DriveSystem(sensor, driver, enY, enX, Wiring.OPEN_C);
-        
+        d = new DriveSystem(sensor, driver, enY, enX, Wiring.OPEN_C);       
     }
 
     public void autonomousInit() {
@@ -58,13 +55,12 @@ public class RobotTemplate extends IterativeRobot {
         d.driveSystemInit();
     }
 
-    public void autonomousPeriodic() {     
-    }
+    public void autonomousPeriodic() { }
     
     public void autoOffense(){
     }
     
-    public void autoDeffense(){
+    public void autoDefence(){
         if (enY.getDistance() < 24 && !hasReached2) {
             d.setSpeed(0, ((24 - enY.getDistance()) / 48), 0, (45 * Math.PI / 180));
         } else if (!hasReached2) {
@@ -107,9 +103,7 @@ public class RobotTemplate extends IterativeRobot {
         smartPull();
     }
 
-    public void testPeriodic() {
-        
-    }
+    public void testPeriodic() { }
 
     public void gathererButtonCheck() {
         if (driver.getGather()) {
@@ -125,17 +119,14 @@ public class RobotTemplate extends IterativeRobot {
     }
     
     public void shooterButtonCheck(){
-
         if (driver.getShoot()){
             shooter.shoot();
-        }else{
+        } else{
             shooter.keepCocked();
         }
-
     }
 
     public void defenseCheck() {
-        
         if(coPilot.getArmRaise())
         {
             if(arm.upLeft.get() && arm.upRight.get())
@@ -152,7 +143,7 @@ public class RobotTemplate extends IterativeRobot {
     
     public void smartInit() {
         smartPush();
-
+        
         SmartDashboard.putNumber("dt", Wiring.dt);
         SmartDashboard.putNumber("kpR", Wiring.KpR);
         SmartDashboard.putNumber("kpR", Wiring.KpR);
@@ -202,7 +193,4 @@ public class RobotTemplate extends IterativeRobot {
         enX.setDistancePerPulse(2.75 * Math.PI / 90);
         enY.setDistancePerPulse(2.75 * Math.PI / 90);
     }
-
-    }
-
-
+}
