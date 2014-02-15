@@ -16,8 +16,7 @@ import edu.wpi.first.wpilibj.Talon;
 public class Gatherer {
 
 
-    Solenoid armUp;
-    Solenoid armDown;
+    DoubleSolenoid arm;
     Talon armMotorL;
     Talon armMotorR;
 
@@ -25,21 +24,17 @@ public class Gatherer {
     {
         armMotorL = new Talon(Wiring.MOTOR_GATHERER_LEFT);
         armMotorR = new Talon(Wiring.MOTOR_GATHERER_RIGHT);
-        armUp = new Solenoid(Wiring.SOLENOID_GATHERER_IN);
-        armDown = new Solenoid(Wiring.SOLENOID_GATHERER_OUT);
-        armUp.set(true);
-        armDown.set(false);
+        arm = new DoubleSolenoid(Wiring.SOLENOID_GATHERER_IN, Wiring.SOLENOID_GATHERER_OUT);
+        arm.set(true);
     }
 
     public void up() //Lifts arms of gatherer up
     {
-        armUp.set(true);
-        armDown.set(false);
+        arm.set(true);
     }
     public void down() //Lowers arms of gatherer
     {
-        armUp.set(false);
-        armDown.set(true);
+        arm.set(false);
     }
 
     public void startIn() //Starts the motors of gatherer in

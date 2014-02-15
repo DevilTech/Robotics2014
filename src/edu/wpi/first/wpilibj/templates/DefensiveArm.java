@@ -12,32 +12,25 @@ import edu.wpi.first.wpilibj.Solenoid;
  * @author robotics
  */
 public class DefensiveArm {
-    Solenoid upLeft;
-    Solenoid downLeft;
-    Solenoid upRight;
-    Solenoid downRight;
+    DoubleSolenoid Left;
+    DoubleSolenoid Right;
+
     boolean isUp = false;
     
     public DefensiveArm() {
-        upLeft = new Solenoid(Wiring.DEFENSIVE_ARM_UP_LEFT);
-        downLeft = new Solenoid(Wiring.DEFENSIVE_ARM_DOWN_LEFT);
-        upRight = new Solenoid(Wiring.DEFENSIVE_ARM_UP_RIGHT);
-        downRight = new Solenoid(Wiring.DEFENSIVE_ARM_DOWN_RIGHT);
+        Left = new DoubleSolenoid(Wiring.DEFENSIVE_ARM_UP_LEFT, Wiring.DEFENSIVE_ARM_DOWN_LEFT);
+        Right = new DoubleSolenoid(Wiring.DEFENSIVE_ARM_UP_RIGHT, Wiring.DEFENSIVE_ARM_DOWN_RIGHT);
     }
     
     public void goUp() {
-        upLeft.set(true);
-        downLeft.set(false);
-        upRight.set(true);
-        downRight.set(false);
+        Left.set(true);
+        Right.set(true);
         isUp = true;
     }
     
     public void goDown() {
-        upLeft.set(false);
-        downLeft.set(true);
-        upRight.set(false);
-        downRight.set(true);
+        Left.set(false);
+        Right.set(false);
         isUp = false;
     }
     

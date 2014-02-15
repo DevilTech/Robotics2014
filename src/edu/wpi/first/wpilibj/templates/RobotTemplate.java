@@ -138,7 +138,7 @@ public class RobotTemplate extends IterativeRobot {
         
         if(coPilot.getArmRaise())
         {
-            if(arm.upLeft.get() && arm.upRight.get())
+            if(arm.isUp)
             {
                 arm.goDown();
             }

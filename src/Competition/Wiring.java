@@ -48,7 +48,8 @@ public class Wiring extends WiringParent{
     public static final int SOLENOID_SHOOTER_TENSION_OUT = 4;
     public static final int SOLENOID_SHOOTER_SHOOT_IN  = 5;
     public static final int SOLENOID_SHOOTER_SHOOT_OUT = 6;
-    public static final int RELAY_SHOOTER_TENSIONED = 1;
+    public static final int SOLENOID_SHOOTER_TENSIONED_IN = 7;
+    public static final int SOLENOID_SHOOTER_TENSIONED_OUT = 8;
     
     public static final int LIMIT_SHOOTER_DETENSIONED = 5;
     public static final int LIMIT_SHOOTER_TENSIONED = 6;

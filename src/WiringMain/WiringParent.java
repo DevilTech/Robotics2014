@@ -12,6 +12,7 @@ package WiringMain;
 public class WiringParent {
     public static final int SAMPLE_RATE = 9; //10ms = 1KHz/10
     public static final double SENSOR_SCALE = 1;
+    public static final int MAX_SOLENOID_PASSES = 1;
     public static double dt = 0.01;
     public static final double MAX_R = 2 * Math.PI;
     
