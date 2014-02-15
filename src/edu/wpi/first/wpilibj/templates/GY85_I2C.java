@@ -1,6 +1,5 @@
 package edu.wpi.first.wpilibj.templates;
 
-
 import edu.wpi.first.wpilibj.ADXL345_I2C;
 import edu.wpi.first.wpilibj.DigitalModule;
 import edu.wpi.first.wpilibj.I2C;
@@ -21,8 +20,8 @@ public class GY85_I2C {
     private int compassByte, cStatusByte, gyroByte, accelByte;
     private double compassX, compassY, accelX, accelY, gyroZ;
     private static final double kGsPerLSB = 0.00390625;
-    private static final double DegreesPerLSB  = 14.375;
-    private static final double offsetScale = 4; 
+    private static final double DegreesPerLSB = 14.375;
+    private static final double offsetScale = 4;
 
     public GY85_I2C() {
 
@@ -57,7 +56,7 @@ public class GY85_I2C {
         gwrite.write(21, Wiring.SAMPLE_RATE);
         gwrite.write(22, 0x1b); //2000dps, 42Hz
         gwrite.write(62, 0x33); //sty x, y, clock set to z
-        
+
     }
 
     private void setupAccel() { //ADXL345
@@ -68,11 +67,11 @@ public class GY85_I2C {
         awrite.write(0x2D, 0x08); //Measure mode
         awrite.write(0x31, 0x00); //10bit, sign EXT, 2G
         readA();
-        byte ax = (byte)(((int)-accelX)/4);
-        byte ay = (byte)(((int)-accelY)/4);
+        byte ax = (byte) (((int) -accelX) / 4);
+        byte ay = (byte) (((int) -accelY) / 4);
         awrite.write(0x1E, ax); //x offset
         awrite.write(0x1F, ay); //y offset
-    } 
+    }
 
     double getAccelX() {
         return accelX * kGsPerLSB;
@@ -139,19 +138,15 @@ public class GY85_I2C {
 
     public void readC() {
         cread.read(9, cStatusByte, cStatusBuffer);
-        if ((cStatusBuffer[0] & 0x1) == 1) 
-        {
+        if ((cStatusBuffer[0] & 0x1) == 1) {
             cread.read(3, compassByte, compassBuffer);
 
             double tempX = DTlib.byteCombo(compassBuffer[0], compassBuffer[1]);
             double tempY = DTlib.byteCombo(compassBuffer[4], compassBuffer[5]);
-            
-            if (tempX == -4096 || tempY == -4096) 
-            {
+
+            if (tempX == -4096 || tempY == -4096) {
                 System.out.println("COMPASS OVERFLOW!");
-            } 
-            else 
-            {
+            } else {
                 compassX = tempX;
                 compassY = tempY;
             }

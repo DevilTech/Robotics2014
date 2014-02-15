@@ -8,6 +8,7 @@ import Control.Control;
 import edu.wpi.first.wpilibj.Joystick;
 
 public class Happystick {
+
     Joystick joy;
     Control controller;
     Button FCButt;
@@ -21,9 +22,8 @@ public class Happystick {
     boolean gathExtend = false;
     boolean gathSpinOut = false;
     boolean gathSpinIn = false;
-    
-    
-    public Happystick(int joyNum, Control controller){
+
+    public Happystick(int joyNum, Control controller) {
         joy = new Joystick(joyNum);
         this.controller = controller;
         FCButt = new Button(joy, this.controller.FCSwitch);
@@ -33,84 +33,81 @@ public class Happystick {
         shootButt = new Button(joy, this.controller.shoot);
         armButt = new Button(joy, this.controller.defenseButton);
     }
-    
-    public double getAxis(int num){
-        if (num != 0){
+
+    public double getAxis(int num) {
+        if (num != 0) {
             return joy.getRawAxis(num);
-        }else{
+        } else {
             return 0;
         }
-        
+
     }
-    public double getRotation(){
+
+    public double getRotation() {
         return getAxis(controller.rotationAxis) * controller.invertR;
     }
-    
-    public double getForward(){
+
+    public double getForward() {
         return getAxis(controller.forwardAxis) * controller.invertY;
     }
-    
-    public double getRight(){
+
+    public double getRight() {
         return getAxis(controller.rightAxis) * controller.invertX;
     }
-    
-    public boolean getFCSwitch(){
+
+    public boolean getFCSwitch() {
         return FCButt.getReHit();
     }
-    
-    public boolean getLoopSwitch(){
+
+    public boolean getLoopSwitch() {
         return PIDButt.getReHit();
     }
-    
-    public boolean getHATUp(){
+
+    public boolean getHATUp() {
         return (getAxis(controller.hatVertical) == controller.hatUp);
     }
-    
-    public boolean getHATDown(){
+
+    public boolean getHATDown() {
         return (getAxis(controller.hatVertical) == controller.hatDown);
     }
-    
-    public boolean getHATRight(){
+
+    public boolean getHATRight() {
         return (getAxis(controller.hatHorizontal) == controller.hatRight);
     }
-    
-    public boolean getHATLeft(){
+
+    public boolean getHATLeft() {
         return (joy.getRawAxis(controller.hatHorizontal) == controller.hatLeft);
     }
-    
-    public boolean getGather(){
-       return gathButt.isPressed();
+
+    public boolean getGather() {
+        return gathButt.isPressed();
     }
-    
-    public boolean getReverseGather(){
+
+    public boolean getReverseGather() {
         return revButt.isPressed();
     }
-    
-    public boolean getLeftHook(){
-        if (getAxis(controller.hookAxis) > controller.hookAxisSens){
+
+    public boolean getLeftHook() {
+        if (getAxis(controller.hookAxis) > controller.hookAxisSens) {
             return true;
-        }
-        else{
+        } else {
             return false;
         }
     }
-    
-    public boolean getRightHook(){
-        if (getAxis(controller.hookAxis) < -controller.hookAxisSens){
+
+    public boolean getRightHook() {
+        if (getAxis(controller.hookAxis) < -controller.hookAxisSens) {
             return true;
-        }
-        else{
+        } else {
             return false;
         }
     }
-    
-    public boolean getShoot(){
+
+    public boolean getShoot() {
         return shootButt.getReHit();
     }
-    
+
     public boolean getArmRaise() {
         return armButt.getReHit();
     }
-    
-            
 }

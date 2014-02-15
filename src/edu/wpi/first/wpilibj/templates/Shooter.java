@@ -31,11 +31,10 @@ public class Shooter {
         tension.retract();
         shoot.extend();
         preTension.extend();
-        tensioned.start();
-        up.start();
-        down.start();
-        deTensioned.start();
+
     }
+    
+
 
     public void keepCocked() {
         switch (state) {

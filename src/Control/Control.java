@@ -9,7 +9,7 @@ package Control;
  * @author robotics
  */
 public class Control {
-    
+
     public int rotationAxis, forwardAxis, rightAxis;
     public int FCSwitch, PIDSwitch;
     public int invertY = 1, invertX = 1, invertR = 1;
@@ -23,9 +23,12 @@ public class Control {
     public double hookAxisSens;
     public int defenseButton;
 
-    private Control (){};
-        
-    public static Control getXbox(){
+    private Control() {
+    }
+
+    ;
+
+    public static Control getXbox() {
         Control xbox = new Control();
         xbox.rotationAxis = 4;
         xbox.forwardAxis = 2;
@@ -48,8 +51,8 @@ public class Control {
         xbox.defenseButton = 1;
         return xbox;
     }
-    
-    public static Control getPilot(){
+
+    public static Control getPilot() {
         Control pilot = new Control();
         pilot.rotationAxis = 3;
         pilot.forwardAxis = 1;

@@ -11,29 +11,29 @@ import edu.wpi.first.wpilibj.Joystick;
  * @author robotics
  */
 public class Button {
+
     Joystick joy;
     int button;
     private boolean isReal = false;
-
     private boolean hasBeenTriggered = false;
-    
-    public Button(Joystick joy, int button){
+
+    public Button(Joystick joy, int button) {
         this.joy = joy;
-        if(button != 0){
+        if (button != 0) {
             this.button = button;
             isReal = true;
         } else {
             isReal = false;
         }
-        
+
     }
-    
-    public boolean isPressed(){
+
+    public boolean isPressed() {
         return joy.getRawButton(button);
     }
 
     public boolean getReHit() {
-        if (!isReal){
+        if (!isReal) {
             return false;
         }
         if (joy.getRawButton(button)) {
