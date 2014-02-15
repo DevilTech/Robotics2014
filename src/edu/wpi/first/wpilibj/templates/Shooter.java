@@ -28,6 +28,10 @@ public class Shooter {
         up = new Counter(Wiring.LIMIT_SHOOTER_UP);
         down = new Counter(Wiring.LIMIT_SHOOTER_DOWN);
         deTensioned = new Counter(Wiring.LIMIT_SHOOTER_DETENSIONED);
+        setupSolenoids();
+    }
+    
+    public void setupSolenoids() {
         tension.set(false);
         shoot.set(true);
         preTension.set(true);
