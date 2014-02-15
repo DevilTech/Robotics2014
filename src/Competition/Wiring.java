@@ -24,41 +24,46 @@ public class Wiring extends WiringParent {
     public static double KpX = 3.1 / MAX_XY * dt;              //13.4
     public static double KdX = .98 / MAX_XY; //0.01 * dt * dt   //.49
     public static double KfX = MAX_XY / 308;
+    
     public static final int MOTOR_LF = 1;
     public static final int MOTOR_RF = 2;
     public static final int MOTOR_LB = 3;
     public static final int MOTOR_RB = 4;
+    
     public static final int MOTOR_GATHERER_LEFT = 5;
     public static final int MOTOR_GATHERER_RIGHT = 6;
     public static final int SOLENOID_GATHERER_OUT = 1;
     public static final int SOLENOID_GATHERER_IN = 2;
+    
     public static final int SOLENOID_SHOOTER_TENSION_IN = 3;
     public static final int SOLENOID_SHOOTER_TENSION_OUT = 4;
     public static final int SOLENOID_SHOOTER_SHOOT_IN = 5;
     public static final int SOLENOID_SHOOTER_SHOOT_OUT = 6;
     public static final int SOLENOID_SHOOTER_TENSIONED_IN = 7;
     public static final int SOLENOID_SHOOTER_TENSIONED_OUT = 8;
+    
     public static final int LIMIT_SHOOTER_DETENSIONED = 5;
     public static final int LIMIT_SHOOTER_TENSIONED = 6;
     public static final int LIMIT_SHOOTER_UP = 7;
     public static final int LIMIT_SHOOTER_DOWN = 8;
+    
     public static final double GATHERER_SPEED_FORWARD = 1;
     public static final double GATHERER_SPEED_REVERSE = -1;
+    
     public static final double CENTER_OF_ROTATION = .608;
-    public static final int MOTOR_SHOOTER = 8;
+    
     public static final int COCKED = 5;
     public static final int UNCOCKED = 8;
     public static final int TENSIONED = 7;
     public static final int DETENSIONED = 6;
+     
     public static final int DEFENSIVE_ARM_UP_LEFT = 2;
     public static final int DEFENSIVE_ARM_DOWN_LEFT = 3;
     public static final int DEFENSIVE_ARM_UP_RIGHT = 4;
     public static final int DEFENSIVE_ARM_DOWN_RIGHT = 5;
-
     
     public static final int DEFENSIVE_ARM_DOWN = 1;
     public static final int DEFENSIVE_ARM_UP = 2;
-    
 
     public static final double CF_HOOK = -.255;
     public static final double FF_HOOK = -.588;
