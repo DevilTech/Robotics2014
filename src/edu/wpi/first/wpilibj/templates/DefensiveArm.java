@@ -12,25 +12,21 @@ import edu.wpi.first.wpilibj.Solenoid;
  * @author robotics
  */
 public class DefensiveArm {
-    DoubleSolenoid Left;
-    DoubleSolenoid Right;
+    Piston pis;
 
     boolean isUp = false;
     
     public DefensiveArm() {
-        Left = new DoubleSolenoid(Wiring.DEFENSIVE_ARM_UP_LEFT, Wiring.DEFENSIVE_ARM_DOWN_LEFT);
-        Right = new DoubleSolenoid(Wiring.DEFENSIVE_ARM_UP_RIGHT, Wiring.DEFENSIVE_ARM_DOWN_RIGHT);
+        pis = new Piston(Wiring.DEFENSIVE_ARM_UP, Wiring.DEFENSIVE_ARM_DOWN);
     }
     
     public void goUp() {
-        Left.set(true);
-        Right.set(true);
+        pis.extend();
         isUp = true;
     }
     
     public void goDown() {
-        Left.set(false);
-        Right.set(false);
+        pis.retract();
         isUp = false;
     }
     

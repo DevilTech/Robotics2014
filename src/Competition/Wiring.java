@@ -69,6 +69,9 @@ public class Wiring extends WiringParent {
     public static final int DEFENSIVE_ARM_UP_RIGHT = 4;
     public static final int DEFENSIVE_ARM_DOWN_RIGHT = 5;
     
+    public static final int DEFENSIVE_ARM_DOWN = 1;
+    public static final int DEFENSIVE_ARM_UP = 2;
+    
     public static final double CF_HOOK = -.255;
     public static final double FF_HOOK = -.588;
     public static final double CB_HOOK = .187;

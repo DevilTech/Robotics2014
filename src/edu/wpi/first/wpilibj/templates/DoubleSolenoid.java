@@ -33,9 +33,6 @@ public class DoubleSolenoid {
             if (onePasses < Wiring.MAX_SOLENOID_PASSES) {
                 one.set(true);
                 onePasses++;
-            } else {
-                one.set(false);
-
             }
         } else {
             oneStatus = false;
@@ -50,10 +47,8 @@ public class DoubleSolenoid {
             if (twoPasses < Wiring.MAX_SOLENOID_PASSES) {
                 two.set(true);
                 twoPasses++;
-            } else {
-                two.set(false);
-
             }
+
         } else {
             twoStatus = false;
             two.set(false);

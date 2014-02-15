@@ -16,21 +16,21 @@ public class Shooter {
     Counter tensioned;
     Counter deTensioned;
     int state = 0;
-    DoubleSolenoid preTension;
-    DoubleSolenoid shoot;
-    DoubleSolenoid tension;
+    Piston preTension;
+    Piston shoot;
+    Piston tension;
 
     public Shooter() {
-        preTension = new DoubleSolenoid(Wiring.SOLENOID_SHOOTER_TENSION_IN, Wiring.SOLENOID_SHOOTER_TENSION_OUT);
-        shoot = new DoubleSolenoid(Wiring.SOLENOID_SHOOTER_SHOOT_IN, Wiring.SOLENOID_SHOOTER_SHOOT_OUT);
-        tension = new DoubleSolenoid(Wiring.SOLENOID_SHOOTER_TENSIONED_IN, Wiring.SOLENOID_SHOOTER_TENSIONED_OUT);
+        preTension = new Piston(Wiring.SOLENOID_SHOOTER_TENSION_IN, Wiring.SOLENOID_SHOOTER_TENSION_OUT);
+        shoot = new Piston(Wiring.SOLENOID_SHOOTER_SHOOT_IN, Wiring.SOLENOID_SHOOTER_SHOOT_OUT);
+        tension = new Piston(Wiring.SOLENOID_SHOOTER_TENSIONED_IN, Wiring.SOLENOID_SHOOTER_TENSIONED_OUT);
         tensioned = new Counter(Wiring.LIMIT_SHOOTER_TENSIONED);
         up = new Counter(Wiring.LIMIT_SHOOTER_UP);
         down = new Counter(Wiring.LIMIT_SHOOTER_DOWN);
         deTensioned = new Counter(Wiring.LIMIT_SHOOTER_DETENSIONED);
-        tension.set(false);
-        shoot.set(true);
-        preTension.set(true);
+        tension.retract();
+        shoot.extend();
+        preTension.extend();
         tensioned.start();
         up.start();
         down.start();
@@ -58,7 +58,7 @@ public class Shooter {
                 break;
             case 1:
                 if (deTensioned.get() >= 1) {
-                    preTension.set(false);
+                    preTension.retract();
                 }
                 //System.out.println("pretensioning and waiting for arm");
                 if (down.get() >= 1) {
@@ -67,8 +67,8 @@ public class Shooter {
                 }
                 break;
             case 2:
-                tension.set(true);
-                preTension.set(true);
+                tension.extend();
+                preTension.extend();
                 //System.out.println("tensioning");
                 if (tensioned.get() >= 1) {
                     state = 3;
@@ -81,7 +81,7 @@ public class Shooter {
             case 4:
                 if (up.get() >= 1) //System.out.println("detensioning and releasing shooter piston");
                 {
-                    shoot.set(true);
+                    shoot.extend();
                     state = 1;
                     resetAllCounters();
                 }
@@ -95,7 +95,7 @@ public class Shooter {
 
     public void shoot() {
         if (state == 3) {
-            shoot.set(false);
+            shoot.retract();
             state = 4;
         } else {
             System.out.println("Trying to Shoot While Not Ready...");
