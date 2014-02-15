@@ -56,6 +56,8 @@ public class Shooter {
                 resetAllCounters();
                 break;
             case 1:
+                tension.sol.valveOne(false);
+                tension.sol.valveTwo(false);
                 if (deTensioned.get() >= 1) {
                     preTension.extend();
                 }
