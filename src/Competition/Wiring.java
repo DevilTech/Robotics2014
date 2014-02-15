@@ -32,6 +32,7 @@ public class Wiring extends WiringParent {
     
     public static final int MOTOR_GATHERER_LEFT = 5;
     public static final int MOTOR_GATHERER_RIGHT = 6;
+    
     public static final int SOLENOID_GATHERER_OUT = 1;
     public static final int SOLENOID_GATHERER_IN = 2;
     
