@@ -30,4 +30,10 @@ public class Piston {
         isExtend = false;
     }
     
+    public void relax(){
+        sol.valveOne(false);
+        sol.valveTwo(false);
+        isExtend = false;
+    }
+    
 }
