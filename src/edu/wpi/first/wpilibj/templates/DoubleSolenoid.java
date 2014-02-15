@@ -44,6 +44,7 @@ public class DoubleSolenoid {
         }
 
     }
+
     public void valveTwo(boolean on) {
         if (on) {
             twoStatus = true;
@@ -61,15 +62,14 @@ public class DoubleSolenoid {
         }
 
     }
-    
-   public void reverse(){
-       valveOne(!oneStatus);
-       valveTwo(!twoStatus);
-   } 
-   
-   public void set(boolean oneOn){
-       valveOne(oneOn);
-       valveTwo(!oneOn);
-   }
-    
+
+    public void reverse() {
+        valveOne(!oneStatus);
+        valveTwo(!twoStatus);
+    }
+
+    public void set(boolean oneOn) {
+        valveOne(oneOn);
+        valveTwo(!oneOn);
+    }
 }

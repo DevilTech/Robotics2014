@@ -39,7 +39,7 @@ public class RobotTemplate extends IterativeRobot {
 
     public void robotInit() {
         setupEncoders();
-        if(!Wiring.isTest){
+        if (!Wiring.isTest) {
             compressor = new Compressor(Wiring.COMPRESSOR_PRESSURE_SWITCH, Wiring.COMPRESSOR_RELAY);
             compressor.start();
             g = new Gatherer();
@@ -47,7 +47,7 @@ public class RobotTemplate extends IterativeRobot {
         }
         driver = new Happystick(1, Control.getXbox());
         coPilot = new Happystick(2, Control.getXbox());
-        d = new DriveSystem(sensor, driver, enY, enX, Wiring.OPEN_C);       
+        d = new DriveSystem(sensor, driver, enY, enX, Wiring.OPEN_C);
     }
 
     public void autonomousInit() {
@@ -55,12 +55,13 @@ public class RobotTemplate extends IterativeRobot {
         d.driveSystemInit();
     }
 
-    public void autonomousPeriodic() { }
-    
-    public void autoOffense(){
+    public void autonomousPeriodic() {
     }
-    
-    public void autoDefence(){
+
+    public void autoOffense() {
+    }
+
+    public void autoDefence() {
         if (enY.getDistance() < 24 && !hasReached2) {
             d.setSpeed(0, ((24 - enY.getDistance()) / 48), 0, (45 * Math.PI / 180));
         } else if (!hasReached2) {
@@ -81,7 +82,6 @@ public class RobotTemplate extends IterativeRobot {
         d.driveSystemInit();
         shootonce = true;
     }
- 
 
     public void teleopPeriodic() {
         d.getJoy();
@@ -89,8 +89,7 @@ public class RobotTemplate extends IterativeRobot {
         gathererButtonCheck();
         smartPush();
         smartPull();
-    }      
-  
+    }
 
     public void disabledInit() {
         d.driveSystemDenit();
@@ -103,7 +102,8 @@ public class RobotTemplate extends IterativeRobot {
         smartPull();
     }
 
-    public void testPeriodic() { }
+    public void testPeriodic() {
+    }
 
     public void gathererButtonCheck() {
         if (driver.getGather()) {
@@ -117,33 +117,29 @@ public class RobotTemplate extends IterativeRobot {
             g.stop();
         }
     }
-    
-    public void shooterButtonCheck(){
-        if (driver.getShoot()){
+
+    public void shooterButtonCheck() {
+        if (driver.getShoot()) {
             shooter.shoot();
-        } else{
+        } else {
             shooter.keepCocked();
         }
     }
 
     public void defenseCheck() {
-        if(coPilot.getArmRaise())
-        {
-            if(arm.isUp)
-            {
+        if (coPilot.getArmRaise()) {
+            if (arm.isUp) {
                 arm.goDown();
-            }
-            else
-            {
+            } else {
                 arm.goUp();
             }
         }
-        
+
     }
-    
+
     public void smartInit() {
         smartPush();
-        
+
         SmartDashboard.putNumber("dt", Wiring.dt);
         SmartDashboard.putNumber("kpR", Wiring.KpR);
         SmartDashboard.putNumber("kpR", Wiring.KpR);
@@ -163,9 +159,9 @@ public class RobotTemplate extends IterativeRobot {
         SmartDashboard.putNumber("enY", enY.getDistance());
         SmartDashboard.putNumber("errorH", d.errorInHeading);
         /*
-         SmartDashboard.putNumber("C", d.clockwiseZ);
-         SmartDashboard.putNumber("R", d.rightX);
-         SmartDashboard.putNumber("F", d.forwardY); //here
+        SmartDashboard.putNumber("C", d.clockwiseZ);
+        SmartDashboard.putNumber("R", d.rightX);
+        SmartDashboard.putNumber("F", d.forwardY); //here
          */
         SmartDashboard.putNumber("heading", d.heading);
         SmartDashboard.putNumber("theta", d.theta);
@@ -180,11 +176,11 @@ public class RobotTemplate extends IterativeRobot {
         Wiring.KdY = SmartDashboard.getNumber("kdY");
         Wiring.KiR = SmartDashboard.getNumber("KiR");
     }
-    
-    public void timeTest(){
+
+    public void timeTest() {
         double time = Timer.getFPGATimestamp();
-        System.out.println(time-prevTime);
-        prevTime=time;
+        System.out.println(time - prevTime);
+        prevTime = time;
     }
 
     public void setupEncoders() {

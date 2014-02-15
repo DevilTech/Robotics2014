@@ -107,9 +107,9 @@ public class DriveSystem {
     }
 
     public void calculateInput() {
-        
+
         theta = sen.getCompassRadAngle(initialHeading);
-        
+
         if (FCMode) {
             if (Math.abs(speedZ) > .01) {
                 heading = theta;
@@ -136,7 +136,7 @@ public class DriveSystem {
         if (control.getLoopSwitch()) {
             driveType = (driveType == Wiring.PID_C) ? Wiring.OPEN_C : Wiring.PID_C;
         }
-        
+
         if (getHooks()) {
             speedX = 0;
             speedZ = 0;
@@ -246,7 +246,7 @@ public class DriveSystem {
     }
 
     public void halfOpen() {
-        
+
         GZ = -sen.getGyroZ() * Wiring.G_SCALE;
 
         clockwiseZ = Wiring.KpR * (Wiring.MAX_R * speedZ + GZ);

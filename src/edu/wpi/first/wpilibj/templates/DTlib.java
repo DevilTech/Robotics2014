@@ -9,23 +9,23 @@ package edu.wpi.first.wpilibj.templates;
  * @author robotics
  */
 public class DTlib {
-    
+
     private static final double kGsPerLSB = 0.00390625;
-    
+
     public static double radianWrap(double d) {
         return (d > Math.PI) ? d - 2 * Math.PI : (d <= -Math.PI) ? d + 2 * Math.PI : d;
     }
-    
+
     public static double clamp(double value) {
         return (value > 1) ? 1 : (value < -1) ? -1 : value;
     }
-    
-    public static boolean isSameSign(double one, double two){
-        return ((one<0)==(two<0));
+
+    public static boolean isSameSign(double one, double two) {
+        return ((one < 0) == (two < 0));
     }
-    
+
     public static int byteCombo(byte num1, byte num2) {
-        return ((num1 << 8) | (num2 & 0x000000ff)); 
+        return ((num1 << 8) | (num2 & 0x000000ff));
     }
 
     public static double accelByteCombo(byte first, byte second) {
@@ -33,18 +33,18 @@ public class DTlib {
         short tempHigh = (short) ((second << 8) & 0xff00);
         return (tempLow | tempHigh) * kGsPerLSB;
     }
-    
+
     public static double f(double t) {
         /* This provides 1/10 of a degree accuracy: */
         return -0.001096995 + t * (1.041963708 + t * (-0.196333807 + t * (-0.060821409)));
     }
-    
-    public static void nanPrint(String scream, double input){
-        if(Double.isNaN(input)){
+
+    public static void nanPrint(String scream, double input) {
+        if (Double.isNaN(input)) {
             System.out.println(scream);
         }
     }
-    
+
     public static double atan2(double y, double x) {
         double pi = Math.PI;
         double pi2 = Math.PI / 2;

@@ -15,13 +15,11 @@ import edu.wpi.first.wpilibj.Talon;
  */
 public class Gatherer {
 
-
     DoubleSolenoid arm;
     Talon armMotorL;
     Talon armMotorR;
 
-    public Gatherer() 
-    {
+    public Gatherer() {
         armMotorL = new Talon(Wiring.MOTOR_GATHERER_LEFT);
         armMotorR = new Talon(Wiring.MOTOR_GATHERER_RIGHT);
         arm = new DoubleSolenoid(Wiring.SOLENOID_GATHERER_IN, Wiring.SOLENOID_GATHERER_OUT);
@@ -32,6 +30,7 @@ public class Gatherer {
     {
         arm.set(true);
     }
+
     public void down() //Lowers arms of gatherer
     {
         arm.set(false);
