@@ -41,11 +41,95 @@ public class Shooter {
         shoot.retract();
         middlePiston.retract();
     }
+<<<<<<< HEAD
     public void initalize()
     {
         outerPistons.retract();
         middlePiston.extend();
         shoot.retract();
+=======
+    
+
+
+    public void keepCocked() {
+        switch (state) {
+
+            case 0:
+                System.out.println("checking position...");
+                if (!isDown() && !deTensioned.get()) {
+                    state = 1;
+                    //switchToCounters();
+                }
+                if (isDown() && !deTensioned.get()) {
+                    state = 2;
+                    //switchToCounters();
+                }
+                if (isDown() && !tensioned.get()) {
+                    state = 3;
+                    //switchToCounters();
+                }
+                if (!isDown() && !tensioned.get()) {
+                    state = 4;
+                    //switchToCounters();
+                }
+                break;
+            case 1:
+                counter = 0;
+                tension.retract();
+                if (!deTensioned.get()) {
+                    preTension.extend();
+                    //resetAllCounters();
+                }
+                System.out.println("pretensioning and waiting for arm");
+                if (isDown()) {
+                    state = 2;
+                    //resetAllCounters();
+                }
+                break;
+            case 2:
+                tension.extend();
+                preTension.retract();
+                System.out.println("tensioning");
+                if (!tensioned.get()) {
+                    state = 3;
+                    //resetAllCounters();
+                }
+                break;
+            case 3:
+                 System.out.println("ready to shoot");
+                break;
+            case 4:
+                counter ++;
+                System.out.println("releasing shooter piston");
+                if (up.get() && counter == 5)
+                {
+                    shoot.retract();
+                    state = 1;
+                    //resetAllCounters();
+                }
+                break;
+        }
+    }
+
+    public void shoot() {
+        if (state == 3) {
+            shoot.extend();
+            state = 4;
+        } else {
+            System.out.println("Trying to Shoot While Not Ready...");
+        }
+    }
+
+    public void resetAllCounters() {
+        tensionedCounter.reset();
+        deTensionedCounter.reset();
+    }
+    public void switchToCounters() {
+        tensioned.free();
+        deTensioned.free();
+        tensionedCounter = new Counter(Wiring.LIMIT_SHOOTER_TENSIONED);
+        deTensionedCounter = new Counter(Wiring.LIMIT_SHOOTER_DETENSIONED);
+>>>>>>> 71101ba6feb71585af2534ddab0e311bf39d8d61
     }
     
 }
