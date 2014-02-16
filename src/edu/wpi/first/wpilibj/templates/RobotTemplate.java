@@ -43,11 +43,12 @@ public class RobotTemplate extends IterativeRobot {
             compressor = new Compressor(Wiring.COMPRESSOR_PRESSURE_SWITCH, Wiring.COMPRESSOR_RELAY);
             compressor.start();
             g = new Gatherer();
-           // shooter = new Shooter();
+            shooter = new Shooter();
         }
         driver = new Happystick(1, Control.getXbox());
         coPilot = new Happystick(2, Control.getXbox());
         d = new DriveSystem(sensor, driver, enY, enX, Wiring.OPEN_C);
+        joy = new Joystick(1);
     }
 
     public void autonomousInit() {
@@ -87,7 +88,7 @@ public class RobotTemplate extends IterativeRobot {
         d.getJoy();
         d.calculateInput();
         gathererButtonCheck();
-        //shooterButtonCheck();
+        shooterButtonCheck();
         smartPush();
         smartPull();
     }
@@ -104,6 +105,23 @@ public class RobotTemplate extends IterativeRobot {
     }
 
     public void testPeriodic() {
+        gathererButtonCheck();
+        if(joy.getRawButton(1)){
+            shooter.preTension.extend();
+        }else{
+            shooter.preTension.retract();
+        }
+        if(joy.getRawButton(2)){
+            shooter.shoot.extend();
+        }else{
+            shooter.shoot.retract();
+        }
+        if(joy.getRawButton(3)){
+            shooter.tension.extend();
+        }else{
+            shooter.tension.retract();
+        }
+        System.out.println(shooter.tensioned.get() + " " + shooter.deTensioned.get() + " " + shooter.down.get() + " " + shooter.up.get());
     }
 
     public void gathererButtonCheck() {

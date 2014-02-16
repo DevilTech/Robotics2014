@@ -46,40 +46,40 @@ public class Shooter {
                 System.out.println("checking position...");
                 if (up.get() && deTensioned.get()) {
                     state = 1;
-                    switchToCounters();
+                    //switchToCounters();
                 }
                 if (down.get() && deTensioned.get()) {
                     state = 2;
-                    switchToCounters();
+                    //switchToCounters();
                 }
                 if (down.get() && tensioned.get()) {
                     state = 3;
-                    switchToCounters();
+                    //switchToCounters();
                 }
                 if (up.get() && tensioned.get()) {
                     state = 4;
-                    switchToCounters();
+                    //switchToCounters();
                 }
                 break;
             case 1:
                 tension.relax();
-                if (deTensionedCounter.get() >= 1) {
+                if (deTensioned.get()) {
                     preTension.extend();
-                    resetAllCounters();
+                    //resetAllCounters();
                 }
                 System.out.println("pretensioning and waiting for arm");
-                if (downCounter.get() >= 1) {
+                if (down.get()) {
                     state = 2;
-                    resetAllCounters();
+                    //resetAllCounters();
                 }
                 break;
             case 2:
                 tension.extend();
                 preTension.retract();
                 System.out.println("tensioning");
-                if (tensionedCounter.get() >= 1) {
+                if (tensioned.get()) {
                     state = 3;
-                    resetAllCounters();
+                    //resetAllCounters();
                 }
                 break;
             case 3:
@@ -87,11 +87,11 @@ public class Shooter {
                 break;
             case 4:
                 System.out.println("releasing shooter piston");
-                if (upCounter.get() >= 1)
+                if (up.get() )
                 {
                     shoot.retract();
                     state = 1;
-                    resetAllCounters();
+                    //resetAllCounters();
                 }
                 break;
         }
