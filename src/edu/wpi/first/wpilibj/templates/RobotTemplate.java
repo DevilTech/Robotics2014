@@ -90,7 +90,7 @@ public class RobotTemplate extends IterativeRobot {
         d.getJoy();
         d.calculateInput();
         gathererButtonCheck();
-        shooterButtonCheck();
+        shooter.sm();
         smartPush();
         smartPull();
     }
@@ -98,7 +98,7 @@ public class RobotTemplate extends IterativeRobot {
     public void disabledInit() {
         d.driveSystemDenit();
         smartInit();
-        shooter.makesafe();
+        shooter.state = 0;
     }
 
     public void disabledPeriodic() {
@@ -139,13 +139,6 @@ public class RobotTemplate extends IterativeRobot {
             g.up();
             g.stop();
         }
-    }
-
-    public void shooterButtonCheck() {
-        if (driver.getShoot()) {
-            //shooter.shoot();
-        }
-        //shooter.keepCocked();
     }
 
     

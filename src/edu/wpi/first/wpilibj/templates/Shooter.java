@@ -60,9 +60,12 @@ public class Shooter {
         switch (state)
         {
             case 0:
+                if (optical.getVoltage() >= 2.4)
+                {
                 middlePiston.retract();
                 outerPistons.extend();
                 state = 1;
+                }
                 break;
                 
             case 1:
