@@ -43,7 +43,7 @@ public class RobotTemplate extends IterativeRobot {
             compressor = new Compressor(Wiring.COMPRESSOR_PRESSURE_SWITCH, Wiring.COMPRESSOR_RELAY);
             compressor.start();
             g = new Gatherer();
-            shooter = new Shooter();
+           // shooter = new Shooter();
         }
         driver = new Happystick(1, Control.getXbox());
         coPilot = new Happystick(2, Control.getXbox());
@@ -87,7 +87,7 @@ public class RobotTemplate extends IterativeRobot {
         d.getJoy();
         d.calculateInput();
         gathererButtonCheck();
-        shooterButtonCheck();
+        //shooterButtonCheck();
         smartPush();
         smartPull();
     }
