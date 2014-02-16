@@ -37,6 +37,7 @@ public class RobotTemplate extends IterativeRobot {
     boolean shootonce;
     DefensiveArm arm;
     static boolean gathererDown = false;
+    int gathCount = 0;
 
     public void robotInit() {
         setupEncoders();
@@ -126,21 +127,24 @@ public class RobotTemplate extends IterativeRobot {
             shooter.outerPistons.retract();
         }
         //System.out.println(shooter.tensioned.get() + " " + shooter.deTensioned.get() + " " + shooter.down.get() + " " + shooter.up.get());
-        System.out.println(shooter.ball.getVoltage());
+        System.out.println(shooter.ball.getVoltage() + "   " + shooter.optical.getVoltage());
     }
 
     public void gathererButtonCheck() {
         if (driver.getGather()) {
-            g.down();
-            g.startIn();
+            g.gather();
             gathererDown = true;
         } else if (driver.getReverseGather()) {
-            g.up();
-            g.startOut();
+            g.reverse();
             gathererDown = false;
         } else {
-            g.up();
-            g.stop();
+            if(gathCount <= 100){
+                g.pullUp();
+                gathCount++;
+            }
+            else{
+                g.rest();
+            }
             gathererDown = false;
         }
     }
