@@ -25,6 +25,7 @@ public class Shooter {
     Piston tension;
     AnalogChannel optical;
     double distance;
+    int counter = 0;
 
     public Shooter() {
         preTension = new Piston(Wiring.SOLENOID_SHOOTER_PRETENSION_OUT, Wiring.SOLENOID_SHOOTER_PRETENSION_IN);
@@ -39,7 +40,6 @@ public class Shooter {
         tension.retract();
         shoot.retract();
         preTension.extend();
-
     }
     
 
@@ -49,31 +49,32 @@ public class Shooter {
 
             case 0:
                 System.out.println("checking position...");
-                if (!up.get() && !deTensioned.get()) {
+                if (!isDown() && !deTensioned.get()) {
                     state = 1;
                     //switchToCounters();
                 }
-                if (!down.get() && !deTensioned.get()) {
+                if (isDown() && !deTensioned.get()) {
                     state = 2;
                     //switchToCounters();
                 }
-                if (!down.get() && !tensioned.get()) {
+                if (isDown() && !tensioned.get()) {
                     state = 3;
                     //switchToCounters();
                 }
-                if (!up.get() && !tensioned.get()) {
+                if (!isDown() && !tensioned.get()) {
                     state = 4;
                     //switchToCounters();
                 }
                 break;
             case 1:
+                counter = 0;
                 tension.relax();
-                if (deTensioned.get()) {
+                if (!deTensioned.get()) {
                     preTension.extend();
                     //resetAllCounters();
                 }
                 System.out.println("pretensioning and waiting for arm");
-                if (down.get()) {
+                if (isDown()) {
                     state = 2;
                     //resetAllCounters();
                 }
@@ -82,7 +83,7 @@ public class Shooter {
                 tension.extend();
                 preTension.retract();
                 System.out.println("tensioning");
-                if (tensioned.get()) {
+                if (!tensioned.get()) {
                     state = 3;
                     //resetAllCounters();
                 }
@@ -91,8 +92,9 @@ public class Shooter {
                  System.out.println("ready to shoot");
                 break;
             case 4:
+                counter ++;
                 System.out.println("releasing shooter piston");
-                if (up.get() )
+                if (up.get() && counter == 5)
                 {
                     shoot.retract();
                     state = 1;
@@ -112,19 +114,21 @@ public class Shooter {
     }
 
     public void resetAllCounters() {
-        upCounter.reset();
-        downCounter.reset();
         tensionedCounter.reset();
         deTensionedCounter.reset();
     }
     public void switchToCounters() {
-        up.free();
-        down.free();
         tensioned.free();
         deTensioned.free();
-        upCounter = new Counter(Wiring.LIMIT_SHOOTER_UP);
-        downCounter = new Counter(Wiring.LIMIT_SHOOTER_DOWN);
         tensionedCounter = new Counter(Wiring.LIMIT_SHOOTER_TENSIONED);
         deTensionedCounter = new Counter(Wiring.LIMIT_SHOOTER_DETENSIONED);
+    }
+    
+    public boolean isDown(){
+        if(optical.getVoltage() > 2){
+            return true;
+        }else{
+            return false;
+        }
     }
 }
