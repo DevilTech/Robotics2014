@@ -6,15 +6,18 @@ package edu.wpi.first.wpilibj.templates;
 
 import Competition.Wiring;
 import edu.wpi.first.wpilibj.Counter;
-import edu.wpi.first.wpilibj.Relay;
-import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.DigitalInput;
 
 public class Shooter {
 
-    Counter up;
-    Counter down;
-    Counter tensioned;
-    Counter deTensioned;
+    Counter upCounter;
+    Counter downCounter;
+    Counter tensionedCounter;
+    Counter deTensionedCounter;
+    DigitalInput up;
+    DigitalInput down;
+    DigitalInput tensioned;
+    DigitalInput deTensioned;
     int state = 0;
     Piston preTension;
     Piston shoot;
@@ -24,10 +27,10 @@ public class Shooter {
         preTension = new Piston(Wiring.SOLENOID_SHOOTER_PRETENSION_OUT, Wiring.SOLENOID_SHOOTER_PRETENSION_IN);
         shoot = new Piston(Wiring.SOLENOID_SHOOTER_SHOOT_OUT, Wiring.SOLENOID_SHOOTER_SHOOT_IN);
         tension = new Piston(Wiring.SOLENOID_SHOOTER_TENSION_OUT, Wiring.SOLENOID_SHOOTER_TENSION_IN);
-        tensioned = new Counter(Wiring.LIMIT_SHOOTER_TENSIONED);
-        up = new Counter(Wiring.LIMIT_SHOOTER_UP);
-        down = new Counter(Wiring.LIMIT_SHOOTER_DOWN);
-        deTensioned = new Counter(Wiring.LIMIT_SHOOTER_DETENSIONED);
+        tensioned = new DigitalInput(Wiring.LIMIT_SHOOTER_TENSIONED);
+        up = new DigitalInput(Wiring.LIMIT_SHOOTER_UP);
+        down = new DigitalInput(Wiring.LIMIT_SHOOTER_DOWN);
+        deTensioned = new DigitalInput(Wiring.LIMIT_SHOOTER_DETENSIONED);
         tension.retract();
         shoot.retract();
         preTension.extend();
@@ -41,28 +44,31 @@ public class Shooter {
 
             case 0:
                 System.out.println("checking position...");
-                if (up.get() >= 1 && deTensioned.get() >= 1) {
+                if (up.get() && deTensioned.get()) {
                     state = 1;
+                    switchToCounters();
                 }
-                if (down.get() >= 1 && deTensioned.get() >= 1) {
+                if (down.get() && deTensioned.get()) {
                     state = 2;
+                    switchToCounters();
                 }
-                if (down.get() >= 1 && tensioned.get() >= 1) {
+                if (down.get() && tensioned.get()) {
                     state = 3;
+                    switchToCounters();
                 }
-                if (up.get() >= 1 && tensioned.get() >= 1) {
+                if (up.get() && tensioned.get()) {
                     state = 4;
+                    switchToCounters();
                 }
-                resetAllCounters();
                 break;
             case 1:
                 tension.relax();
-                if (deTensioned.get() >= 1) {
+                if (deTensionedCounter.get() >= 1) {
                     preTension.extend();
                     resetAllCounters();
                 }
                 System.out.println("pretensioning and waiting for arm");
-                if (down.get() >= 1) {
+                if (downCounter.get() >= 1) {
                     state = 2;
                     resetAllCounters();
                 }
@@ -71,7 +77,7 @@ public class Shooter {
                 tension.extend();
                 preTension.retract();
                 System.out.println("tensioning");
-                if (tensioned.get() >= 1) {
+                if (tensionedCounter.get() >= 1) {
                     state = 3;
                     resetAllCounters();
                 }
@@ -81,17 +87,13 @@ public class Shooter {
                 break;
             case 4:
                 System.out.println("releasing shooter piston");
-                if (up.get() >= 1)
+                if (upCounter.get() >= 1)
                 {
                     shoot.retract();
                     state = 1;
                     resetAllCounters();
                 }
                 break;
-            default:
-                state = 0;
-                break;
-
         }
     }
 
@@ -105,9 +107,19 @@ public class Shooter {
     }
 
     public void resetAllCounters() {
-        up.reset();
-        down.reset();
-        tensioned.reset();
-        deTensioned.reset();
+        upCounter.reset();
+        downCounter.reset();
+        tensionedCounter.reset();
+        deTensionedCounter.reset();
+    }
+    public void switchToCounters() {
+        up = null;
+        down = null;
+        tensioned = null;
+        deTensioned = null;
+        upCounter = new Counter(Wiring.LIMIT_SHOOTER_UP);
+        downCounter = new Counter(Wiring.LIMIT_SHOOTER_DOWN);
+        tensionedCounter = new Counter(Wiring.LIMIT_SHOOTER_TENSIONED);
+        deTensionedCounter = new Counter(Wiring.LIMIT_SHOOTER_DETENSIONED);
     }
 }
