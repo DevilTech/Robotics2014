@@ -39,16 +39,17 @@ public class RobotTemplate extends IterativeRobot {
 
     public void robotInit() {
         setupEncoders();
-        if (!Wiring.isTest) {
-            compressor = new Compressor(Wiring.COMPRESSOR_PRESSURE_SWITCH, Wiring.COMPRESSOR_RELAY);
-            compressor.start();
-            g = new Gatherer();
-            shooter = new Shooter();
-        }
         driver = new Happystick(1, Control.getXbox());
         coPilot = new Happystick(2, Control.getXbox());
         d = new DriveSystem(sensor, driver, enY, enX, Wiring.OPEN_C);
         joy = new Joystick(1);
+        if (!Wiring.isTest) {
+            compressor = new Compressor(Wiring.COMPRESSOR_PRESSURE_SWITCH, Wiring.COMPRESSOR_RELAY);
+            compressor.start();
+            g = new Gatherer();
+            shooter = new Shooter(driver);
+        }
+        
     }
 
     public void autonomousInit() {
@@ -82,7 +83,7 @@ public class RobotTemplate extends IterativeRobot {
     public void teleopInit() {
         d.driveSystemInit();
         shootonce = true;
-//        shooter.initalize();
+        shooter.initalize();
     }
 
     public void teleopPeriodic() {
@@ -97,7 +98,7 @@ public class RobotTemplate extends IterativeRobot {
     public void disabledInit() {
         d.driveSystemDenit();
         smartInit();
-        shooter.initalize();
+        shooter.makesafe();
     }
 
     public void disabledPeriodic() {
@@ -124,7 +125,7 @@ public class RobotTemplate extends IterativeRobot {
             shooter.outerPistons.retract();
         }
         //System.out.println(shooter.tensioned.get() + " " + shooter.deTensioned.get() + " " + shooter.down.get() + " " + shooter.up.get());
-        System.out.println(shooter.optical.getVoltage());
+        System.out.println(shooter.ball.getVoltage());
     }
 
     public void gathererButtonCheck() {
