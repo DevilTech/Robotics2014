@@ -82,6 +82,7 @@ public class RobotTemplate extends IterativeRobot {
     public void teleopInit() {
         d.driveSystemInit();
         shootonce = true;
+//        shooter.initalize();
     }
 
     public void teleopPeriodic() {
@@ -96,6 +97,7 @@ public class RobotTemplate extends IterativeRobot {
     public void disabledInit() {
         d.driveSystemDenit();
         smartInit();
+        shooter.initalize();
     }
 
     public void disabledPeriodic() {
@@ -107,9 +109,9 @@ public class RobotTemplate extends IterativeRobot {
     public void testPeriodic() {
         gathererButtonCheck();
         if(joy.getRawButton(1)){
-            shooter.preTension.extend();
+            shooter.middlePiston.extend();
         }else{
-            shooter.preTension.retract();
+            shooter.middlePiston.retract();
         }
         if(joy.getRawButton(2)){
             shooter.shoot.extend();
@@ -117,9 +119,9 @@ public class RobotTemplate extends IterativeRobot {
             shooter.shoot.retract();
         }
         if(joy.getRawButton(3)){
-            shooter.tension.extend();
+            shooter.outerPistons.extend();
         }else{
-            shooter.tension.retract();
+            shooter.outerPistons.retract();
         }
         //System.out.println(shooter.tensioned.get() + " " + shooter.deTensioned.get() + " " + shooter.down.get() + " " + shooter.up.get());
         System.out.println(shooter.optical.getVoltage());
@@ -140,9 +142,9 @@ public class RobotTemplate extends IterativeRobot {
 
     public void shooterButtonCheck() {
         if (driver.getShoot()) {
-            shooter.shoot();
+            //shooter.shoot();
         }
-        shooter.keepCocked();
+        //shooter.keepCocked();
     }
 
     
