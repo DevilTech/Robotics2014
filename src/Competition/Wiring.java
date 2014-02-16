@@ -11,7 +11,7 @@ public class Wiring extends WiringParent {
     public static final boolean isTest = false;
     public static final double MAX_XY = 170;
     public static final int CAMERA_SERVO = 1;
-    public static final int COMPRESSOR_RELAY = 8;
+    public static final int COMPRESSOR_RELAY = 7;
     public static final int COMPRESSOR_PRESSURE_SWITCH = 14;
     //K is for PID control
     //P is proportion, D is derivative
@@ -36,12 +36,12 @@ public class Wiring extends WiringParent {
     public static final int SOLENOID_GATHERER_OUT = 1;
     public static final int SOLENOID_GATHERER_IN = 2;
     
-    public static final int SOLENOID_SHOOTER_TENSION_IN = 3;
-    public static final int SOLENOID_SHOOTER_TENSION_OUT = 4;
-    public static final int SOLENOID_SHOOTER_SHOOT_IN = 5;
+    public static final int SOLENOID_SHOOTER_PRETENSION_IN = 7; // the middle cylinder
+    public static final int SOLENOID_SHOOTER_PRETENSION_OUT = 8;
+    public static final int SOLENOID_SHOOTER_SHOOT_IN = 5;  // the little one
     public static final int SOLENOID_SHOOTER_SHOOT_OUT = 6;
-    public static final int SOLENOID_SHOOTER_TENSIONED_IN = 7;
-    public static final int SOLENOID_SHOOTER_TENSIONED_OUT = 8;
+    public static final int SOLENOID_SHOOTER_TENSION_IN = 3; // the two cylinders on the side
+    public static final int SOLENOID_SHOOTER_TENSION_OUT = 4;
     
     public static final int LIMIT_SHOOTER_DETENSIONED = 5;
     public static final int LIMIT_SHOOTER_TENSIONED = 6;

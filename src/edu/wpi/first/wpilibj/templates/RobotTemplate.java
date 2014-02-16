@@ -87,6 +87,7 @@ public class RobotTemplate extends IterativeRobot {
         d.getJoy();
         d.calculateInput();
         gathererButtonCheck();
+        shooterButtonCheck();
         smartPush();
         smartPull();
     }
@@ -121,11 +122,11 @@ public class RobotTemplate extends IterativeRobot {
     public void shooterButtonCheck() {
         if (driver.getShoot()) {
             shooter.shoot();
-        } else {
-            shooter.keepCocked();
         }
+        shooter.keepCocked();
     }
 
+    
     public void defenseCheck() {
         if (coPilot.getArmRaise()) {
             if (arm.isUp) {
