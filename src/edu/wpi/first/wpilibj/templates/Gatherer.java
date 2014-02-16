@@ -57,4 +57,24 @@ public class Gatherer {
         armMotorR.set(-Wiring.GATHERER_SPEED_REVERSE);
 
     }
+    
+    public void gather(){
+        startIn();
+        down();
+    }
+    
+    public void pullUp(){
+        startIn();
+        up();   
+    }
+    
+    public void reverse(){
+        startOut();
+        up();
+    }
+    
+    public void rest(){
+        stop();
+        up();
+    }
 }

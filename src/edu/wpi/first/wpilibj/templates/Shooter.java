@@ -20,115 +20,151 @@ public class Shooter {
     DigitalInput tensioned;
     DigitalInput deTensioned;
     int state = 0;
-    Piston preTension;
+    Piston middlePiston;
     Piston shoot;
-    Piston tension;
+    Piston outerPistons;
     AnalogChannel optical;
+    AnalogChannel ball;
     double distance;
     int counter = 0;
+    boolean readyToShoot = false;
+    boolean hasShot = false;
+    boolean isDown = false;
 
     public Shooter() {
-        preTension = new Piston(Wiring.SOLENOID_SHOOTER_PRETENSION_OUT, Wiring.SOLENOID_SHOOTER_PRETENSION_IN);
+        middlePiston = new Piston(Wiring.SOLENOID_SHOOTER_PRETENSION_OUT, Wiring.SOLENOID_SHOOTER_PRETENSION_IN);
         shoot = new Piston(Wiring.SOLENOID_SHOOTER_SHOOT_OUT, Wiring.SOLENOID_SHOOTER_SHOOT_IN);
-        tension = new Piston(Wiring.SOLENOID_SHOOTER_TENSION_OUT, Wiring.SOLENOID_SHOOTER_TENSION_IN);
+        outerPistons = new Piston(Wiring.SOLENOID_SHOOTER_TENSION_OUT, Wiring.SOLENOID_SHOOTER_TENSION_IN);
         tensioned = new DigitalInput(Wiring.LIMIT_SHOOTER_TENSIONED);
         up = new DigitalInput(Wiring.LIMIT_SHOOTER_UP);
         down = new DigitalInput(Wiring.LIMIT_SHOOTER_DOWN);
         deTensioned = new DigitalInput(Wiring.LIMIT_SHOOTER_DETENSIONED);
         optical = new AnalogChannel(Wiring.OPTICAL_SHOOTER_SENSOR);
+        ball = new AnalogChannel(2);
         distance = optical.getVoltage();
-        tension.retract();
+        outerPistons.retract();
         shoot.retract();
-        preTension.extend();
+        middlePiston.retract();
+
     }
-    
 
+    public void initalize() {
+        outerPistons.retract();
+        middlePiston.retract();
+        shoot.retract();
+    }
 
-    public void keepCocked() {
-        switch (state) {
-
-            case 0:
-                System.out.println("checking position...");
-                if (!isDown() && !deTensioned.get()) {
-                    state = 1;
-                    //switchToCounters();
+    public void cock() {
+        if (!readyToShoot) {
+            if (optical.getVoltage() <= 2 && !isDown) {
+                middlePiston.extend();
+            } else if (counter < 50) {
+                counter++;
+            } else {
+                isDown = true;
+                if (tensioned.get()) {
+                    middlePiston.retract();
+                    outerPistons.extend();
+                    System.out.println("tensionin");
+                } else {
+                    readyToShoot = true;
+                    hasShot = false;
+                    System.out.println("ready");
                 }
-                if (isDown() && !deTensioned.get()) {
-                    state = 2;
-                    //switchToCounters();
-                }
-                if (isDown() && !tensioned.get()) {
-                    state = 3;
-                    //switchToCounters();
-                }
-                if (!isDown() && !tensioned.get()) {
-                    state = 4;
-                    //switchToCounters();
-                }
-                break;
-            case 1:
-                counter = 0;
-                tension.retract();
-                if (!deTensioned.get()) {
-                    preTension.extend();
-                    //resetAllCounters();
-                }
-                System.out.println("pretensioning and waiting for arm");
-                if (isDown()) {
-                    state = 2;
-                    //resetAllCounters();
-                }
-                break;
-            case 2:
-                tension.extend();
-                preTension.retract();
-                System.out.println("tensioning");
-                if (!tensioned.get()) {
-                    state = 3;
-                    //resetAllCounters();
-                }
-                break;
-            case 3:
-                 System.out.println("ready to shoot");
-                break;
-            case 4:
-                counter ++;
-                System.out.println("releasing shooter piston");
-                if (up.get() && counter == 5)
-                {
-                    shoot.retract();
-                    state = 1;
-                    //resetAllCounters();
-                }
-                break;
+            }
         }
     }
 
     public void shoot() {
-        if (state == 3) {
+
+        if (readyToShoot && !hasShot) {
             shoot.extend();
-            state = 4;
-        } else {
-            System.out.println("Trying to Shoot While Not Ready...");
+            System.out.println("shoot");
+        }
+        if (optical.getVoltage() < 1.5) {
+            hasShot = true;
+            counter = 0;
+            readyToShoot = false;
+            isDown = false;
+            shoot.retract();
+            outerPistons.retract();
+            System.out.println("has shot");
         }
     }
 
-    public void resetAllCounters() {
-        tensionedCounter.reset();
-        deTensionedCounter.reset();
+    public void shootThings(boolean joy) {
+        if (joy) {
+            shoot();
+        } else {
+            cock();
+        }
     }
-    public void switchToCounters() {
-        tensioned.free();
-        deTensioned.free();
-        tensionedCounter = new Counter(Wiring.LIMIT_SHOOTER_TENSIONED);
-        deTensionedCounter = new Counter(Wiring.LIMIT_SHOOTER_DETENSIONED);
+
+    public void sm(boolean fire) {
+        System.out.println(state);
+        switch (state) {
+            case 0:
+                if (optical.getVoltage() >= 2.2) {
+                    middlePiston.retract();
+                    outerPistons.extend();
+                    state = 1;
+                }
+                break;
+
+            case 1:
+                if (!tensioned.get()) {
+                    state = 2;
+                }
+                break;
+            case 2:
+                if (optical.getVoltage() >= 2.0) {
+                    state = 3;
+                }
+                break;
+            case 3:
+                System.out.println(ball.getVoltage());
+                if (fire) {
+                    shoot.extend();
+                    state = 4;
+                }
+                break;
+            case 4:
+                if (optical.getVoltage() <= 1) {
+                    state = 5;
+                    shoot.retract();
+                    System.out.println(optical.getVoltage());
+                }
+                break;
+            case 5:
+                outerPistons.retract();
+                middlePiston.extend();
+                state = 6;
+                break;
+            case 6:
+                if (!deTensioned.get()) {
+                    state = 7;
+                    counter = 0;
+                }
+                break;
+            case 7:
+                if (optical.getVoltage() >= 2.0) {
+                    state = 0;
+                }
+        }
     }
-    
-    public boolean isDown(){
-        if(optical.getVoltage() > 2){
-            return true;
-        }else{
-            return false;
+
+    public void makesafe() {
+        outerPistons.retract();
+        middlePiston.retract();
+        shoot.retract();
+        System.out.println("Making Shooter Safe");
+    }
+
+    public void popShot(boolean but) {
+        if (but) {
+            shoot.extend();
+        } else {
+            shoot.retract();
         }
     }
 }

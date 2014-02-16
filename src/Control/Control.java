@@ -22,6 +22,7 @@ public class Control {
     public int hookAxis;
     public double hookAxisSens;
     public int defenseButton;
+    public int popShot;
 
     private Control() {
     }
@@ -34,21 +35,27 @@ public class Control {
         xbox.forwardAxis = 2;
         xbox.invertY = -1;
         xbox.rightAxis = 1;
-        xbox.FCSwitch = 3;
-        xbox.PIDSwitch = 2;
+        
+        xbox.FCSwitch = XboxMap.X;
+        xbox.PIDSwitch = XboxMap.B;
+        
         xbox.hatUp = 1;
         xbox.hatDown = -1;
         xbox.hatLeft = -1;
         xbox.hatRight = 1;
         xbox.hatHorizontal = 5;
         xbox.hatVertical = 6;
-        xbox.gathSwitch = 6;
-        xbox.revSwitch = 5;
+        
+        xbox.gathSwitch = XboxMap.RIGHT_BUMPER;
+        xbox.revSwitch = XboxMap.LEFT_BUMPER;
+        
         xbox.useZAxisHook = true;
         xbox.hookAxis = 3;
-        xbox.shoot = 1;
+        
+        xbox.shoot = XboxMap.A;
         xbox.hookAxisSens = .1;
         xbox.defenseButton = 1;
+        xbox.popShot = XboxMap.Y;
         return xbox;
     }
 

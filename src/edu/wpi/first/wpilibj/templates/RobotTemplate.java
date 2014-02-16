@@ -26,8 +26,8 @@ public class RobotTemplate extends IterativeRobot {
     Gatherer g;
     Joystick joy;
     double previousValue = 0;
-    Happystick driver;
-    Happystick coPilot;
+    static Happystick driver;
+    static Happystick coPilot;
     boolean hasReached2;
     boolean hasReached3;
     boolean hasReached6;
@@ -36,30 +36,42 @@ public class RobotTemplate extends IterativeRobot {
     Shooter shooter;
     boolean shootonce;
     DefensiveArm arm;
+    static boolean gathererDown = false;
+    int gathCount = 0;
+    boolean hasFired = false;
 
     public void robotInit() {
         setupEncoders();
+        driver = new Happystick(1, Control.getXbox());
+        coPilot = new Happystick(2, Control.getXbox());
+        d = new DriveSystem(sensor, driver, enY, enX, Wiring.HALF_C);
+        d.FCMode = true;
+        joy = new Joystick(1);
         if (!Wiring.isTest) {
             compressor = new Compressor(Wiring.COMPRESSOR_PRESSURE_SWITCH, Wiring.COMPRESSOR_RELAY);
             compressor.start();
             g = new Gatherer();
             shooter = new Shooter();
         }
-        driver = new Happystick(1, Control.getXbox());
-        coPilot = new Happystick(2, Control.getXbox());
-        d = new DriveSystem(sensor, driver, enY, enX, Wiring.OPEN_C);
-        joy = new Joystick(1);
+        
     }
 
     public void autonomousInit() {
         enY.reset();
         d.driveSystemInit();
+        shooter.initalize();
     }
 
     public void autonomousPeriodic() {
     }
 
     public void autoOffense() {
+        if(!hasFired){
+        shooter.shootThings(true);
+        hasFired = true;
+        }
+            
+        
     }
 
     public void autoDefence() {
@@ -82,13 +94,15 @@ public class RobotTemplate extends IterativeRobot {
     public void teleopInit() {
         d.driveSystemInit();
         shootonce = true;
+       // shooter.initalize();
     }
 
     public void teleopPeriodic() {
         d.getJoy();
         d.calculateInput();
         gathererButtonCheck();
-        shooterButtonCheck();
+        shooter.shootThings(driver.getShoot() && gathererDown);
+        //shooter.popShot(driver.getPop());
         smartPush();
         smartPull();
     }
@@ -96,6 +110,7 @@ public class RobotTemplate extends IterativeRobot {
     public void disabledInit() {
         d.driveSystemDenit();
         smartInit();
+        shooter.state = 0;
     }
 
     public void disabledPeriodic() {
@@ -107,9 +122,9 @@ public class RobotTemplate extends IterativeRobot {
     public void testPeriodic() {
         gathererButtonCheck();
         if(joy.getRawButton(1)){
-            shooter.preTension.extend();
+            shooter.middlePiston.extend();
         }else{
-            shooter.preTension.retract();
+            shooter.middlePiston.retract();
         }
         if(joy.getRawButton(2)){
             shooter.shoot.extend();
@@ -117,32 +132,32 @@ public class RobotTemplate extends IterativeRobot {
             shooter.shoot.retract();
         }
         if(joy.getRawButton(3)){
-            shooter.tension.extend();
+            shooter.outerPistons.extend();
         }else{
-            shooter.tension.retract();
+            shooter.outerPistons.retract();
         }
         //System.out.println(shooter.tensioned.get() + " " + shooter.deTensioned.get() + " " + shooter.down.get() + " " + shooter.up.get());
-        System.out.println(shooter.optical.getVoltage());
+
     }
 
     public void gathererButtonCheck() {
         if (driver.getGather()) {
-            g.down();
-            g.startIn();
+            g.gather();
+            gathererDown = true;
+            gathCount = 0;
         } else if (driver.getReverseGather()) {
-            g.up();
-            g.startOut();
+            g.reverse();
+            gathererDown = false;
         } else {
-            g.up();
-            g.stop();
+            if(gathCount <= 100){
+                g.pullUp();
+                gathCount++;
+            }
+            else{
+                g.rest();
+            }
+            gathererDown = false;
         }
-    }
-
-    public void shooterButtonCheck() {
-        if (driver.getShoot()) {
-            shooter.shoot();
-        }
-        shooter.keepCocked();
     }
 
     
