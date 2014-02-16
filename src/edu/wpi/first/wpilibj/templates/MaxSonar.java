@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.AnalogChannel;
 
 public class MaxSonar {
      AnalogChannel sensor;
-     double conversionFactor = 41.86;
+     double conversionFactor;
      public MaxSonar(int channel)
      {
          sensor = new AnalogChannel(channel);
