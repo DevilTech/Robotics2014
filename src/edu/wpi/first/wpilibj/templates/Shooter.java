@@ -68,7 +68,7 @@ public class Shooter {
                 break;
             case 1:
                 counter = 0;
-                tension.relax();
+                tension.retract();
                 if (!deTensioned.get()) {
                     preTension.extend();
                     //resetAllCounters();
