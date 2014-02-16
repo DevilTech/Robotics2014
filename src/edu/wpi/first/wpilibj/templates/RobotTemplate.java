@@ -121,7 +121,8 @@ public class RobotTemplate extends IterativeRobot {
         }else{
             shooter.tension.retract();
         }
-        System.out.println(shooter.tensioned.get() + " " + shooter.deTensioned.get() + " " + shooter.down.get() + " " + shooter.up.get());
+        //System.out.println(shooter.tensioned.get() + " " + shooter.deTensioned.get() + " " + shooter.down.get() + " " + shooter.up.get());
+        System.out.println(shooter.optical.getVoltage());
     }
 
     public void gathererButtonCheck() {

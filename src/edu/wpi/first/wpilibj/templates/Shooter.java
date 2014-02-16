@@ -5,6 +5,7 @@
 package edu.wpi.first.wpilibj.templates;
 
 import Competition.Wiring;
+import edu.wpi.first.wpilibj.AnalogChannel;
 import edu.wpi.first.wpilibj.Counter;
 import edu.wpi.first.wpilibj.DigitalInput;
 
@@ -22,6 +23,8 @@ public class Shooter {
     Piston preTension;
     Piston shoot;
     Piston tension;
+    AnalogChannel optical;
+    double distance;
 
     public Shooter() {
         preTension = new Piston(Wiring.SOLENOID_SHOOTER_PRETENSION_OUT, Wiring.SOLENOID_SHOOTER_PRETENSION_IN);
@@ -31,6 +34,8 @@ public class Shooter {
         up = new DigitalInput(Wiring.LIMIT_SHOOTER_UP);
         down = new DigitalInput(Wiring.LIMIT_SHOOTER_DOWN);
         deTensioned = new DigitalInput(Wiring.LIMIT_SHOOTER_DETENSIONED);
+        optical = new AnalogChannel(Wiring.OPTICAL_SHOOTER_SENSOR);
+        distance = optical.getVoltage();
         tension.retract();
         shoot.retract();
         preTension.extend();
