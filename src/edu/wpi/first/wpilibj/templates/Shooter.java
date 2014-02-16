@@ -44,19 +44,19 @@ public class Shooter {
 
             case 0:
                 System.out.println("checking position...");
-                if (up.get() && deTensioned.get()) {
+                if (!up.get() && !deTensioned.get()) {
                     state = 1;
                     switchToCounters();
                 }
-                if (down.get() && deTensioned.get()) {
+                if (!down.get() && !deTensioned.get()) {
                     state = 2;
                     switchToCounters();
                 }
-                if (down.get() && tensioned.get()) {
+                if (!down.get() && !tensioned.get()) {
                     state = 3;
                     switchToCounters();
                 }
-                if (up.get() && tensioned.get()) {
+                if (!up.get() && !tensioned.get()) {
                     state = 4;
                     switchToCounters();
                 }
@@ -113,10 +113,10 @@ public class Shooter {
         deTensionedCounter.reset();
     }
     public void switchToCounters() {
-        up = null;
-        down = null;
-        tensioned = null;
-        deTensioned = null;
+        up.free();
+        down.free();
+        tensioned.free();
+        deTensioned.free();
         upCounter = new Counter(Wiring.LIMIT_SHOOTER_UP);
         downCounter = new Counter(Wiring.LIMIT_SHOOTER_DOWN);
         tensionedCounter = new Counter(Wiring.LIMIT_SHOOTER_TENSIONED);
