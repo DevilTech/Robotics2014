@@ -249,7 +249,7 @@ public class DriveSystem {
 
         GZ = sen.getGyroZ() * Wiring.G_SCALE;
 
-        clockwiseZ = Wiring.KpR * (Wiring.MAX_R * speedZ + GZ);
+        clockwiseZ = (Wiring.KfR * speedZ) + Wiring.KpR * (Wiring.MAX_R * speedZ + GZ);
 
         double tempCZ = clockwiseZ + errorInHeading;
         double tempFY = speedY;
