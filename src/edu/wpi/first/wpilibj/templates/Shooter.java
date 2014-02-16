@@ -27,9 +27,8 @@ public class Shooter {
     AnalogChannel ball;
     double distance;
     int counter = 0;
-    Happystick js;
-
-    public Shooter(Happystick joystick){
+    
+    public Shooter(){
         middlePiston = new Piston(Wiring.SOLENOID_SHOOTER_PRETENSION_OUT, Wiring.SOLENOID_SHOOTER_PRETENSION_IN);
         shoot = new Piston(Wiring.SOLENOID_SHOOTER_SHOOT_OUT, Wiring.SOLENOID_SHOOTER_SHOOT_IN);
         outerPistons = new Piston(Wiring.SOLENOID_SHOOTER_TENSION_OUT, Wiring.SOLENOID_SHOOTER_TENSION_IN);
@@ -43,7 +42,7 @@ public class Shooter {
         outerPistons.retract();
         shoot.retract();
         middlePiston.retract();
-        js = joystick;
+        
     }
 
     public void initalize()
@@ -82,7 +81,7 @@ public class Shooter {
                 break;
             case 3:
                 System.out.println(ball.getVoltage());
-                if (js.getShoot())
+                if (RobotTemplate.driver.getShoot() && RobotTemplate.gathererDown)
                 {
                     shoot.extend();
                     state = 4;

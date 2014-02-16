@@ -26,8 +26,8 @@ public class RobotTemplate extends IterativeRobot {
     Gatherer g;
     Joystick joy;
     double previousValue = 0;
-    Happystick driver;
-    Happystick coPilot;
+    static Happystick driver;
+    static Happystick coPilot;
     boolean hasReached2;
     boolean hasReached3;
     boolean hasReached6;
@@ -36,6 +36,7 @@ public class RobotTemplate extends IterativeRobot {
     Shooter shooter;
     boolean shootonce;
     DefensiveArm arm;
+    static boolean gathererDown = false;
 
     public void robotInit() {
         setupEncoders();
@@ -47,7 +48,7 @@ public class RobotTemplate extends IterativeRobot {
             compressor = new Compressor(Wiring.COMPRESSOR_PRESSURE_SWITCH, Wiring.COMPRESSOR_RELAY);
             compressor.start();
             g = new Gatherer();
-            shooter = new Shooter(driver);
+            shooter = new Shooter();
         }
         
     }
@@ -132,12 +133,15 @@ public class RobotTemplate extends IterativeRobot {
         if (driver.getGather()) {
             g.down();
             g.startIn();
+            gathererDown = true;
         } else if (driver.getReverseGather()) {
             g.up();
             g.startOut();
+            gathererDown = false;
         } else {
             g.up();
             g.stop();
+            gathererDown = false;
         }
     }
 
