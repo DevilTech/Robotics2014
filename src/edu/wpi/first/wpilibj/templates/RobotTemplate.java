@@ -39,6 +39,8 @@ public class RobotTemplate extends IterativeRobot {
     static boolean gathererDown = false;
     int gathCount = 0;
     boolean hasFired = false;
+    Camera cam;
+    int loopCounter = 0;
 
     public void robotInit() {
         setupEncoders();
@@ -47,6 +49,7 @@ public class RobotTemplate extends IterativeRobot {
         d = new DriveSystem(sensor, driver, enY, enX, Wiring.HALF_C);
         d.FCMode = true;
         joy = new Joystick(1);
+        cam = new Camera();
         if (!Wiring.isTest) {
             compressor = new Compressor(Wiring.COMPRESSOR_PRESSURE_SWITCH, Wiring.COMPRESSOR_RELAY);
             compressor.start();
@@ -60,18 +63,27 @@ public class RobotTemplate extends IterativeRobot {
         enY.reset();
         d.driveSystemInit();
         shooter.initalize();
+        loopCounter = 0;
     }
 
     public void autonomousPeriodic() {
+        // see if the goal is hot
+        cam.setAngle(90.0);
+        if(cam.getHotGoal()) {
+            //shoot stuff
+            //move forward
+        } else { loopCounter++; }
+        if(loopCounter >= 250) {
+            System.out.println("Oh no! No hot goal detected.");
+            //just move the robot forward
+        }
     }
 
     public void autoOffense() {
         if(!hasFired){
-        shooter.shootThings(true);
-        hasFired = true;
+            shooter.shootThings(true);
+            hasFired = true;
         }
-            
-        
     }
 
     public void autoDefence() {
@@ -137,7 +149,6 @@ public class RobotTemplate extends IterativeRobot {
             shooter.outerPistons.retract();
         }
         //System.out.println(shooter.tensioned.get() + " " + shooter.deTensioned.get() + " " + shooter.down.get() + " " + shooter.up.get());
-
     }
 
     public void gathererButtonCheck() {
