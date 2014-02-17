@@ -22,6 +22,8 @@ public class Control {
     public int hookAxis;
     public double hookAxisSens;
     public int defenseButton;
+    public int popShot;
+    public int resetHead;
 
     private Control() {
     }
@@ -49,6 +51,8 @@ public class Control {
         xbox.shoot = 1;
         xbox.hookAxisSens = .1;
         xbox.defenseButton = 1;
+        xbox.popShot = 4;
+        xbox.resetHead = 10;
         return xbox;
     }
 

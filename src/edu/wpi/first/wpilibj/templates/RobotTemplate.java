@@ -37,7 +37,10 @@ public class RobotTemplate extends IterativeRobot {
     boolean shootonce;
     DefensiveArm arm;
     static boolean gathererDown = false;
+    static boolean gathererReversed = false;
     int gathCount = 0;
+    boolean hasFired = false;
+    int state = 0;
 
     public void robotInit() {
         setupEncoders();
@@ -61,9 +64,37 @@ public class RobotTemplate extends IterativeRobot {
     }
 
     public void autonomousPeriodic() {
+        autoOffense();
     }
 
     public void autoOffense() {
+        switch (state){
+            case 0:
+                gathererButtonCheck(true, false);
+                shooter.readyToShoot = true;
+                d.setSpeed(0, ((24 - enY.getDistance()) / 48), 0, 0);
+                if(enY.getDistance() > 24){
+                    state = 1;
+                }
+                break;
+            case 1:
+                
+                shooter.shootThings(true);
+                state = 2;
+                break;
+            case 2:
+                shooter.shootThings(false);
+                d.setSpeed(0, ((48 - enY.getDistance()) / 48), 0, 0);
+                if(enY.getDistance() > 48){
+                    state = 3;
+                }
+                break;
+            case 3:
+                gathererButtonCheck(false, false);
+                d.setSpeed(0,0,0,0);
+                shooter.shootThings(false);
+                break;
+        }   
     }
 
     public void autoDefence() {
@@ -92,8 +123,10 @@ public class RobotTemplate extends IterativeRobot {
     public void teleopPeriodic() {
         d.getJoy();
         d.calculateInput();
-        gathererButtonCheck();
-        shooter.sm();
+        gathererButtonCheck(driver.getGather(), driver.getReverseGather());
+        //System.out.println("this makes it work");
+        shooter.shootThings(driver.getShoot() && gathererDown);
+        shooter.popShot(driver.getPop());
         smartPush();
         smartPull();
     }
@@ -101,7 +134,7 @@ public class RobotTemplate extends IterativeRobot {
     public void disabledInit() {
         d.driveSystemDenit();
         smartInit();
-        shooter.state = 0;
+        state = 0;
     }
 
     public void disabledPeriodic() {
@@ -111,7 +144,7 @@ public class RobotTemplate extends IterativeRobot {
     }
 
     public void testPeriodic() {
-        gathererButtonCheck();
+        gathererButtonCheck(driver.getGather(), driver.getReverseGather());
         if(joy.getRawButton(1)){
             shooter.middlePiston.extend();
         }else{
@@ -127,18 +160,21 @@ public class RobotTemplate extends IterativeRobot {
         }else{
             shooter.outerPistons.retract();
         }
-        //System.out.println(shooter.tensioned.get() + " " + shooter.deTensioned.get() + " " + shooter.down.get() + " " + shooter.up.get());
-        System.out.println(shooter.ball.getVoltage() + "   " + shooter.optical.getVoltage());
+        System.out.println(shooter.ball.getVoltage());
+
+
     }
 
-    public void gathererButtonCheck() {
-        if (driver.getGather()) {
+    public void gathererButtonCheck(boolean gath, boolean rev) {
+        if (gath) {
             g.gather();
             gathererDown = true;
+            gathererReversed = false;
             gathCount = 0;
-        } else if (driver.getReverseGather()) {
+        } else if (rev) {
             g.reverse();
             gathererDown = false;
+            gathererReversed = true;
         } else {
             if(gathCount <= 100){
                 g.pullUp();
@@ -148,6 +184,7 @@ public class RobotTemplate extends IterativeRobot {
                 g.rest();
             }
             gathererDown = false;
+            gathererReversed = false;
         }
     }
 

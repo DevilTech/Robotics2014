@@ -27,99 +27,119 @@ public class Shooter {
     AnalogChannel ball;
     double distance;
     int counter = 0;
-    
-    public Shooter(){
+    boolean readyToShoot = false;
+    boolean hasShot = false;
+    boolean isDown = false;
+    boolean shooting = false;
+    boolean popTrig = false;
+
+
+    public Shooter() {
         middlePiston = new Piston(Wiring.SOLENOID_SHOOTER_PRETENSION_OUT, Wiring.SOLENOID_SHOOTER_PRETENSION_IN);
         shoot = new Piston(Wiring.SOLENOID_SHOOTER_SHOOT_OUT, Wiring.SOLENOID_SHOOTER_SHOOT_IN);
         outerPistons = new Piston(Wiring.SOLENOID_SHOOTER_TENSION_OUT, Wiring.SOLENOID_SHOOTER_TENSION_IN);
-        tensioned = new DigitalInput(Wiring.LIMIT_SHOOTER_TENSIONED);
+        //tensioned = new DigitalInput(Wiring.LIMIT_SHOOTER_TENSIONED);
         up = new DigitalInput(Wiring.LIMIT_SHOOTER_UP);
         down = new DigitalInput(Wiring.LIMIT_SHOOTER_DOWN);
         deTensioned = new DigitalInput(Wiring.LIMIT_SHOOTER_DETENSIONED);
         optical = new AnalogChannel(Wiring.OPTICAL_SHOOTER_SENSOR);
-        ball = new AnalogChannel(2);
+        ball = new AnalogChannel(Wiring.OPTICAL_SHOOTER_BALL_SENSOR);
         distance = optical.getVoltage();
+        tensionedCounter = new Counter(Wiring.LIMIT_SHOOTER_TENSIONED);
+        tensionedCounter.start();
+        tensionedCounter.reset();
+    }
+
+    public void initalize() {
         outerPistons.retract();
-        shoot.retract();
         middlePiston.retract();
+        shoot.retract();
+        readyToShoot = false;
+        isDown = false;
+        tensionedCounter.reset();
+        System.out.println("init");
         
     }
 
-    public void initalize()
-    {
-        outerPistons.retract();
-        middlePiston.extend();
-        shoot.retract();
-
-    }
-    
-    public void sm()
-    {
-        System.out.println(state);
-        switch (state)
-        {
-            case 0:
-                if (optical.getVoltage() >= 2.2)
-                {
-                middlePiston.retract();
-                outerPistons.extend();
-                state = 1;
-                }
-                break;
-                
-            case 1:
-                if (!tensioned.get())
-                {
-                    state = 2;
-                }
-                break;
-            case 2:
-                if (optical.getVoltage() >= 2.0)
-                {
-                    state = 3;
-                }
-                break;
-            case 3:
-                System.out.println(ball.getVoltage());
-                if (RobotTemplate.driver.getShoot() && RobotTemplate.gathererDown)
-                {
-                    shoot.extend();
-                    state = 4;
-                }
-                break;
-            case 4:
-                if (optical.getVoltage() <= 1)
-                {
-                    state = 5;
-                    shoot.retract();
-                    System.out.println(optical.getVoltage());
-                }
-                break;
-            case 5:
-                outerPistons.retract();
+    public void cock() {
+        if (!readyToShoot) {
+            if (optical.getVoltage() <= 2 && !isDown) {
                 middlePiston.extend();
-                state = 6;
-                break;
-            case 6:
-                if (!deTensioned.get())
-                {
-                    state = 7;
-                    counter = 0;
+                outerPistons.retract();
+                shoot.retract();
+                tensionedCounter.reset();
+                System.out.println("readying");
+                isDown = false;
+            } else if (counter < 50) {
+                counter++;
+            } else {
+                isDown = true;
+                if (tensionedCounter.get() == 0) {
+                    middlePiston.retract();
+                    outerPistons.extend();
+                    System.out.println("tensionin");
+                } else {
+                    middlePiston.retract();
+                    readyToShoot = true;
+                    hasShot = false;
+                    System.out.println("ready");
                 }
-                break;
-            case 7:
-                if (optical.getVoltage() >= 2.0)
-                {
-                    state = 0;
-                }
+            }
         }
     }
-    
-    public void makesafe()
-    {
+
+    public void shoot() {
+        // add ball sensor
+
+        if (readyToShoot && !hasShot && (ball.getVoltage() > Wiring.C_HAS_BALL)) {
+            shoot.extend();
+            System.out.println("shoot");
+            shooting = true;
+        }
+        if (optical.getVoltage() < 1.5) {
+            hasShot = true;
+            counter = 0;
+            readyToShoot = false;
+            isDown = false;
+            shooting = false;
+            shoot.retract();
+            System.out.println("has shot");
+        }
+    }
+
+    public void shootThings(boolean joy) {
+        if (joy) {
+            shoot();
+        } else if(shooting){
+            shoot();
+        }else{
+            cock();
+        }
+    }
+
+    public void makesafe() {
         outerPistons.retract();
         middlePiston.retract();
         shoot.retract();
         System.out.println("Making Shooter Safe");
+    }
+
+    public void popShot(boolean but) {
+        if (but) {
+            if(!deTensioned.get() && RobotTemplate.gathererReversed){
+                shoot.extend();
+                readyToShoot = false;
+                popTrig = true;
+            }else if(deTensioned.get()){
+                outerPistons.retract();
+                System.out.println("pop");
+                readyToShoot = false;
+            }
+        } else if(popTrig){
+            isDown = false;
+            readyToShoot = false;
+            popTrig = false;
+        }
+
     }
 }

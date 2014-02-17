@@ -105,6 +105,10 @@ public class DriveSystem {
                 break;
         }
     }
+    
+    public void resetHeading(){
+        initialHeading = sen.getCompassRadAngle();
+    }
 
     public void calculateInput() {
 

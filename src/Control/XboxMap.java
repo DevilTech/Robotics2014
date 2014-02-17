@@ -1,0 +1,14 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package Control;
+
+/**
+ *
+ * @author robotics
+ */
+public class XboxMap {
+    public static final int START = 7;
+    public static final int BACK = 8;
+}
