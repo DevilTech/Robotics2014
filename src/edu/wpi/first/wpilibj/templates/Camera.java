@@ -16,6 +16,7 @@ public class Camera {
     double highMotion;
     double motionPercent;
     double ballAngle;
+    double cameraShoot;
 
     public Camera() {
         servo = new Servo(Wiring.CAMERA_SERVO);
@@ -24,8 +25,18 @@ public class Camera {
         motionPercent = 0.0;
     }
 
+    
+    public void shootAngle() {
+        servo.setAngle(cameraShoot);
+    }
+    
     public void setAngle(double angle) {
+        
+        if((angle < 0.0) || (angle > 180)){
+            return;
+        } else {
         servo.setAngle(angle);
+        }
     }
 
     public double getAngleToBall() {

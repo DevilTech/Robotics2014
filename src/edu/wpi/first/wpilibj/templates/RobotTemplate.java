@@ -1,3 +1,4 @@
+
 /*----------------------------------------------------------------------------*/
 /* Copyright (c) FIRST 2008. All Rights Reserved.                             */
 /* Open Source Software - may be modified and shared by FRC teams. The code   */
@@ -66,7 +67,17 @@ public class RobotTemplate extends IterativeRobot {
     public void autonomousPeriodic() {
         autoOffense();
     }
-
+/*
+    cam.setAngle(90.0);
+        if(cam.getHotGoal()) {
+            //shoot stuff
+            //move forward
+        } else { loopCounter++; }
+        if(loopCounter >= 250) {
+            System.out.println("Oh no! No hot goal detected.");
+            //just move the robot forward
+        }
+ */
     public void autoOffense() {
         switch (state){
             case 0:
