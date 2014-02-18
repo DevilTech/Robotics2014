@@ -48,6 +48,7 @@ public class Wiring extends WiringParent {
     public static final int LIMIT_SHOOTER_TENSIONED = 6;
     public static final int LIMIT_SHOOTER_UP = 7;
     public static final int LIMIT_SHOOTER_DOWN = 8;
+    public static final int LIMIT_SHOOTER_MIDDLE_PISTON = 1;
     
     public static final int OPTICAL_SHOOTER_SENSOR = 1;
     public static final int OPTICAL_SHOOTER_BALL_SENSOR = 5;

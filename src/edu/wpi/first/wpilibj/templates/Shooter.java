@@ -24,8 +24,8 @@ public class Shooter {
     Piston middlePiston;
     Piston shoot;
     Piston outerPistons;
-    AnalogChannel optical;
     AnalogChannel ball;
+    DigitalInput shooterPistonLimit;
     double distance;
     int counter = 0;
     boolean readyToShoot = false;
@@ -43,9 +43,8 @@ public class Shooter {
         up = new DigitalInput(Wiring.LIMIT_SHOOTER_UP);
         down = new DigitalInput(Wiring.LIMIT_SHOOTER_DOWN);
         deTensioned = new DigitalInput(Wiring.LIMIT_SHOOTER_DETENSIONED);
-        optical = new AnalogChannel(Wiring.OPTICAL_SHOOTER_SENSOR);
         ball = new AnalogChannel(Wiring.OPTICAL_SHOOTER_BALL_SENSOR);
-        distance = optical.getVoltage();
+        shooterPistonLimit = new DigitalInput(Wiring.LIMIT_SHOOTER_MIDDLE_PISTON);
         tensionedCounter = new Counter(Wiring.LIMIT_SHOOTER_TENSIONED);
         tensionedCounter.start();
         tensionedCounter.reset();
@@ -64,16 +63,15 @@ public class Shooter {
 
     public void cock() {
         if (!readyToShoot) {
-            if (optical.getVoltage() <= 2 && !isDown) {
+            if (shooterPistonLimit.get()) {
+                isDown = true;
+            }else if(!isDown){
                 middlePiston.extend();
                 outerPistons.retract();
                 shoot.retract();
                 tensionedCounter.reset();
                 System.out.println("readying");
-                isDown = false;
-            } else if (counter < 50) {
-                counter++;
-            } else {
+            }else{
                 isDown = true;
                 if (tensionedCounter.get() == 0) {
                     middlePiston.retract();
@@ -82,7 +80,6 @@ public class Shooter {
                 } else {
                     middlePiston.retract();
                     readyToShoot = true;
-                    hasShot = false;
                     System.out.println("ready");
                 }
             }
@@ -92,26 +89,16 @@ public class Shooter {
     public void shoot() {
         // add ball sensor
 
-        if (readyToShoot && !hasShot && (ball.getVoltage() > Wiring.C_HAS_BALL)) {
+        if (readyToShoot && (ball.getVoltage() > Wiring.C_HAS_BALL)) {
             shoot.extend();
             System.out.println("shoot");
-            shooting = true;
-        }
-        if (optical.getVoltage() < 1.5) {
-            hasShot = true;
-            counter = 0;
-            readyToShoot = false;
             isDown = false;
-            shooting = false;
-            shoot.retract();
-            System.out.println("has shot");
+            readyToShoot = false;
         }
     }
 
-    public void shootThings(boolean joy) {
+    public void operate(boolean joy) {
         if (joy) {
-            shoot();
-        } else if(shooting){
             shoot();
         }else{
             cock();

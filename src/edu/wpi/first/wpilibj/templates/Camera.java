@@ -66,4 +66,13 @@ public class Camera {
             return false;
         }
     }
+    
+    public boolean getBarode() {
+        String bar = SmartDashboard.getString("BARCODE");
+        if(bar.equals("nan")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

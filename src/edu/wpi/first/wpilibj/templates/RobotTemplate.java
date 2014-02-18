@@ -42,6 +42,8 @@ public class RobotTemplate extends IterativeRobot {
     int gathCount = 0;
     boolean hasFired = false;
     int state = 0;
+    Camera cam;
+    int loopCounter = 0;
 
     public void robotInit() {
         setupEncoders();
@@ -50,6 +52,7 @@ public class RobotTemplate extends IterativeRobot {
         d = new DriveSystem(sensor, driver, enY, enX, Wiring.OPEN_C);
         d.FCMode = false;
         joy = new Joystick(1);
+        cam = new Camera();
         if (!Wiring.isTest) {
             compressor = new Compressor(Wiring.COMPRESSOR_PRESSURE_SWITCH, Wiring.COMPRESSOR_RELAY);
             compressor.start();
@@ -89,12 +92,20 @@ public class RobotTemplate extends IterativeRobot {
                 }
                 break;
             case 1:
-                
-                shooter.shootThings(true);
-                state = 2;
+                if (loopCounter < 250) {
+                    if (cam.getBarode()) {
+                        shooter.operate(true);
+                        state = 2;
+                    } else {
+                        loopCounter++;
+                    }
+                } else {
+                    shooter.operate(true);
+                    state = 2;
+                }
                 break;
             case 2:
-                shooter.shootThings(false);
+                shooter.operate(false);
                 d.setSpeed(0, ((48 - enY.getDistance()) / 48), 0, 0);
                 if(enY.getDistance() > 48){
                     state = 3;
@@ -103,7 +114,7 @@ public class RobotTemplate extends IterativeRobot {
             case 3:
                 gathererButtonCheck(false, false);
                 d.setSpeed(0,0,0,0);
-                shooter.shootThings(false);
+                shooter.operate(false);
                 break;
         }   
     }
@@ -136,7 +147,7 @@ public class RobotTemplate extends IterativeRobot {
         d.calculateInput();
         gathererButtonCheck(driver.getGather(), driver.getReverseGather());
         //System.out.println("this makes it work");
-        shooter.shootThings(driver.getShoot() && gathererDown);
+        shooter.operate(driver.getShoot() && gathererDown);
         shooter.popShot(driver.getPop());
         smartPush();
         smartPull();
