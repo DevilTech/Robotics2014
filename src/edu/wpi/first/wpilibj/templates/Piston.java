@@ -17,7 +17,6 @@ public class Piston {
     
     public Piston(int extendValve, int retractValve){
         sol = new DoubleSolenoid(extendValve, retractValve);
-        retract();
     }
     
     public void extend(){
