@@ -56,7 +56,7 @@ public class RobotTemplate extends IterativeRobot {
             g = new Gatherer();
             shooter = new Shooter();
         }
-        
+
     }
 
     public void autonomousInit() {
@@ -67,45 +67,46 @@ public class RobotTemplate extends IterativeRobot {
     public void autonomousPeriodic() {
         autoOffense();
     }
-/*
-    cam.setAngle(90.0);
-        if(cam.getHotGoal()) {
-            //shoot stuff
-            //move forward
-        } else { loopCounter++; }
-        if(loopCounter >= 250) {
-            System.out.println("Oh no! No hot goal detected.");
-            //just move the robot forward
-        }
- */
+    /*
+     cam.setAngle(90.0);
+     if(cam.getHotGoal()) {
+     //shoot stuff
+     //move forward
+     } else { loopCounter++; }
+     if(loopCounter >= 250) {
+     System.out.println("Oh no! No hot goal detected.");
+     //just move the robot forward
+     }
+     */
+
     public void autoOffense() {
-        switch (state){
+        switch (state) {
             case 0:
                 gathererButtonCheck(true, false);
                 shooter.readyToShoot = true;
                 d.setSpeed(0, ((24 - enY.getDistance()) / 48), 0, 0);
-                if(enY.getDistance() > 24){
+                if (enY.getDistance() > 24) {
                     state = 1;
                 }
                 break;
             case 1:
-                
+
                 shooter.shootThings(true);
                 state = 2;
                 break;
             case 2:
                 shooter.shootThings(false);
                 d.setSpeed(0, ((48 - enY.getDistance()) / 48), 0, 0);
-                if(enY.getDistance() > 48){
+                if (enY.getDistance() > 48) {
                     state = 3;
                 }
                 break;
             case 3:
                 gathererButtonCheck(false, false);
-                d.setSpeed(0,0,0,0);
+                d.setSpeed(0, 0, 0, 0);
                 shooter.shootThings(false);
                 break;
-        }   
+        }
     }
 
     public void autoDefence() {
@@ -156,23 +157,22 @@ public class RobotTemplate extends IterativeRobot {
 
     public void testPeriodic() {
         gathererButtonCheck(driver.getGather(), driver.getReverseGather());
-        if(joy.getRawButton(1)){
+        if (joy.getRawButton(1)) {
             shooter.middlePiston.extend();
-        }else{
+        } else {
             shooter.middlePiston.retract();
         }
-        if(joy.getRawButton(2)){
+        if (joy.getRawButton(2)) {
             shooter.shoot.extend();
-        }else{
+        } else {
             shooter.shoot.retract();
         }
-        if(joy.getRawButton(3)){
+        if (joy.getRawButton(3)) {
             shooter.outerPistons.extend();
-        }else{
+        } else {
             shooter.outerPistons.retract();
         }
         System.out.println(shooter.ball.getVoltage());
-
 
     }
 
@@ -187,11 +187,10 @@ public class RobotTemplate extends IterativeRobot {
             gathererDown = false;
             gathererReversed = true;
         } else {
-            if(gathCount <= 100){
+            if (gathCount <= 100) {
                 g.pullUp();
                 gathCount++;
-            }
-            else{
+            } else {
                 g.rest();
             }
             gathererDown = false;
@@ -199,14 +198,11 @@ public class RobotTemplate extends IterativeRobot {
         }
     }
 
-    
     public void defenseCheck() {
         if (coPilot.getArmRaise()) {
-            if (arm.isUp) {
-                arm.goDown();
-            } else {
-                arm.goUp();
-            }
+            arm.goUp();
+        } else {
+            arm.goDown();
         }
 
     }
@@ -233,9 +229,9 @@ public class RobotTemplate extends IterativeRobot {
         SmartDashboard.putNumber("enY", enY.getDistance());
         SmartDashboard.putNumber("errorH", d.errorInHeading);
         /*
-        SmartDashboard.putNumber("C", d.clockwiseZ);
-        SmartDashboard.putNumber("R", d.rightX);
-        SmartDashboard.putNumber("F", d.forwardY); //here
+         SmartDashboard.putNumber("C", d.clockwiseZ);
+         SmartDashboard.putNumber("R", d.rightX);
+         SmartDashboard.putNumber("F", d.forwardY); //here
          */
         SmartDashboard.putNumber("heading", d.heading);
         SmartDashboard.putNumber("theta", d.theta);

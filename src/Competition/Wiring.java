@@ -63,10 +63,7 @@ public class Wiring extends WiringParent {
     public static final int TENSIONED = 7;
     public static final int DETENSIONED = 6;
      
-    public static final int DEFENSIVE_ARM_UP_LEFT = 2;
-    public static final int DEFENSIVE_ARM_DOWN_LEFT = 3;
-    public static final int DEFENSIVE_ARM_UP_RIGHT = 4;
-    public static final int DEFENSIVE_ARM_DOWN_RIGHT = 5;
+    public static final int DEFENSIVE_ARM = 8;
     
     public static final int DEFENSIVE_ARM_DOWN = 1;
     public static final int DEFENSIVE_ARM_UP = 2;

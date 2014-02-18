@@ -111,7 +111,7 @@ public class Happystick {
     }
 
     public boolean getArmRaise() {
-        return armButt.getReHit();
+        return armButt.isPressed();
     }
     
     public boolean getPop(){
