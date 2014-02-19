@@ -14,6 +14,7 @@ public class Wiring extends WiringParent {
     public static final int CAMERA_SERVO = 1;
     public static final int COMPRESSOR_RELAY = 7;
     public static final int COMPRESSOR_PRESSURE_SWITCH = 14;
+    //------------------------------------------------------------try increasing I value for rotation
     //K is for PID control
     //P is proportion, D is derivative
     public static double KpR = 2.5 * dt;/// Math.PI;
