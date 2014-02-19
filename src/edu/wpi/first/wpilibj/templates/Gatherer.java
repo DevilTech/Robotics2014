@@ -7,6 +7,7 @@
 package edu.wpi.first.wpilibj.templates;
 
 import Competition.Wiring;
+import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Talon;
 
@@ -18,7 +19,7 @@ public class Gatherer {
 
 
 
-    Piston arm;
+    Relay arm;
 
     Talon armMotorL;
     Talon armMotorR;
@@ -26,18 +27,18 @@ public class Gatherer {
     public Gatherer() {
         armMotorL = new Talon(Wiring.MOTOR_GATHERER_LEFT);
         armMotorR = new Talon(Wiring.MOTOR_GATHERER_RIGHT);
-        arm = new Piston(Wiring.SOLENOID_GATHERER_OUT, Wiring.SOLENOID_GATHERER_IN);
-        arm.retract();
+        arm = new Relay(Wiring.RELAY_GATHERER);
+        arm.set(Relay.Value.kOff);
     }
 
     public void up() //Lifts arms of gatherer up
     {
-        arm.retract();
+        arm.set(Relay.Value.kOn);
     }
 
     public void down() //Lowers arms of gatherer
     {
-        arm.extend();
+        arm.set(Relay.Value.kOff);
     }
 
     public void startIn() //Starts the motors of gatherer in

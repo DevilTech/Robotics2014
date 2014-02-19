@@ -213,11 +213,10 @@ public class RobotTemplate extends IterativeRobot {
     
     public void defenseCheck() {
         if (coPilot.getArmRaise()) {
-            if (arm.isUp) {
-                arm.goDown();
-            } else {
                 arm.goUp();
-            }
+            
+        }else{
+            arm.goDown();
         }
 
     }

@@ -5,6 +5,7 @@
 package edu.wpi.first.wpilibj.templates;
 
 import Competition.Wiring;
+import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.Solenoid;
 
 /**
@@ -13,22 +14,22 @@ import edu.wpi.first.wpilibj.Solenoid;
  */
 public class DefensiveArm {
 
-    Piston pis;
+    Relay piston;
 
 
     boolean isUp = false;
 
     public DefensiveArm() {
-        pis = new Piston(Wiring.DEFENSIVE_ARM_UP, Wiring.DEFENSIVE_ARM_DOWN);
+        piston = new Relay(Wiring.DEFENSIVE_ARM);
     }
 
     public void goUp() {
-        pis.extend();
+        piston.set(Relay.Value.kOn);
         isUp = true;
     }
 
     public void goDown() {
-        pis.retract();
+        piston.set(Relay.Value.kOff);
         isUp = false;
     }
 }

@@ -34,8 +34,7 @@ public class Wiring extends WiringParent {
     public static final int MOTOR_GATHERER_LEFT = 5;
     public static final int MOTOR_GATHERER_RIGHT = 6;
     
-    public static final int SOLENOID_GATHERER_OUT = 1;
-    public static final int SOLENOID_GATHERER_IN = 2;
+    public static final int RELAY_GATHERER = 6;
     
     public static final int SOLENOID_SHOOTER_PRETENSION_IN = 7; // the middle cylinder
     public static final int SOLENOID_SHOOTER_PRETENSION_OUT = 8;
@@ -64,13 +63,7 @@ public class Wiring extends WiringParent {
     public static final int TENSIONED = 7;
     public static final int DETENSIONED = 6;
      
-    public static final int DEFENSIVE_ARM_UP_LEFT = 2;
-    public static final int DEFENSIVE_ARM_DOWN_LEFT = 3;
-    public static final int DEFENSIVE_ARM_UP_RIGHT = 4;
-    public static final int DEFENSIVE_ARM_DOWN_RIGHT = 5;
-    
-    public static final int DEFENSIVE_ARM_DOWN = 1;
-    public static final int DEFENSIVE_ARM_UP = 2;
+    public static final int DEFENSIVE_ARM = 8;
 
     public static final double CF_HOOK = -.255;
     public static final double FF_HOOK = -.588;
