@@ -67,7 +67,7 @@ public class Camera {
         }
     }
     
-    public boolean getBarode() {
+    public boolean getBarcode() {
         String bar = SmartDashboard.getString("BARCODE");
         if(bar.equals("nan")) {
             return true;

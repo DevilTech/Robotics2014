@@ -93,7 +93,7 @@ public class RobotTemplate extends IterativeRobot {
                 break;
             case 1:
                 if (loopCounter < 250) {
-                    if (cam.getBarode()) {
+                    if (cam.getBarcode()) {
                         shooter.operate(true);
                         state = 2;
                     } else {
