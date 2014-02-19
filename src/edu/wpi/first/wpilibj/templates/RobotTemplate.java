@@ -49,10 +49,11 @@ public class RobotTemplate extends IterativeRobot {
         setupEncoders();
         driver = new Happystick(1, Control.getXbox());
         coPilot = new Happystick(2, Control.getXbox());
-        d = new DriveSystem(sensor, driver, enY, enX, Wiring.OPEN_C);
-        d.FCMode = false;
+        d = new DriveSystem(sensor, driver, enY, enX, Wiring.HALF_C);
+        d.FCMode = true;
         joy = new Joystick(1);
-        cam = new Camera();
+        //cam = new Camera();
+        arm = new DefensiveArm();
         if (!Wiring.isTest) {
             compressor = new Compressor(Wiring.COMPRESSOR_PRESSURE_SWITCH, Wiring.COMPRESSOR_RELAY);
             compressor.start();
@@ -146,9 +147,9 @@ public class RobotTemplate extends IterativeRobot {
         d.getJoy();
         d.calculateInput();
         gathererButtonCheck(driver.getGather(), driver.getReverseGather());
-        //System.out.println("this makes it work");
         shooter.operate(driver.getShoot() && gathererDown);
         shooter.popShot(driver.getPop());
+        defenseCheck();
         smartPush();
         smartPull();
     }
@@ -163,9 +164,15 @@ public class RobotTemplate extends IterativeRobot {
         sensor.readAll();
         smartPush();
         smartPull();
+        arm.goDown();
     }
 
     public void testPeriodic() {
+        if(joy.getRawButton(4)){
+            arm.goUp();
+        }else{
+            arm.goDown();
+        }
         gathererButtonCheck(driver.getGather(), driver.getReverseGather());
         if(joy.getRawButton(1)){
             shooter.middlePiston.extend();

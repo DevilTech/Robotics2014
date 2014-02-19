@@ -24,12 +24,12 @@ public class DefensiveArm {
     }
 
     public void goUp() {
-        piston.set(Relay.Value.kOn);
+        piston.set(Relay.Value.kForward);
         isUp = true;
     }
 
     public void goDown() {
-        piston.set(Relay.Value.kOff);
+        piston.set(Relay.Value.kReverse);
         isUp = false;
     }
 }

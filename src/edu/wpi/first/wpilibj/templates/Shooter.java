@@ -34,14 +34,13 @@ public class Shooter {
     boolean shooting = false;
     boolean popTrig = false;
 
-
     public Shooter() {
         middlePiston = new Piston(Wiring.SOLENOID_SHOOTER_PRETENSION_OUT, Wiring.SOLENOID_SHOOTER_PRETENSION_IN);
         shoot = new Piston(Wiring.SOLENOID_SHOOTER_SHOOT_OUT, Wiring.SOLENOID_SHOOTER_SHOOT_IN);
         outerPistons = new Piston(Wiring.SOLENOID_SHOOTER_TENSION_OUT, Wiring.SOLENOID_SHOOTER_TENSION_IN);
         //tensioned = new DigitalInput(Wiring.LIMIT_SHOOTER_TENSIONED);
-        up = new DigitalInput(Wiring.LIMIT_SHOOTER_UP);
-        down = new DigitalInput(Wiring.LIMIT_SHOOTER_DOWN);
+        // up = new DigitalInput(Wiring.LIMIT_SHOOTER_UP);
+        //down = new DigitalInput(Wiring.LIMIT_SHOOTER_DOWN);
         deTensioned = new DigitalInput(Wiring.LIMIT_SHOOTER_DETENSIONED);
         ball = new AnalogChannel(Wiring.OPTICAL_SHOOTER_BALL_SENSOR);
         shooterPistonLimit = new DigitalInput(Wiring.LIMIT_SHOOTER_MIDDLE_PISTON);
@@ -51,28 +50,26 @@ public class Shooter {
     }
 
     public void initalize() {
-        outerPistons.retract();
-        middlePiston.retract();
-        shoot.retract();
         readyToShoot = false;
         isDown = false;
         tensionedCounter.reset();
         System.out.println("init");
-        
+
     }
 
     public void cock() {
         if (!readyToShoot) {
-            if (shooterPistonLimit.get()) {
-                isDown = true;
-            }else if(!isDown){
+            if (!isDown) {
                 middlePiston.extend();
                 outerPistons.retract();
                 shoot.retract();
                 tensionedCounter.reset();
-                System.out.println("readying");
-            }else{
-                isDown = true;
+                if (shooterPistonLimit.get()) {
+                    isDown = true;
+                    System.out.println(shooterPistonLimit.get());
+                }
+                System.out.println("readying " + shooterPistonLimit.get());
+            } else {
                 if (tensionedCounter.get() == 0) {
                     middlePiston.retract();
                     outerPistons.extend();
@@ -100,7 +97,7 @@ public class Shooter {
     public void operate(boolean joy) {
         if (joy) {
             shoot();
-        }else{
+        } else {
             cock();
         }
     }
@@ -114,16 +111,16 @@ public class Shooter {
 
     public void popShot(boolean but) {
         if (but) {
-            if(!deTensioned.get() && RobotTemplate.gathererReversed){
+            if (!deTensioned.get() && RobotTemplate.gathererReversed) {
                 shoot.extend();
                 readyToShoot = false;
                 popTrig = true;
-            }else if(deTensioned.get()){
+            } else if (deTensioned.get()) {
                 outerPistons.retract();
                 System.out.println("pop");
                 readyToShoot = false;
             }
-        } else if(popTrig){
+        } else if (popTrig) {
             isDown = false;
             readyToShoot = false;
             popTrig = false;

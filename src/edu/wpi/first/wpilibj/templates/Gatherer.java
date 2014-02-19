@@ -33,12 +33,12 @@ public class Gatherer {
 
     public void up() //Lifts arms of gatherer up
     {
-        arm.set(Relay.Value.kOn);
+        arm.set(Relay.Value.kForward);
     }
 
     public void down() //Lowers arms of gatherer
     {
-        arm.set(Relay.Value.kOff);
+        arm.set(Relay.Value.kReverse);
     }
 
     public void startIn() //Starts the motors of gatherer in
