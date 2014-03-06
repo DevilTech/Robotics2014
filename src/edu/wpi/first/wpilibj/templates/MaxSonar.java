@@ -29,7 +29,7 @@ public class MaxSonar {
      }
      public boolean canShoot() 
      {
-         dist = getInches();
+         dist = getFeet();
          if((dist >= Wiring.MIN_DIST_R1) && (dist <= Wiring.MAX_DIST_R1)) {
              return true;
          } else if ((dist >= Wiring.MIN_DIST_R2) && (dist <= Wiring.MAX_DIST_R2)) {
