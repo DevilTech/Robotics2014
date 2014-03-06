@@ -70,4 +70,11 @@ public class Wiring extends WiringParent {
     public static final double FF_HOOK = -.588;
     public static final double CB_HOOK = .187;
     public static final double FB_HOOK = -1;
+    
+    //Sonar things
+    public static final int SONAR_CHANNEL = 3; //This will probably have to change...
+    public static final double MAX_DIST_R1 = 4;
+    public static final double MIN_DIST_R1 = 0;
+    public static final double MAX_DIST_R2 = 15;
+    public static final double MIN_DIST_R2 = 8;
 }

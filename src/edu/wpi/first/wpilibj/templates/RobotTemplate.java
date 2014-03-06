@@ -44,6 +44,7 @@ public class RobotTemplate extends IterativeRobot {
     int state = 0;
     Camera cam;
     int loopCounter = 0;
+    MaxSonar sonar;
 
     public void robotInit() {
         setupEncoders();
@@ -59,6 +60,7 @@ public class RobotTemplate extends IterativeRobot {
             compressor.start();
             g = new Gatherer();
             shooter = new Shooter();
+            sonar = new MaxSonar(Wiring.SONAR_CHANNEL);
         }
         
     }
@@ -150,6 +152,11 @@ public class RobotTemplate extends IterativeRobot {
         shooter.operate(driver.getShoot() && gathererDown);
         shooter.popShot(driver.getPop());
         defenseCheck();
+        if(sonar.canShoot()) {
+            SmartDashboard.putBoolean("CAN FIRE!", true);
+        } else if(!sonar.canShoot()) {
+            SmartDashboard.putBoolean("CAN FIRE!", false);
+        }
         smartPush();
         smartPull();
     }
@@ -249,6 +256,7 @@ public class RobotTemplate extends IterativeRobot {
         SmartDashboard.putNumber("enX", enX.getDistance());
         SmartDashboard.putNumber("enY", enY.getDistance());
         SmartDashboard.putNumber("errorH", d.errorInHeading);
+        SmartDashboard.putNumber("Distance: ", sonar.getFeet());
         /*
         SmartDashboard.putNumber("C", d.clockwiseZ);
         SmartDashboard.putNumber("R", d.rightX);
