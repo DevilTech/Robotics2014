@@ -14,6 +14,7 @@ public class Wiring extends WiringParent {
     public static final int CAMERA_SERVO = 1;
     public static final int COMPRESSOR_RELAY = 7;
     public static final int COMPRESSOR_PRESSURE_SWITCH = 14;
+    //------------------------------------------------------------try increasing I value for rotation
     //K is for PID control
     //P is proportion, D is derivative
     public static double KpR = 2.5 * dt;/// Math.PI;
@@ -34,8 +35,7 @@ public class Wiring extends WiringParent {
     public static final int MOTOR_GATHERER_LEFT = 5;
     public static final int MOTOR_GATHERER_RIGHT = 6;
     
-    public static final int SOLENOID_GATHERER_OUT = 1;
-    public static final int SOLENOID_GATHERER_IN = 2;
+    public static final int RELAY_GATHERER = 6;
     
     public static final int SOLENOID_SHOOTER_PRETENSION_IN = 7; // the middle cylinder
     public static final int SOLENOID_SHOOTER_PRETENSION_OUT = 8;
@@ -47,7 +47,8 @@ public class Wiring extends WiringParent {
     public static final int LIMIT_SHOOTER_DETENSIONED = 5;
     public static final int LIMIT_SHOOTER_TENSIONED = 6;
     public static final int LIMIT_SHOOTER_UP = 7;
-    public static final int LIMIT_SHOOTER_DOWN = 8;
+    //public static final int LIMIT_SHOOTER_DOWN = 8;
+    public static final int LIMIT_SHOOTER_MIDDLE_PISTON = 8;
     
     public static final int OPTICAL_SHOOTER_SENSOR = 1;
     public static final int OPTICAL_SHOOTER_BALL_SENSOR = 5;
@@ -64,12 +65,16 @@ public class Wiring extends WiringParent {
     public static final int DETENSIONED = 6;
      
     public static final int DEFENSIVE_ARM = 8;
-    
-    public static final int DEFENSIVE_ARM_DOWN = 1;
-    public static final int DEFENSIVE_ARM_UP = 2;
 
     public static final double CF_HOOK = -.255;
     public static final double FF_HOOK = -.588;
     public static final double CB_HOOK = .187;
     public static final double FB_HOOK = -1;
+    
+    //Sonar things
+    public static final int SONAR_CHANNEL = 3; //This will probably have to change...
+    public static final double MAX_DIST_R1 = 4;
+    public static final double MIN_DIST_R1 = 0;
+    public static final double MAX_DIST_R2 = 15;
+    public static final double MIN_DIST_R2 = 8;
 }

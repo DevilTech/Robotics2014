@@ -13,22 +13,23 @@ import edu.wpi.first.wpilibj.Solenoid;
  * @author robotics
  */
 public class DefensiveArm {
-    
+
+
     Relay piston;
     boolean isUp = false;
 
-    public DefensiveArm() 
-    {
+    public DefensiveArm() {
         piston = new Relay(Wiring.DEFENSIVE_ARM);
     }
 
-    public void goUp() 
-    {
+    public void goUp() {
         piston.set(Relay.Value.kForward);
+        isUp = true;
     }
 
-    public void goDown()
-    {
+    public void goDown() {
         piston.set(Relay.Value.kReverse);
+        isUp = false;
+
     }
 }

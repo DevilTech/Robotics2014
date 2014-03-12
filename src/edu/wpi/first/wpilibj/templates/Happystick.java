@@ -21,6 +21,7 @@ public class Happystick {
     Button shootButt;
     Button armButt;
     Button popButt;
+    Button resetButt;
     boolean gathExtend = false;
     boolean gathSpinOut = false;
     boolean gathSpinIn = false;
@@ -35,6 +36,7 @@ public class Happystick {
         shootButt = new Button(joy, this.controller.shoot);
         armButt = new Button(joy, this.controller.defenseButton);
         popButt = new Button(joy, this.controller.popShot);
+        resetButt = new Button(joy, this.controller.resetButton);
     }
 
     public double getAxis(int num) {
@@ -116,5 +118,9 @@ public class Happystick {
     
     public boolean getPop(){
         return popButt.isPressed();
+    }
+    
+    public boolean getReset(){
+        return resetButt.getReHit();
     }
 }

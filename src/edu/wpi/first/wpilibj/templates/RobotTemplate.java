@@ -42,19 +42,25 @@ public class RobotTemplate extends IterativeRobot {
     int gathCount = 0;
     boolean hasFired = false;
     int state = 0;
+    Camera cam;
+    int loopCounter = 0;
+    MaxSonar sonar;
 
     public void robotInit() {
         setupEncoders();
         driver = new Happystick(1, Control.getXbox());
         coPilot = new Happystick(2, Control.getXbox());
-        d = new DriveSystem(sensor, driver, enY, enX, Wiring.OPEN_C);
-        d.FCMode = false;
+        d = new DriveSystem(sensor, driver, enY, enX, Wiring.HALF_C);
+        d.FCMode = true;
         joy = new Joystick(1);
+        //cam = new Camera();
+        arm = new DefensiveArm();
         if (!Wiring.isTest) {
             compressor = new Compressor(Wiring.COMPRESSOR_PRESSURE_SWITCH, Wiring.COMPRESSOR_RELAY);
             compressor.start();
             g = new Gatherer();
             shooter = new Shooter();
+            sonar = new MaxSonar(Wiring.SONAR_CHANNEL);
         }
 
     }
@@ -90,12 +96,20 @@ public class RobotTemplate extends IterativeRobot {
                 }
                 break;
             case 1:
-
-                shooter.shootThings(true);
-                state = 2;
+                if (loopCounter < 250) {
+                    if (cam.getBarcode()) {
+                        shooter.operate(true);
+                        state = 2;
+                    } else {
+                        loopCounter++;
+                    }
+                } else {
+                    shooter.operate(true);
+                    state = 2;
+                }
                 break;
             case 2:
-                shooter.shootThings(false);
+                shooter.operate(false);
                 d.setSpeed(0, ((48 - enY.getDistance()) / 48), 0, 0);
                 if (enY.getDistance() > 48) {
                     state = 3;
@@ -103,8 +117,8 @@ public class RobotTemplate extends IterativeRobot {
                 break;
             case 3:
                 gathererButtonCheck(false, false);
-                d.setSpeed(0, 0, 0, 0);
-                shooter.shootThings(false);
+                d.setSpeed(0,0,0,0);
+                shooter.operate(false);
                 break;
         }
     }
@@ -136,9 +150,14 @@ public class RobotTemplate extends IterativeRobot {
         d.getJoy();
         d.calculateInput();
         gathererButtonCheck(driver.getGather(), driver.getReverseGather());
-        //System.out.println("this makes it work");
-        shooter.shootThings(driver.getShoot() && gathererDown);
+        shooter.operate(driver.getShoot() && gathererDown);
         shooter.popShot(driver.getPop());
+        defenseCheck();
+        if(sonar.canShoot()) {
+            SmartDashboard.putBoolean("CAN FIRE!", true);
+        } else if(!sonar.canShoot()) {
+            SmartDashboard.putBoolean("CAN FIRE!", false);
+        }
         smartPush();
         smartPull();
     }
@@ -153,9 +172,15 @@ public class RobotTemplate extends IterativeRobot {
         sensor.readAll();
         smartPush();
         smartPull();
+        arm.goDown();
     }
 
     public void testPeriodic() {
+        if(joy.getRawButton(4)){
+            arm.goUp();
+        }else{
+            arm.goDown();
+        }
         gathererButtonCheck(driver.getGather(), driver.getReverseGather());
         if (joy.getRawButton(1)) {
             shooter.middlePiston.extend();
@@ -201,7 +226,7 @@ public class RobotTemplate extends IterativeRobot {
     public void defenseCheck() {
         if (coPilot.getArmRaise()) {
             arm.goUp();
-        } else {
+        }else{
             arm.goDown();
         }
 
@@ -228,6 +253,7 @@ public class RobotTemplate extends IterativeRobot {
         SmartDashboard.putNumber("enX", enX.getDistance());
         SmartDashboard.putNumber("enY", enY.getDistance());
         SmartDashboard.putNumber("errorH", d.errorInHeading);
+        SmartDashboard.putNumber("Distance: ", sonar.getFeet());
         /*
          SmartDashboard.putNumber("C", d.clockwiseZ);
          SmartDashboard.putNumber("R", d.rightX);

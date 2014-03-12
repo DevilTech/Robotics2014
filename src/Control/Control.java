@@ -25,6 +25,7 @@ public class Control {
     public double hookAxisSens;
     public int defenseButton;
     public int popShot;
+    public int resetButton;
 
     private Control() {
     }
@@ -58,6 +59,7 @@ public class Control {
         xbox.hookAxisSens = .1;
         xbox.defenseButton = 1;
         xbox.popShot = XboxMap.Y;
+        xbox.resetButton = XboxMap.START;
         return xbox;
     }
 

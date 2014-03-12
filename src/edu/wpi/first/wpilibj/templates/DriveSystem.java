@@ -141,6 +141,9 @@ public class DriveSystem {
         if (control.getLoopSwitch()) {
             driveType = (driveType == Wiring.PID_C) ? Wiring.OPEN_C : Wiring.PID_C;
         }
+        if(control.getReset()){
+            resetHeading();
+        }
 
         if (getHooks()) {
             speedX = 0;
