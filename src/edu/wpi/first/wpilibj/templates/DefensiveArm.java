@@ -14,9 +14,8 @@ import edu.wpi.first.wpilibj.Solenoid;
  */
 public class DefensiveArm {
 
+
     Relay piston;
-
-
     boolean isUp = false;
 
     public DefensiveArm() {
@@ -31,5 +30,6 @@ public class DefensiveArm {
     public void goDown() {
         piston.set(Relay.Value.kReverse);
         isUp = false;
+
     }
 }
