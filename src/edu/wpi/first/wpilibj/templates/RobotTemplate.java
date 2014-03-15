@@ -163,7 +163,7 @@ public class RobotTemplate extends IterativeRobot {
             SmartDashboard.putBoolean("CAN FIRE!", false);
         }
         smartPush();
-        smartPull();
+        smartPull(); 
     }
 
     public void disabledInit() {
