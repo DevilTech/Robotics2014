@@ -5,7 +5,7 @@
  */
 package edu.wpi.first.wpilibj.templates;
 
-import Competition.Wiring;
+import Test.Wiring;
 import edu.wpi.first.wpilibj.AnalogChannel;
 import edu.wpi.first.wpilibj.Counter;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -35,9 +35,13 @@ public class Shooter {
     boolean popTrig = false;
 
     public Shooter() {
-        middlePiston = new Piston(Wiring.SOLENOID_SHOOTER_PRETENSION_OUT, Wiring.SOLENOID_SHOOTER_PRETENSION_IN);
         shoot = new Piston(Wiring.SOLENOID_SHOOTER_SHOOT_OUT, Wiring.SOLENOID_SHOOTER_SHOOT_IN);
         outerPistons = new Piston(Wiring.SOLENOID_SHOOTER_TENSION_OUT, Wiring.SOLENOID_SHOOTER_TENSION_IN);
+        if(Wiring.isTest)
+            middlePiston = new Piston(Wiring.RELAY_MIDDLE_PISTON, true);
+        else{
+        middlePiston = new Piston(Wiring.SOLENOID_SHOOTER_PRETENSION_OUT, Wiring.SOLENOID_SHOOTER_PRETENSION_IN);
+        
         //tensioned = new DigitalInput(Wiring.LIMIT_SHOOTER_TENSIONED);
         // up = new DigitalInput(Wiring.LIMIT_SHOOTER_UP);
         //down = new DigitalInput(Wiring.LIMIT_SHOOTER_DOWN);
@@ -47,6 +51,7 @@ public class Shooter {
         tensionedCounter = new Counter(Wiring.LIMIT_SHOOTER_TENSIONED);
         tensionedCounter.start();
         tensionedCounter.reset();
+        }
     }
 
     public void initalize() {
