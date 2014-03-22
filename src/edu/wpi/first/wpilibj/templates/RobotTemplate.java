@@ -16,7 +16,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import Competition.Wiring;
 import Control.Control;
+import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.visa.VisaException;
 
 public class RobotTemplate extends IterativeRobot {
 
@@ -45,6 +47,7 @@ public class RobotTemplate extends IterativeRobot {
     Camera cam;
     int loopCounter = 0;
     MaxSonar sonar;
+    Pixy pixy;
 
     public void robotInit() {
         setupEncoders();
@@ -55,6 +58,7 @@ public class RobotTemplate extends IterativeRobot {
         joy = new Joystick(1);
         //cam = new Camera();
         arm = new DefensiveArm();
+        pixy = new Pixy();
         if (!Wiring.isTest) {
             compressor = new Compressor(Wiring.COMPRESSOR_PRESSURE_SWITCH, Wiring.COMPRESSOR_RELAY);
             compressor.start();
@@ -159,7 +163,7 @@ public class RobotTemplate extends IterativeRobot {
             SmartDashboard.putBoolean("CAN FIRE!", false);
         }
         smartPush();
-        smartPull();
+        smartPull(); 
     }
 
     public void disabledInit() {
