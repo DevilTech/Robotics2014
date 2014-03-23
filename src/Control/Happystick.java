@@ -3,10 +3,11 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.wpi.first.wpilibj.templates;
+package Control;
 
 import Control.Control;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.templates.Button;
 
 public class Happystick {
 
@@ -21,7 +22,8 @@ public class Happystick {
     Button shootButt;
     Button armButt;
     Button popButt;
-    Button resetButt;
+    Button resetDriveButt;
+    Button resetShooterButt;
     boolean gathExtend = false;
     boolean gathSpinOut = false;
     boolean gathSpinIn = false;
@@ -36,7 +38,8 @@ public class Happystick {
         shootButt = new Button(joy, this.controller.shoot);
         armButt = new Button(joy, this.controller.defenseButton);
         popButt = new Button(joy, this.controller.popShot);
-        resetButt = new Button(joy, this.controller.resetButton);
+        resetDriveButt = new Button(joy, this.controller.resetDriveButton);
+        resetShooterButt = new Button(joy, this.controller.resetShooterButton);
     }
 
     public double getAxis(int num) {
@@ -121,6 +124,10 @@ public class Happystick {
     }
     
     public boolean getReset(){
-        return resetButt.getReHit();
+        return resetDriveButt.getReHit();
+    }
+    
+    public boolean getShooterReset(){
+        return resetShooterButt.getReHit();
     }
 }

@@ -25,7 +25,8 @@ public class Control {
     public double hookAxisSens;
     public int defenseButton;
     public int popShot;
-    public int resetButton;
+    public int resetDriveButton;
+    public int resetShooterButton;
 
     private Control() {
     }
@@ -56,10 +57,13 @@ public class Control {
         xbox.hookAxis = 3;
         
         xbox.shoot = XboxMap.A;
+        xbox.popShot = XboxMap.Y;
+        
         xbox.hookAxisSens = .1;
         xbox.defenseButton = 1;
-        xbox.popShot = XboxMap.Y;
-        xbox.resetButton = XboxMap.START;
+        
+        xbox.resetDriveButton = XboxMap.START;
+        xbox.resetShooterButton = XboxMap.BACK;
         return xbox;
     }
 

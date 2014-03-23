@@ -7,6 +7,7 @@
 /*----------------------------------------------------------------------------*/
 package edu.wpi.first.wpilibj.templates;
 
+import Control.Happystick;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -59,13 +60,11 @@ public class RobotTemplate extends IterativeRobot {
         //cam = new Camera();
         arm = new DefensiveArm();
         pixy = new Pixy();
-        if (!Wiring.isTest) {
-            compressor = new Compressor(Wiring.COMPRESSOR_PRESSURE_SWITCH, Wiring.COMPRESSOR_RELAY);
-            compressor.start();
-            g = new Gatherer();
-            shooter = new Shooter();
-            sonar = new MaxSonar(Wiring.SONAR_CHANNEL);
-        }
+        compressor = new Compressor(Wiring.COMPRESSOR_PRESSURE_SWITCH, Wiring.COMPRESSOR_RELAY);
+        compressor.start();
+        g = new Gatherer();
+        shooter = new Shooter();
+        sonar = new MaxSonar(Wiring.SONAR_CHANNEL);
 
     }
 
@@ -102,18 +101,18 @@ public class RobotTemplate extends IterativeRobot {
             case 1:
                 if (loopCounter < 250) {
                     if (cam.getBarcode()) {
-                        shooter.operate(true);
+                        shooter.shoot();
                         state = 2;
                     } else {
                         loopCounter++;
                     }
                 } else {
-                    shooter.operate(true);
+                    shooter.shoot();
                     state = 2;
                 }
                 break;
             case 2:
-                shooter.operate(false);
+                shooter.cock();
                 d.setSpeed(0, ((48 - enY.getDistance()) / 48), 0, 0);
                 if (enY.getDistance() > 48) {
                     state = 3;
@@ -121,8 +120,8 @@ public class RobotTemplate extends IterativeRobot {
                 break;
             case 3:
                 gathererButtonCheck(false, false);
-                d.setSpeed(0,0,0,0);
-                shooter.operate(false);
+                d.setSpeed(0, 0, 0, 0);
+                shooter.cock();
                 break;
         }
     }
@@ -154,16 +153,15 @@ public class RobotTemplate extends IterativeRobot {
         d.getJoy();
         d.calculateInput();
         gathererButtonCheck(driver.getGather(), driver.getReverseGather());
-        shooter.operate(driver.getShoot() && gathererDown);
-        shooter.popShot(driver.getPop());
+        shooterButtonCheck();
         defenseCheck();
-        if(sonar.canShoot()) {
+        if (sonar.canShoot()) {
             SmartDashboard.putBoolean("CAN FIRE!", true);
-        } else if(!sonar.canShoot()) {
+        } else if (!sonar.canShoot()) {
             SmartDashboard.putBoolean("CAN FIRE!", false);
         }
         smartPush();
-        smartPull(); 
+        smartPull();
     }
 
     public void disabledInit() {
@@ -180,9 +178,9 @@ public class RobotTemplate extends IterativeRobot {
     }
 
     public void testPeriodic() {
-        if(joy.getRawButton(4)){
+        if (joy.getRawButton(4)) {
             arm.goUp();
-        }else{
+        } else {
             arm.goDown();
         }
         gathererButtonCheck(driver.getGather(), driver.getReverseGather());
@@ -204,7 +202,18 @@ public class RobotTemplate extends IterativeRobot {
         System.out.println(shooter.ball.getVoltage());
 
     }
-
+    
+    public void shooterButtonCheck(){
+        if(driver.getShoot() && gathererDown){
+            shooter.shoot();
+        }else if(driver.getPop() && gathererReversed){
+            shooter.popShot();
+        }else if(driver.getShooterReset()){
+            shooter.reset();
+        }else{
+            shooter.cock();
+        }
+    }
     public void gathererButtonCheck(boolean gath, boolean rev) {
         if (gath) {
             g.gather();
@@ -230,7 +239,7 @@ public class RobotTemplate extends IterativeRobot {
     public void defenseCheck() {
         if (coPilot.getArmRaise()) {
             arm.goUp();
-        }else{
+        } else {
             arm.goDown();
         }
 
