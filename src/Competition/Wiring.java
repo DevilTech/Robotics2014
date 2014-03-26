@@ -77,4 +77,7 @@ public class Wiring extends WiringParent {
     public static final double MIN_DIST_R1 = 0;
     public static final double MAX_DIST_R2 = 15;
     public static final double MIN_DIST_R2 = 8;
+    
+    public static final int KATE_KRATE_SWITCH = 7;
+    public static final int KATE_KRATE_ARM = 16;
 }

@@ -17,6 +17,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import Competition.Wiring;
 import Control.Control;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStationEnhancedIO;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.visa.VisaException;
@@ -49,6 +51,7 @@ public class RobotTemplate extends IterativeRobot {
     int loopCounter = 0;
     MaxSonar sonar;
     Pixy pixy;
+    DriverStationEnhancedIO kateKrate;
 
     public void robotInit() {
         setupEncoders();
@@ -65,6 +68,7 @@ public class RobotTemplate extends IterativeRobot {
         g = new Gatherer();
         shooter = new Shooter();
         sonar = new MaxSonar(Wiring.SONAR_CHANNEL);
+        kateKrate  = DriverStation.getInstance().getEnhancedIO();
 
     }
 
@@ -237,10 +241,19 @@ public class RobotTemplate extends IterativeRobot {
     }
 
     public void defenseCheck() {
-        if (coPilot.getArmRaise()) {
-            arm.goUp();
-        } else {
-            arm.goDown();
+        try {
+            if(kateKrate.getDigital(Wiring.KATE_KRATE_SWITCH)){
+                if(kateKrate.getDigital(Wiring.KATE_KRATE_ARM)){
+                    arm.goUp();
+                }else{
+                    arm.goDown();
+                }
+            }else{
+                arm.goDown();
+            }
+            
+        } catch (DriverStationEnhancedIO.EnhancedIOException ex) {
+            ex.printStackTrace();
         }
 
     }
