@@ -6,13 +6,13 @@ package edu.wpi.first.wpilibj.templates;
 
 import Control.Happystick;
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Talon;
 import java.util.TimerTask;
 
 
 import Test.Wiring;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
@@ -138,9 +138,19 @@ public class DriveSystem {
     public void getJoy() {
         if (control.getFCSwitch()) {
             FCMode = (FCMode && driveType == Wiring.OPEN_C) ? false : true;
+            SmartDashboard.putBoolean("FCMODE", FCMode);
         }
         if (control.getLoopSwitch()) {
-            driveType = (driveType == Wiring.PID_C) ? Wiring.OPEN_C : Wiring.PID_C;
+            //driveType = (driveType == Wiring.HALF_C) ? Wiring.OPEN_C : Wiring.HALF_C;
+            if(driveType == Wiring.HALF_C){
+                driveType = Wiring.OPEN_C;
+                SmartDashboard.putBoolean("OPEN DRIVE", true);
+                SmartDashboard.putBoolean("HALF DRIVE", false);
+            }else{
+                driveType = Wiring.HALF_C;
+                SmartDashboard.putBoolean("OPEN DRIVE", false);
+                SmartDashboard.putBoolean("HALF DRIVE", true);
+            }
         }
         if(control.getReset()){
             resetHeading();
