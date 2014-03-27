@@ -9,6 +9,7 @@ import Competition.Wiring;
 import edu.wpi.first.wpilibj.AnalogChannel;
 import edu.wpi.first.wpilibj.Counter;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Shooter {
 
@@ -25,7 +26,7 @@ public class Shooter {
     Piston shoot;
     Piston outerPistons;
     AnalogChannel ball;
-    DigitalInput shooterPistonLimit;
+    DigitalInput middlePistonLimit;
     double distance;
     int counter = 0;
     boolean readyToShoot = false;
@@ -43,7 +44,7 @@ public class Shooter {
         //down = new DigitalInput(Wiring.LIMIT_SHOOTER_DOWN);
         deTensioned = new DigitalInput(Wiring.LIMIT_SHOOTER_DETENSIONED);
         ball = new AnalogChannel(Wiring.OPTICAL_SHOOTER_BALL_SENSOR);
-        shooterPistonLimit = new DigitalInput(Wiring.LIMIT_SHOOTER_MIDDLE_PISTON);
+        middlePistonLimit = new DigitalInput(Wiring.LIMIT_SHOOTER_MIDDLE_PISTON);
         tensionedCounter = new Counter(Wiring.LIMIT_SHOOTER_TENSIONED);
         tensionedCounter.start();
         tensionedCounter.reset();
@@ -54,7 +55,9 @@ public class Shooter {
         readyToShoot = false;
         isDown = false;
         tensionedCounter.reset();
-        System.out.println("init");
+        SmartDashboard.putBoolean("TENSIONING", false);
+        SmartDashboard.putBoolean("READY", false);
+        SmartDashboard.putBoolean("DOWN", false);
 
     }
 
@@ -65,20 +68,26 @@ public class Shooter {
                 outerPistons.retract();
                 shoot.retract();
                 tensionedCounter.reset();
-                if (shooterPistonLimit.get()) {
+                if (!middlePistonLimit.get()) {
                     isDown = true;
-                    System.out.println(shooterPistonLimit.get());
+                    SmartDashboard.putBoolean("DOWN", true);
+                    //System.out.println(shooterPistonLimit.get());
                 }
-                System.out.println("readying " + shooterPistonLimit.get());
+                
+                SmartDashboard.putBoolean("TENSIONING", true);
+                //System.out.println("readying " + shooterPistonLimit.get());
             } else {
                 if (tensionedCounter.get() == 0) {
                     middlePiston.retract();
                     outerPistons.extend();
-                    System.out.println("tensionin");
+                    SmartDashboard.putBoolean("TENSIONING", true);
+                    //System.out.println("tensionin");
                 } else {
                     middlePiston.retract();
                     readyToShoot = true;
-                    System.out.println("ready");
+                    SmartDashboard.putBoolean("TENSIONING", false);
+                    SmartDashboard.putBoolean("READY", true);
+                    //System.out.println("ready");
                 }
             }
         }
@@ -88,7 +97,10 @@ public class Shooter {
 
         if (readyToShoot && (ball.getVoltage() > Wiring.C_HAS_BALL)) {
             shoot.extend();
-            System.out.println("shoot");
+            SmartDashboard.putBoolean("TENSIONING", false);
+            SmartDashboard.putBoolean("READY", false);
+            SmartDashboard.putBoolean("DOWN", false);
+            //System.out.println("shoot");
             isDown = false;
             readyToShoot = false;
         }
@@ -100,7 +112,10 @@ public class Shooter {
         shoot.retract();
         isDown = false;
         readyToShoot = false;
-        System.out.println("Making Shooter Safe");
+        SmartDashboard.putBoolean("TENSIONING", false);
+        SmartDashboard.putBoolean("READY", false);
+        SmartDashboard.putBoolean("DOWN", false);
+        //System.out.println("Making Shooter Safe");
     }
 
     public void popShot() {
@@ -110,9 +125,12 @@ public class Shooter {
                 readyToShoot = false;
                 popTrig = true;
                 isDown = false;
+                SmartDashboard.putBoolean("TENSIONING", false);
+                SmartDashboard.putBoolean("DOWN", false);
             } else if (deTensioned.get()) {
                 outerPistons.retract();
-                System.out.println("pop");
+                SmartDashboard.putBoolean("READY", false);
+                //System.out.println("pop");
                 readyToShoot = false;
             }
         
