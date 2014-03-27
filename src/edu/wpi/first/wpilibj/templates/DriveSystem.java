@@ -79,6 +79,7 @@ public class DriveSystem {
             time = new java.util.Timer();
             time.schedule(new DriveLoop(this), 0L, Wiring.DRIVE_POLL_RATE);
             initialHeading = sen.getCompassRadAngle();
+            System.out.println("init");
         } else {
             System.out.println("Drive system already init");
         }
@@ -88,6 +89,7 @@ public class DriveSystem {
         if (hasBeenStarted) {
             hasBeenStarted = false;
             time.cancel();
+            System.out.println("denit");
         }
     }
 

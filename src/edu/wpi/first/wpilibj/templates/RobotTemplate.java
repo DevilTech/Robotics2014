@@ -47,6 +47,7 @@ public class RobotTemplate extends IterativeRobot {
     Camera cam;
     int loopCounter = 0;
     MaxSonar sonar;
+    double disAuto = 24;
     DriverStationEnhancedIO kateKrate;
 
     public void robotInit() {
@@ -62,7 +63,7 @@ public class RobotTemplate extends IterativeRobot {
         compressor.start();
         g = new Gatherer();
         shooter = new Shooter();
-        //sonar = new MaxSonar(Wiring.SONAR_CHANNEL);
+        sonar = new MaxSonar(Wiring.SONAR_CHANNEL);
         kateKrate  = DriverStation.getInstance().getEnhancedIO();
 
     }
@@ -76,8 +77,15 @@ public class RobotTemplate extends IterativeRobot {
 
     public void autonomousPeriodic() {
         if(isAutonomous()){
-            autoCameraOffense();
-
+            //autoCameraOffense();
+            d.setSpeed(0, .5, 0, 0);
+            if (enY.getDistance() > disAuto) {
+                 d.setSpeed(0, 0, 0, 0);
+                }
+            if(cam.getBarcode()){
+                System.out.println("SHOT!!!!");
+                disAuto = 48;
+            }
         }else{
             return;
         }
@@ -99,7 +107,7 @@ public class RobotTemplate extends IterativeRobot {
             case 0:
                 System.out.println(state);
                 shooter.cock();
-                d.setSpeed(0, ((24 - enY.getDistance()) / 48), 0, 0);
+                d.setSpeed(0, ((24 - enY.getDistance()) / 48) + .25, 0, 0);
                 if (enY.getDistance() > 24) {
                     state = 1;
                 }
@@ -197,7 +205,7 @@ public class RobotTemplate extends IterativeRobot {
         gathererButtonCheck(driver.getGather(), driver.getReverseGather());
         shooterButtonCheck();
         defenseCheck();
-
+        System.out.println("DISTANCE: " + sonar.getFeet() + "VOLTAGE: " + sonar.getVoltage());
     }
 
     public void disabledInit() {
@@ -309,6 +317,7 @@ public class RobotTemplate extends IterativeRobot {
         SmartDashboard.putNumber("enY", enY.getDistance());
         SmartDashboard.putNumber("errorH", d.errorInHeading);
         //SmartDashboard.putNumber("Distance: ", sonar.getFeet());
+        
         /*
          SmartDashboard.putNumber("C", d.clockwiseZ);
          SmartDashboard.putNumber("R", d.rightX);

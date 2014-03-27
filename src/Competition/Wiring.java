@@ -71,11 +71,11 @@ public class Wiring extends WiringParent {
     public static final double FB_HOOK = -1;
     
     //Sonar things
-    public static final int SONAR_CHANNEL = 3; //This will probably have to change...
-    public static final double MAX_DIST_R1 = 4;
-    public static final double MIN_DIST_R1 = 0;
-    public static final double MAX_DIST_R2 = 15;
-    public static final double MIN_DIST_R2 = 8;
+    public static final int SONAR_CHANNEL = 7; //This will probably have to change...
+    public static final double MAX_DIST_R1 = 14;
+    public static final double MIN_DIST_R1 = 13;
+    public static final double MAX_DIST_R2 = 5;
+    public static final double MIN_DIST_R2 = 0;
     
     public static final int KATE_KRATE_SWITCH = 7;
     public static final int KATE_KRATE_ARM = 16;
