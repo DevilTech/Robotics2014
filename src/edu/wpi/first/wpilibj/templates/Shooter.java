@@ -38,7 +38,7 @@ public class Shooter {
     public Shooter() {
         shoot = new Piston(Wiring.SOLENOID_SHOOTER_SHOOT_OUT, Wiring.SOLENOID_SHOOTER_SHOOT_IN);
         outerPistons = new Piston(Wiring.SOLENOID_SHOOTER_TENSION_OUT, Wiring.SOLENOID_SHOOTER_TENSION_IN);
-        middlePiston = new Piston(Wiring.SOLENOID_SHOOTER_PRETENSION_OUT, Wiring.SOLENOID_SHOOTER_PRETENSION_IN);
+        middlePiston = new Piston(Wiring.SOLENOID_SHOOTER_PRETENSION_IN, Wiring.SOLENOID_SHOOTER_PRETENSION_OUT);
         //tensioned = new DigitalInput(Wiring.LIMIT_SHOOTER_TENSIONED);
         // up = new DigitalInput(Wiring.LIMIT_SHOOTER_UP);
         //down = new DigitalInput(Wiring.LIMIT_SHOOTER_DOWN);
@@ -103,6 +103,7 @@ public class Shooter {
             //System.out.println("shoot");
             isDown = false;
             readyToShoot = false;
+            System.out.println("shot");
         }
     }
 

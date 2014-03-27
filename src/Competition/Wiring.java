@@ -36,6 +36,8 @@ public class Wiring extends WiringParent {
     public static final int MOTOR_GATHERER_RIGHT = 6;
     
     public static final int RELAY_GATHERER = 6;
+    public static final double GATHERER_SPEED_FORWARD = 1;
+    public static final double GATHERER_SPEED_REVERSE = -1;
     
     public static final int SOLENOID_SHOOTER_PRETENSION_IN = 7; // the middle cylinder
     public static final int SOLENOID_SHOOTER_PRETENSION_OUT = 8;
@@ -53,10 +55,7 @@ public class Wiring extends WiringParent {
     public static final int OPTICAL_SHOOTER_SENSOR = 1;
     public static final int OPTICAL_SHOOTER_BALL_SENSOR = 5;
     public static final double C_HAS_BALL = 2;
-    
-    public static final double GATHERER_SPEED_FORWARD = 1;
-    public static final double GATHERER_SPEED_REVERSE = -1;
-    
+  
     public static final double CENTER_OF_ROTATION = .608;
     
     public static final int COCKED = 5;

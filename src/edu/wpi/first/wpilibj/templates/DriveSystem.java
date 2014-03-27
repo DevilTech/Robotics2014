@@ -262,6 +262,7 @@ public class DriveSystem {
         rb = tempFY - tempCZ + tempRX;
 
         calculateMotorSpeed(lf, rf, lb, rb);
+        
     }
 
     public void halfOpen() {
@@ -327,6 +328,8 @@ public class DriveSystem {
         fr.set(-rf);
         bl.set(lb);
         br.set(-rb);
+        
+        Thread.yield();
     }
 
     public void timeTest() {

@@ -8,7 +8,6 @@
 package edu.wpi.first.wpilibj.templates;
 
 import Control.Happystick;
-import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Compressor;
@@ -42,7 +41,7 @@ public class RobotTemplate extends IterativeRobot {
     DefensiveArm arm;
     static boolean gathererDown = false;
     static boolean gathererReversed = false;
-    int gathCount = 0;
+    int gathCount = 101;
     boolean hasFired = false;
     int state = 0;
     Camera cam;
@@ -57,7 +56,7 @@ public class RobotTemplate extends IterativeRobot {
         d = new DriveSystem(sensor, driver, enY, enX, Wiring.HALF_C);
         d.FCMode = true;
         joy = new Joystick(1);
-        //cam = new Camera();
+        cam = new Camera();
         arm = new DefensiveArm();
         compressor = new Compressor(Wiring.COMPRESSOR_PRESSURE_SWITCH, Wiring.COMPRESSOR_RELAY);
         compressor.start();
@@ -71,10 +70,18 @@ public class RobotTemplate extends IterativeRobot {
     public void autonomousInit() {
         enY.reset();
         d.driveSystemInit();
+        state = 0;
+        System.out.print("dsysteminit");
     }
 
     public void autonomousPeriodic() {
-        autoOffense();
+        if(isAutonomous()){
+            autoCameraOffense();
+
+        }else{
+            return;
+        }
+        
     }
     /*
      cam.setAngle(90.0);
@@ -87,12 +94,45 @@ public class RobotTemplate extends IterativeRobot {
      //just move the robot forward
      }
      */
-
-    public void autoOffense() {
+    public void autoBasicOffense(){
+        switch (state){
+            case 0:
+                System.out.println(state);
+                shooter.cock();
+                d.setSpeed(0, ((24 - enY.getDistance()) / 48), 0, 0);
+                if (enY.getDistance() > 24) {
+                    state = 1;
+                }
+                break;
+            case 1:
+                System.out.println(state);
+                if(shooter.readyToShoot){
+                    shooter.shoot();
+                    state = 2;
+                }else{
+                    shooter.cock();
+                }
+                break;
+            case 2:
+                System.out.println(state);
+                shooter.cock();
+                d.setSpeed(0, ((48 - enY.getDistance()) / 48), 0, 0);
+                if (enY.getDistance() > 48) {
+                    state = 3;
+                }
+                break;
+            case 3:
+                System.out.println(state);
+                d.setSpeed(0, 0, 0, 0);
+                shooter.cock();
+                break;
+        }
+    }
+    public void autoCameraOffense() {
+        System.out.println(state);
         switch (state) {
             case 0:
-                gathererButtonCheck(true, false);
-                shooter.readyToShoot = true;
+                shooter.cock();
                 d.setSpeed(0, ((24 - enY.getDistance()) / 48), 0, 0);
                 if (enY.getDistance() > 24) {
                     state = 1;
@@ -100,12 +140,13 @@ public class RobotTemplate extends IterativeRobot {
                 break;
             case 1:
                 if (loopCounter < 250) {
-                    if (cam.getBarcode()) {
-                        shooter.shoot();
-                        state = 2;
-                    } else {
-                        loopCounter++;
-                    }
+//                    if (cam.getBarcode()) {
+//                        shooter.shoot();
+//                        state = 2;
+//                    } else {
+//                        loopCounter++;
+//                    }
+                    loopCounter++;
                 } else {
                     shooter.shoot();
                     state = 2;
@@ -119,7 +160,6 @@ public class RobotTemplate extends IterativeRobot {
                 }
                 break;
             case 3:
-                gathererButtonCheck(false, false);
                 d.setSpeed(0, 0, 0, 0);
                 shooter.cock();
                 break;
@@ -147,6 +187,8 @@ public class RobotTemplate extends IterativeRobot {
         d.driveSystemInit();
         shootonce = true;
         shooter.initalize();
+        System.out.println("tele");
+
     }
 
     public void teleopPeriodic() {
@@ -155,21 +197,16 @@ public class RobotTemplate extends IterativeRobot {
         gathererButtonCheck(driver.getGather(), driver.getReverseGather());
         shooterButtonCheck();
         defenseCheck();
-        disCheck();
-        smartPush();
-        smartPull();
+
     }
 
     public void disabledInit() {
         d.driveSystemDenit();
-        smartInit();
         state = 0;
     }
 
     public void disabledPeriodic() {
         sensor.readAll();
-        smartPush();
-        smartPull();
         arm.goDown();
     }
 
@@ -195,14 +232,14 @@ public class RobotTemplate extends IterativeRobot {
         } else {
             shooter.outerPistons.retract();
         }
-        System.out.println(shooter.ball.getVoltage());
+        System.out.println(shooter.middlePistonLimit.get() + " " + shooter.deTensioned.get() + " " + shooter.tensionedCounter.get());
 
     }
     
     public void shooterButtonCheck(){
-        if(driver.getShoot() && gathererDown){
+        if(driver.getShoot()){// && gathererDown){
             shooter.shoot();
-        }else if(driver.getPop() && gathererReversed){
+        }else if(driver.getPop()){// && gathererReversed){
             shooter.popShot();
         }else if(driver.getShooterReset()){
             shooter.reset();
@@ -271,7 +308,7 @@ public class RobotTemplate extends IterativeRobot {
         SmartDashboard.putNumber("enX", enX.getDistance());
         SmartDashboard.putNumber("enY", enY.getDistance());
         SmartDashboard.putNumber("errorH", d.errorInHeading);
-        SmartDashboard.putNumber("Distance: ", sonar.getFeet());
+        //SmartDashboard.putNumber("Distance: ", sonar.getFeet());
         /*
          SmartDashboard.putNumber("C", d.clockwiseZ);
          SmartDashboard.putNumber("R", d.rightX);

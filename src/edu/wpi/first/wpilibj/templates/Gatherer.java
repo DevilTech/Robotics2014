@@ -43,8 +43,8 @@ public class Gatherer {
 
     public void startIn() //Starts the motors of gatherer in
     {
-        armMotorL.set(Wiring.GATHERER_SPEED_FORWARD);
-        armMotorR.set(-Wiring.GATHERER_SPEED_FORWARD);
+        armMotorL.set(-Wiring.GATHERER_SPEED_FORWARD);
+        armMotorR.set(Wiring.GATHERER_SPEED_FORWARD);
     }
 
     public void stop() //Stops the motors of gatherer
@@ -55,8 +55,8 @@ public class Gatherer {
 
     public void startOut() //Starts the motors of gatherer in reverse
     {
-        armMotorL.set(Wiring.GATHERER_SPEED_REVERSE);
-        armMotorR.set(-Wiring.GATHERER_SPEED_REVERSE);
+        armMotorL.set(-Wiring.GATHERER_SPEED_REVERSE);
+        armMotorR.set(Wiring.GATHERER_SPEED_REVERSE);
 
     }
     
