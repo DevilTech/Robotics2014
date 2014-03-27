@@ -15,36 +15,20 @@ import edu.wpi.first.wpilibj.Relay;
 public class Piston {
     
     DoubleSolenoid sol;
-    Relay r;
     boolean isExtend;
-    boolean isSol;
     boolean outFor;
     
     public Piston(int extendValve, int retractValve){
         sol = new DoubleSolenoid(extendValve, retractValve);
-        isSol = true;
     }
-    public Piston(int relay, boolean forwardOut){
-        r = new Relay(relay);
-        isSol = false;
-        outFor = forwardOut;
-    }
-    
+
     public void extend(){
-        if(isSol)
-            sol.set(true);
-        else
-            if(outFor) r.set(Relay.Value.kForward);
-            else r.set(Relay.Value.kReverse);
+        sol.set(true);
         isExtend = true;
     }
     
     public void retract(){
-         if(isSol)
-            sol.set(false);
-        else
-            if(outFor) r.set(Relay.Value.kReverse);
-            else r.set(Relay.Value.kForward);
+        sol.set(false);
         isExtend = false;
     }
     
