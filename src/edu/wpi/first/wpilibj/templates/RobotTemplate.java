@@ -19,9 +19,7 @@ import Competition.Wiring;
 import Control.Control;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStationEnhancedIO;
-import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.visa.VisaException;
 
 public class RobotTemplate extends IterativeRobot {
 
@@ -50,7 +48,6 @@ public class RobotTemplate extends IterativeRobot {
     Camera cam;
     int loopCounter = 0;
     MaxSonar sonar;
-    Pixy pixy;
     DriverStationEnhancedIO kateKrate;
 
     public void robotInit() {
@@ -62,12 +59,11 @@ public class RobotTemplate extends IterativeRobot {
         joy = new Joystick(1);
         //cam = new Camera();
         arm = new DefensiveArm();
-        pixy = new Pixy();
         compressor = new Compressor(Wiring.COMPRESSOR_PRESSURE_SWITCH, Wiring.COMPRESSOR_RELAY);
         compressor.start();
         g = new Gatherer();
         shooter = new Shooter();
-        sonar = new MaxSonar(Wiring.SONAR_CHANNEL);
+        //sonar = new MaxSonar(Wiring.SONAR_CHANNEL);
         kateKrate  = DriverStation.getInstance().getEnhancedIO();
 
     }
@@ -159,11 +155,7 @@ public class RobotTemplate extends IterativeRobot {
         gathererButtonCheck(driver.getGather(), driver.getReverseGather());
         shooterButtonCheck();
         defenseCheck();
-        if (sonar.canShoot()) {
-            SmartDashboard.putBoolean("CAN FIRE!", true);
-        } else if (!sonar.canShoot()) {
-            SmartDashboard.putBoolean("CAN FIRE!", false);
-        }
+        disCheck();
         smartPush();
         smartPull();
     }
@@ -297,6 +289,14 @@ public class RobotTemplate extends IterativeRobot {
         Wiring.KdX = SmartDashboard.getNumber("kdX");
         Wiring.KdY = SmartDashboard.getNumber("kdY");
         Wiring.KiR = SmartDashboard.getNumber("KiR");
+    }
+    
+    public void disCheck(){
+        if (sonar.canShoot()) {
+            SmartDashboard.putBoolean("CAN FIRE!", true);
+        } else if (!sonar.canShoot()) {
+            SmartDashboard.putBoolean("CAN FIRE!", false);
+        }
     }
 
     public void timeTest() {
