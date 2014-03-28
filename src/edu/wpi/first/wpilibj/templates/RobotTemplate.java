@@ -47,6 +47,7 @@ public class RobotTemplate extends IterativeRobot {
     int state = 0;
     Camera cam;
     int loopCounter = 0;
+    int shootCounter = 0;
     MaxSonar sonar;
     double disAuto = 96;
     DriverStationEnhancedIO kateKrate;
@@ -74,6 +75,7 @@ public class RobotTemplate extends IterativeRobot {
         enY.reset();
         state = 0;
         loopCounter = 0;
+        shootCounter = 0;
         System.out.print("dsysteminit");
     }
 
@@ -88,11 +90,18 @@ public class RobotTemplate extends IterativeRobot {
                 }
                 break;
             case 1:
-                shooter.shoot();
-                loopCounter++;
-                if(loopCounter > 50){
+                if(cam.getBarcode()){
+                    shooter.shoot();
+                    shootCounter++;
+                }
+                else if(loopCounter > 300){
+                    shooter.shoot();
+                    shootCounter++;
+                }
+                if(shootCounter > 50){
                     state = 2;
                 }
+                loopCounter++;
                 break;
             case 2:
                 shooter.cock();

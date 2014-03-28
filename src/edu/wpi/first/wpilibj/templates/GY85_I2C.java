@@ -9,6 +9,7 @@ import Competition.Wiring;
 /**
  *
  * @author colin
+ * !!!Add: Sensor Read - Timeouts!!!
  */
 public class GY85_I2C {
 
