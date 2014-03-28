@@ -92,6 +92,7 @@ public class RobotTemplate extends IterativeRobot {
             case 1:
                 if(cam.getBarcode()){
                     shooter.shoot();
+                    System.out.println("shot");
                     shootCounter++;
                 }
                 else if(loopCounter > 300){
@@ -227,13 +228,13 @@ public class RobotTemplate extends IterativeRobot {
 
     public void disabledInit() {
         //d.driveSystemDenit();
-        System.out.println("d");
+//        System.out.println("d");
         state = 0;
         loopCounter = 0;
     }
 
     public void disabledPeriodic() {
-        System.out.println("dp");
+//        System.out.println("dp");
         arm.goDown();
     }
 
@@ -270,8 +271,13 @@ public class RobotTemplate extends IterativeRobot {
             shooter.popShot();
         }else if(driver.getShooterReset()){
             shooter.reset();
+        }else try {
+            if(kateKrate.getDigital(11) || kateKrate.getDigital(13) || kateKrate.getDigital(15)){
+                shooter.override();
         }else{
-            shooter.cock();
+          shooter.cock();
+        } } catch (DriverStationEnhancedIO.EnhancedIOException ex) {
+            ex.printStackTrace();
         }
     }
     public void gathererButtonCheck(boolean gath, boolean rev) {

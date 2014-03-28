@@ -97,7 +97,7 @@ public class DriveSystem {
     }
 
     private void runDrive() {
-        System.out.println("rund");
+//        System.out.println("rund");
         sen.readA();
         sen.readG();
         sen.readC();
@@ -284,7 +284,7 @@ public class DriveSystem {
 
         double tempCZ = clockwiseZ + errorInHeading;
         double tempFY = speedY;
-        double tempRX = speedX * .577;
+        double tempRX = speedX;
 
         double lf, rf, lb, rb;
 

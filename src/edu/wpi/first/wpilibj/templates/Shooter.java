@@ -60,7 +60,11 @@ public class Shooter {
         SmartDashboard.putBoolean("DOWN", false);
 
     }
-
+    public void override(){
+        shoot.extend();
+        readyToShoot = false;
+        isDown = false;
+    }
     public void cock() {
         if (!readyToShoot) {
             if (!isDown) {

@@ -10,8 +10,8 @@ package Control;
  * @author robotics
  */
 public class XboxMap {
-    public static final int START = 7;
-    public static final int BACK = 8;
+    public static final int START = 8;
+    public static final int BACK = 7;
     public static final int LEFT_BUMPER = 5;
     public static final int RIGHT_BUMPER = 6;
     public static final int A = 1;

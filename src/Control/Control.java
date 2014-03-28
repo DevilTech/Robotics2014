@@ -62,8 +62,8 @@ public class Control {
         xbox.hookAxisSens = .1;
         xbox.defenseButton = 1;
         
-        xbox.resetDriveButton = XboxMap.START;
-        xbox.resetShooterButton = XboxMap.BACK;
+        xbox.resetDriveButton = XboxMap.BACK;
+        xbox.resetShooterButton = XboxMap.START;
         return xbox;
     }
 
