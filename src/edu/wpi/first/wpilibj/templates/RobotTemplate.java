@@ -49,7 +49,7 @@ public class RobotTemplate extends IterativeRobot {
     int loopCounter = 0;
     int shootCounter = 0;
     MaxSonar sonar;
-    double disAuto = 96;
+    double disAuto = 132;
     DriverStationEnhancedIO kateKrate;
 
     public void robotInit() {
@@ -83,7 +83,7 @@ public class RobotTemplate extends IterativeRobot {
         switch (state){
             case 0:
                 shooter.cock();
-                d.setSpeed(0,.5,0,0);
+                d.setSpeed(0,.5,.01,0);
                 if(enY.getDistance() > disAuto){
                     state = 1;
                     d.setSpeed(0,0,0,0);
@@ -272,7 +272,7 @@ public class RobotTemplate extends IterativeRobot {
         }else if(driver.getShooterReset()){
             shooter.reset();
         }else try {
-            if(kateKrate.getDigital(11) || kateKrate.getDigital(13) || kateKrate.getDigital(15)){
+            if(!kateKrate.getDigital(11) || !kateKrate.getDigital(13) || !kateKrate.getDigital(15)){
                 shooter.override();
         }else{
           shooter.cock();

@@ -82,12 +82,10 @@ public class Shooter {
                 //System.out.println("readying " + shooterPistonLimit.get());
             } else {
                 if (tensionedCounter.get() == 0) {
-                    middlePiston.retract();
                     outerPistons.extend();
                     SmartDashboard.putBoolean("TENSIONING", true);
                     //System.out.println("tensionin");
                 } else {
-                    middlePiston.retract();
                     readyToShoot = true;
                     SmartDashboard.putBoolean("TENSIONING", false);
                     SmartDashboard.putBoolean("READY", true);
@@ -100,6 +98,7 @@ public class Shooter {
     public void shoot() {
 
         if (readyToShoot && (ball.getVoltage() > Wiring.C_HAS_BALL)) {
+            middlePiston.retract();
             shoot.extend();
             SmartDashboard.putBoolean("TENSIONING", false);
             SmartDashboard.putBoolean("READY", false);
