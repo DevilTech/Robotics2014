@@ -90,10 +90,14 @@ public class DriveSystem {
             hasBeenStarted = false;
             time.cancel();
             System.out.println("denit");
+            forwardY = 0;
+            rightX = 0;
+            clockwiseZ = 0;
         }
     }
 
     private void runDrive() {
+        System.out.println("rund");
         sen.readA();
         sen.readG();
         sen.readC();
@@ -106,6 +110,9 @@ public class DriveSystem {
                 break;
             case 2:
                 halfOpen();
+                break;
+            default:
+                openLoop();
                 break;
         }
     }
@@ -205,12 +212,14 @@ public class DriveSystem {
             directRF = Wiring.FF_HOOK;
             directLB = Wiring.CB_HOOK;
             directRB = Wiring.FB_HOOK;
+            System.out.println("HOOKED?");
             return true;
         } else if (control.getRightHook()) {
             directLF = Wiring.FF_HOOK;
             directRF = Wiring.CF_HOOK;
             directLB = Wiring.FB_HOOK;
             directRB = Wiring.CB_HOOK;
+            System.out.println("HOOKED?");
             return true;
         } else {
             directLF = 0;

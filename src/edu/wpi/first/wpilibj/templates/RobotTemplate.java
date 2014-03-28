@@ -18,6 +18,7 @@ import Competition.Wiring;
 import Control.Control;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStationEnhancedIO;
+import edu.wpi.first.wpilibj.DriverStationLCD;
 import edu.wpi.first.wpilibj.Timer;
 
 public class RobotTemplate extends IterativeRobot {
@@ -47,7 +48,7 @@ public class RobotTemplate extends IterativeRobot {
     Camera cam;
     int loopCounter = 0;
     MaxSonar sonar;
-    double disAuto = 24;
+    double disAuto = 96;
     DriverStationEnhancedIO kateKrate;
 
     public void robotInit() {
@@ -65,30 +66,41 @@ public class RobotTemplate extends IterativeRobot {
         shooter = new Shooter();
         sonar = new MaxSonar(Wiring.SONAR_CHANNEL);
         kateKrate  = DriverStation.getInstance().getEnhancedIO();
+        d.driveSystemInit();
 
     }
 
     public void autonomousInit() {
         enY.reset();
-        d.driveSystemInit();
         state = 0;
+        loopCounter = 0;
         System.out.print("dsysteminit");
     }
 
     public void autonomousPeriodic() {
-        if(isAutonomous()){
-            //autoCameraOffense();
-            d.setSpeed(0, .5, 0, 0);
-            if (enY.getDistance() > disAuto) {
-                 d.setSpeed(0, 0, 0, 0);
+        switch (state){
+            case 0:
+                shooter.cock();
+                d.setSpeed(0,.5,0,0);
+                if(enY.getDistance() > disAuto){
+                    state = 1;
+                    d.setSpeed(0,0,0,0);
                 }
-            if(cam.getBarcode()){
-                System.out.println("SHOT!!!!");
-                disAuto = 48;
-            }
-        }else{
-            return;
+                break;
+            case 1:
+                shooter.shoot();
+                loopCounter++;
+                if(loopCounter > 50){
+                    state = 2;
+                }
+                break;
+            case 2:
+                shooter.cock();
+                break;
+            default:
+                shooter.cock();
         }
+
         
     }
     /*
@@ -107,8 +119,8 @@ public class RobotTemplate extends IterativeRobot {
             case 0:
                 System.out.println(state);
                 shooter.cock();
-                d.setSpeed(0, ((24 - enY.getDistance()) / 48) + .25, 0, 0);
-                if (enY.getDistance() > 24) {
+                d.setSpeed(0, .5, 0, 0);
+                if (enY.getDistance() > disAuto) {
                     state = 1;
                 }
                 break;
@@ -122,14 +134,6 @@ public class RobotTemplate extends IterativeRobot {
                 }
                 break;
             case 2:
-                System.out.println(state);
-                shooter.cock();
-                d.setSpeed(0, ((48 - enY.getDistance()) / 48), 0, 0);
-                if (enY.getDistance() > 48) {
-                    state = 3;
-                }
-                break;
-            case 3:
                 System.out.println(state);
                 d.setSpeed(0, 0, 0, 0);
                 shooter.cock();
@@ -148,12 +152,10 @@ public class RobotTemplate extends IterativeRobot {
                 break;
             case 1:
                 if (loopCounter < 250) {
-//                    if (cam.getBarcode()) {
-//                        shooter.shoot();
-//                        state = 2;
-//                    } else {
-//                        loopCounter++;
-//                    }
+                    if (cam.getBarcode()) {
+                        shooter.shoot();
+                        state = 2;
+                    } 
                     loopCounter++;
                 } else {
                     shooter.shoot();
@@ -192,10 +194,13 @@ public class RobotTemplate extends IterativeRobot {
     }
 
     public void teleopInit() {
+        System.out.println("start");
         d.driveSystemInit();
         shootonce = true;
         shooter.initalize();
         System.out.println("tele");
+        DriverStationLCD.getInstance().println(DriverStationLCD.Line.kUser1, 1, "teleop");
+        DriverStationLCD.getInstance().updateLCD();
 
     }
 
@@ -205,16 +210,21 @@ public class RobotTemplate extends IterativeRobot {
         gathererButtonCheck(driver.getGather(), driver.getReverseGather());
         shooterButtonCheck();
         defenseCheck();
+        
+        DriverStationLCD.getInstance().println(DriverStationLCD.Line.kUser2, 1, "teleopper"+sonar.getVoltage());
+        DriverStationLCD.getInstance().updateLCD();
         System.out.println("DISTANCE: " + sonar.getFeet() + "VOLTAGE: " + sonar.getVoltage());
     }
 
     public void disabledInit() {
-        d.driveSystemDenit();
+        //d.driveSystemDenit();
+        System.out.println("d");
         state = 0;
+        loopCounter = 0;
     }
 
     public void disabledPeriodic() {
-        sensor.readAll();
+        System.out.println("dp");
         arm.goDown();
     }
 
@@ -280,7 +290,7 @@ public class RobotTemplate extends IterativeRobot {
     public void defenseCheck() {
         try {
             if(kateKrate.getDigital(Wiring.KATE_KRATE_SWITCH)){
-                if(kateKrate.getDigital(Wiring.KATE_KRATE_ARM)){
+                if(!kateKrate.getDigital(Wiring.KATE_KRATE_ARM)){
                     arm.goUp();
                 }else{
                     arm.goDown();

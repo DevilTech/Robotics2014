@@ -15,15 +15,15 @@ public class MaxSonar {
          sensor.setOversampleBits(0);
          dist = 0;
      }
-     public double getInches ()
+     public double getInches()
      {
-         return (sensor.getAverageVoltage()*conversionFactor-21);
+         return ((sensor.getAverageVoltage()*conversionFactor/12)-21);
      }
-     public double getFeet ()
+     public double getFeet()
      {
-         return ((sensor.getAverageVoltage()*.149) - 1.58);
+         return ((sensor.getAverageVoltage()*conversionFactor) - 1.75);
      }
-     public double getVoltage ()
+     public double getVoltage()
      {
          return (sensor.getAverageVoltage());
      }

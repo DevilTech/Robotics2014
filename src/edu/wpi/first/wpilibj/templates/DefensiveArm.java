@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj.Solenoid;
  */
 public class DefensiveArm {
 
-
     Relay piston;
     boolean isUp = false;
 
