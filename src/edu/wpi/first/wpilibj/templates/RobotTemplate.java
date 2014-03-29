@@ -50,6 +50,8 @@ public class RobotTemplate extends IterativeRobot {
     int shootCounter = 0;
     MaxSonar sonar;
     double disAuto = 132;
+    double disAutoD = 24;
+    boolean goBack = false;
     DriverStationEnhancedIO kateKrate;
 
     public void robotInit() {
@@ -80,6 +82,55 @@ public class RobotTemplate extends IterativeRobot {
     }
 
     public void autonomousPeriodic() {
+        hailMary();
+    }
+    /*
+     cam.setAngle(90.0);
+     if(cam.getHotGoal()) {
+     //shoot stuff
+     //move forward
+     } else { loopCounter++; }
+     if(loopCounter >= 250) {
+     System.out.println("Oh no! No hot goal detected.");
+     //just move the robot forward
+     }
+     */
+    public void hailMary(){
+        switch(state){
+            case 0:
+                arm.goUp();
+                try {
+                     if(kateKrate.getDigital(Wiring.KATE_KRATE_DEFENSE_SWITCH)){
+                        disAutoD = -24;
+                        d.setSpeed(0,-.5,.01,0);
+                        goBack = true;
+                    }else{
+                        disAutoD = 24;
+                        d.setSpeed(0,.5,.01,0);
+                        goBack = false;
+                    }
+                } catch (DriverStationEnhancedIO.EnhancedIOException ex) {
+                    ex.printStackTrace();
+                    disAutoD = 24;
+                    d.setSpeed(0,.5,0,0);
+                    goBack = false;
+                }
+                if(enY.getDistance() > disAutoD && !goBack){
+                    state = 1;
+                    d.setSpeed(0,0,0,0);
+                }else if(enY.getDistance() < disAutoD && goBack){
+                    state = 1;
+                    d.setSpeed(0,0,0,0);
+
+                }
+                break;
+            case 1:
+                arm.goUp();
+                d.setSpeed(0,0,0,0);
+
+        }
+    }
+    public void autoThatWorks(){
         switch (state){
             case 0:
                 shooter.cock();
@@ -110,20 +161,7 @@ public class RobotTemplate extends IterativeRobot {
             default:
                 shooter.cock();
         }
-
-        
     }
-    /*
-     cam.setAngle(90.0);
-     if(cam.getHotGoal()) {
-     //shoot stuff
-     //move forward
-     } else { loopCounter++; }
-     if(loopCounter >= 250) {
-     System.out.println("Oh no! No hot goal detected.");
-     //just move the robot forward
-     }
-     */
     public void autoBasicOffense(){
         switch (state){
             case 0:
@@ -272,8 +310,12 @@ public class RobotTemplate extends IterativeRobot {
         }else if(driver.getShooterReset()){
             shooter.reset();
         }else try {
-            if(!kateKrate.getDigital(11) || !kateKrate.getDigital(13) || !kateKrate.getDigital(15)){
+            if(!kateKrate.getDigital(11)){
                 shooter.override();
+            }else if(!kateKrate.getDigital(13)){
+                shooter.load();
+            }else if(!kateKrate.getDigital(15)){
+                shooter.tension();
         }else{
           shooter.cock();
         } } catch (DriverStationEnhancedIO.EnhancedIOException ex) {

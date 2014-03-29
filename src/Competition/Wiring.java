@@ -79,4 +79,5 @@ public class Wiring extends WiringParent {
     
     public static final int KATE_KRATE_SWITCH = 7;
     public static final int KATE_KRATE_ARM = 16;
+    public static final int KATE_KRATE_DEFENSE_SWITCH = 9;
 }

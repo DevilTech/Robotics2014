@@ -139,4 +139,25 @@ public class Shooter {
             }
         
     }
+    public void load(){
+        middlePiston.extend();
+        outerPistons.retract();
+        shoot.retract();
+        tensionedCounter.reset();
+        if (!middlePistonLimit.get()) {
+            isDown = true;
+            SmartDashboard.putBoolean("DOWN", true);
+        }
+    }
+    
+    public void tension(){
+        middlePiston.extend();
+        outerPistons.extend();
+        shoot.retract();
+        if (tensionedCounter.get() == 1) {
+            readyToShoot = true;
+            SmartDashboard.putBoolean("TENSIONING", false);
+            SmartDashboard.putBoolean("READY", true);  
+        }
+    }
 }
