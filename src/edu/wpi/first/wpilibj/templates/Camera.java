@@ -78,7 +78,8 @@ public class Camera {
     }
     
     public boolean getDefenseRight() {
-        if(SmartDashboard.getString("BARCODE") == "RT"){
+        if(SmartDashboard.getString("BARCODE").equals("RT")){
+//            System.out.println("read barcode Right");
             return true;
         } else {
             return false;
@@ -86,8 +87,9 @@ public class Camera {
     }
     
     public boolean getDefenseLeft() {
-        if(SmartDashboard.getString("BARCODE") == "LFT"){
-           return true;
+        if(SmartDashboard.getString("BARCODE").equals("LFT")){
+//           System.out.println("Read Barcode Left");
+            return true;
         } else {
             return false;
         }

@@ -74,14 +74,18 @@ public class RobotTemplate extends IterativeRobot {
     }
 
     public void barcodeDefense() {
+        //Add PID for X-translation, Keep robot from moving diagonally
         arm.goUp();
         if(cam.getDefenseLeft()){
             //move left
-            d.setSpeed(0,.5,.01,0);
+//            System.out.println("Got to defend Left");
+            d.setSpeed(0,.5,.04,0);
         } else if(cam.getDefenseRight()) {
             //move right
-            d.setSpeed(0,-.5,-0.01,0);
+//            System.out.println("Got to Defend Right");
+            d.setSpeed(0,-.5,.05,0);
         } else {
+//            System.out.println("No Barcode");
             d.setSpeed(0,0,0,0);
         }
     }
@@ -91,6 +95,7 @@ public class RobotTemplate extends IterativeRobot {
         state = 0;
         loopCounter = 0;
         shootCounter = 0;
+        
         System.out.print("dsysteminit");
     }
 
@@ -269,6 +274,7 @@ public class RobotTemplate extends IterativeRobot {
     public void teleopPeriodic() {
         d.getJoy();
         d.calculateInput();
+        
         gathererButtonCheck(driver.getGather(), driver.getReverseGather());
         shooterButtonCheck();
         defenseCheck();
@@ -283,6 +289,8 @@ public class RobotTemplate extends IterativeRobot {
 //        System.out.println("d");
         state = 0;
         loopCounter = 0;
+        SmartDashboard.putNumber("RIGHT", 0);
+        SmartDashboard.putNumber("LEFT", 0);
     }
 
     public void disabledPeriodic() {
@@ -291,29 +299,33 @@ public class RobotTemplate extends IterativeRobot {
     }
 
     public void testPeriodic() {
-        if (joy.getRawButton(4)) {
-            arm.goUp();
-        } else {
-            arm.goDown();
-        }
-        gathererButtonCheck(driver.getGather(), driver.getReverseGather());
-        if (joy.getRawButton(1)) {
-            shooter.middlePiston.extend();
-        } else {
-            shooter.middlePiston.retract();
-        }
-        if (joy.getRawButton(2)) {
-            shooter.shoot.extend();
-        } else {
-            shooter.shoot.retract();
-        }
-        if (joy.getRawButton(3)) {
-            shooter.outerPistons.extend();
-        } else {
-            shooter.outerPistons.retract();
-        }
-        System.out.println(shooter.middlePistonLimit.get() + " " + shooter.deTensioned.get() + " " + shooter.tensionedCounter.get());
-
+        d.fl.set(1);
+        d.fr.set(1);
+        d.bl.set(1);
+        d.br.set(1);
+//        if (joy.getRawButton(4)) {
+//            arm.goUp();
+//        } else {
+//            arm.goDown();
+//        }
+//        gathererButtonCheck(driver.getGather(), driver.getReverseGather());
+//        if (joy.getRawButton(1)) {
+//            shooter.middlePiston.extend();
+//        } else {
+//            shooter.middlePiston.retract();
+//        }
+//        if (joy.getRawButton(2)) {
+//            shooter.shoot.extend();
+//        } else {
+//            shooter.shoot.retract();
+//        }
+//        if (joy.getRawButton(3)) {
+//            shooter.outerPistons.extend();
+//        } else {
+//            shooter.outerPistons.retract();
+//        }
+//        System.out.println(shooter.middlePistonLimit.get() + " " + shooter.deTensioned.get() + " " + shooter.tensionedCounter.get());
+//
     }
     
     public void shooterButtonCheck(){
