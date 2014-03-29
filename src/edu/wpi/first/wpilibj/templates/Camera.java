@@ -76,4 +76,20 @@ public class Camera {
             return false;
         }
     }
+    
+    public boolean getDefenseRight() {
+        if(SmartDashboard.getString("BARCODE") == "RT"){
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    public boolean getDefenseLeft() {
+        if(SmartDashboard.getString("BARCODE") == "LFT"){
+           return true;
+        } else {
+            return false;
+        }
+    }
 }

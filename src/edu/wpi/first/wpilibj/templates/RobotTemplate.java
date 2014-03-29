@@ -73,6 +73,19 @@ public class RobotTemplate extends IterativeRobot {
 
     }
 
+    public void barcodeDefense() {
+        arm.goUp();
+        if(cam.getDefenseLeft()){
+            //move left
+            d.setSpeed(0,.5,.01,0);
+        } else if(cam.getDefenseRight()) {
+            //move right
+            d.setSpeed(0,-.5,-0.01,0);
+        } else {
+            d.setSpeed(0,0,0,0);
+        }
+    }
+    
     public void autonomousInit() {
         enY.reset();
         state = 0;
@@ -82,7 +95,8 @@ public class RobotTemplate extends IterativeRobot {
     }
 
     public void autonomousPeriodic() {
-        hailMary();
+//        hailMary();
+        barcodeDefense();
     }
     /*
      cam.setAngle(90.0);
@@ -102,7 +116,7 @@ public class RobotTemplate extends IterativeRobot {
                 try {
                      if(kateKrate.getDigital(Wiring.KATE_KRATE_DEFENSE_SWITCH)){
                         disAutoD = -24;
-                        d.setSpeed(0,-.5,.01,0);
+                        d.setSpeed(0,-.5,.1,0);
                         goBack = true;
                     }else{
                         disAutoD = 24;
@@ -112,7 +126,7 @@ public class RobotTemplate extends IterativeRobot {
                 } catch (DriverStationEnhancedIO.EnhancedIOException ex) {
                     ex.printStackTrace();
                     disAutoD = 24;
-                    d.setSpeed(0,.5,0,0);
+                    d.setSpeed(0,.5,.01,0);
                     goBack = false;
                 }
                 if(enY.getDistance() > disAutoD && !goBack){
