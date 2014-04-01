@@ -10,22 +10,21 @@ public class MaxSonar {
      public MaxSonar(int channel)
      {
          sensor = new AnalogChannel(channel);
-         conversionFactor = 84;
-         sensor.setAverageBits(8);
-         sensor.setOversampleBits(0);
+         conversionFactor = 8.4;
          dist = 0;
      }
      public double getInches()
      {
-         return ((sensor.getAverageVoltage()*conversionFactor/12)-21);
+         return ((sensor.getVoltage()*conversionFactor/12)-21);
+         //Distance to front of chassis is 21 in
      }
      public double getFeet()
      {
-         return ((sensor.getAverageVoltage()*conversionFactor) - 1.75);
+         return ((sensor.getVoltage()*conversionFactor)-1.75);
      }
      public double getVoltage()
      {
-         return (sensor.getAverageVoltage());
+         return (sensor.getVoltage());
      }
      public boolean canShoot() 
      {
@@ -40,3 +39,4 @@ public class MaxSonar {
      }
      
 }
+
