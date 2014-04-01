@@ -299,33 +299,29 @@ public class RobotTemplate extends IterativeRobot {
     }
 
     public void testPeriodic() {
-        d.fl.set(-1);
-        d.fr.set(1);
-        d.bl.set(-1);
-        d.br.set(1);
-//        if (joy.getRawButton(4)) {
-//            arm.goUp();
-//        } else {
-//            arm.goDown();
-//        }
-//        gathererButtonCheck(driver.getGather(), driver.getReverseGather());
-//        if (joy.getRawButton(1)) {
-//            shooter.middlePiston.extend();
-//        } else {
-//            shooter.middlePiston.retract();
-//        }
-//        if (joy.getRawButton(2)) {
-//            shooter.shoot.extend();
-//        } else {
-//            shooter.shoot.retract();
-//        }
-//        if (joy.getRawButton(3)) {
-//            shooter.outerPistons.extend();
-//        } else {
-//            shooter.outerPistons.retract();
-//        }
-//        System.out.println(shooter.middlePistonLimit.get() + " " + shooter.deTensioned.get() + " " + shooter.tensionedCounter.get());
-//
+        if (joy.getRawButton(4)) {
+            arm.goUp();
+        } else {
+            arm.goDown();
+        }
+        gathererButtonCheck(driver.getGather(), driver.getReverseGather());
+        if (joy.getRawButton(1)) {
+            shooter.middlePiston.extend();
+        } else {
+            shooter.middlePiston.retract();
+        }
+        if (joy.getRawButton(2)) {
+            shooter.shoot.extend();
+        } else {
+            shooter.shoot.retract();
+        }
+        if (joy.getRawButton(3)) {
+            shooter.outerPistons.extend();
+        } else {
+            shooter.outerPistons.retract();
+        }
+        System.out.println(shooter.middlePistonLimit.get() + " " + shooter.deTensioned.get() + " " + shooter.tensionedCounter.get());
+
     }
     
     public void shooterButtonCheck(){
