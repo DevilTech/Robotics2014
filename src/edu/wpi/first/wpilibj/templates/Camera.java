@@ -5,6 +5,7 @@
 package edu.wpi.first.wpilibj.templates;
 
 import Competition.Wiring;
+import edu.wpi.first.wpilibj.CANJaguar;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.camera.AxisCamera;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -94,4 +95,70 @@ public class Camera {
             return false;
         }
     }
+    
+    public boolean moveForward() {
+        if(SmartDashboard.getString("BARCODE").equals("LFT")){
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    public boolean moveBackwards() {
+        if(SmartDashboard.getString("BARCODE").equals("RT")){
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    public boolean triggerDT1() {
+        if(SmartDashboard.getString("BARCODE").equals("DT1")){
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    public boolean triggerDT2() {
+        if(SmartDashboard.getString("BARCODE").equals("DT2")){
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    public boolean triggerNAN() {
+        if(SmartDashboard.getString("BARCODE").equals("nan")){
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    public String readCode() {
+        return SmartDashboard.getString("BARCODE");
+    }
+    
+    public void pushString(String g) {
+        SmartDashboard.putString("BARCODE", g);
+    }
+    
+    public boolean gatherDown() {
+        if(SmartDashboard.getString("BARCODE").equals("DT1")){
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    public boolean gatherUp() {
+        if(SmartDashboard.getString("BARCODE").equals("DT2")){
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+
 }
