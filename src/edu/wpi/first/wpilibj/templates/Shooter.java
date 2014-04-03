@@ -38,8 +38,8 @@ public class Shooter {
 
     public Shooter() {
         shoot = new Piston(Wiring.SOLENOID_SHOOTER_SHOOT_OUT, Wiring.SOLENOID_SHOOTER_SHOOT_IN);
-        outerPistons = new Piston(Wiring.SOLENOID_SHOOTER_TENSION_OUT, Wiring.SOLENOID_SHOOTER_TENSION_IN);
-        middlePiston = new Piston(Wiring.SOLENOID_SHOOTER_PRETENSION_IN, Wiring.SOLENOID_SHOOTER_PRETENSION_OUT);
+        outerPistons = new Piston(Wiring.SOLENOID_SHOOTER_TENSION_IN, Wiring.SOLENOID_SHOOTER_TENSION_OUT);
+        middlePiston = new Piston(Wiring.SOLENOID_SHOOTER_PRETENSION_OUT, Wiring.SOLENOID_SHOOTER_PRETENSION_IN);
         deTensioned = new DigitalInput(Wiring.LIMIT_SHOOTER_DETENSIONED);
         ball = new AnalogChannel(Wiring.OPTICAL_SHOOTER_BALL_SENSOR);
         middlePistonLimit = new DigitalInput(Wiring.LIMIT_SHOOTER_MIDDLE_PISTON);
@@ -60,11 +60,37 @@ public class Shooter {
 
     }
     public void override(){
+        middlePiston.retract();
         shoot.extend();
         readyToShoot = false;
         isDown = false;
     }
-    public void cock() {
+    
+    
+    public void cock(){
+        if(!readyToShoot){
+            if(!limitDown.get()){
+                middlePiston.extend();
+                outerPistons.retract();
+                shoot.retract();
+                tensionedCounter.reset();
+                SmartDashboard.putBoolean("DOWN", false);
+                SmartDashboard.putBoolean("TENSIONING", false);
+            }else{
+                SmartDashboard.putBoolean("DOWN", true);
+                SmartDashboard.putBoolean("TENSIONING", true);
+                if (tensionedCounter.get() == 0) {
+                    outerPistons.extend();
+                    SmartDashboard.putBoolean("TENSIONING", true);
+                }else{
+                    readyToShoot = true;
+                    SmartDashboard.putBoolean("TENSIONING", false);
+                    SmartDashboard.putBoolean("READY", true);
+                }
+            }
+        }
+    }
+    public void cockOld() {
         if (!readyToShoot) {
             if (!isDown) {
                 middlePiston.extend();
@@ -96,17 +122,15 @@ public class Shooter {
 
     public void shoot() {
 
-        if (readyToShoot && (ball.getVoltage() > Wiring.C_HAS_BALL)) {
+        //if (isDown ){&& (ball.getVoltage() > Wiring.C_HAS_BALL)) {
             middlePiston.retract();
             shoot.extend();
             SmartDashboard.putBoolean("TENSIONING", false);
             SmartDashboard.putBoolean("READY", false);
             SmartDashboard.putBoolean("DOWN", false);
             //System.out.println("shoot");
-            isDown = false;
             readyToShoot = false;
             System.out.println("shot");
-        }
     }
 
     public void reset() {

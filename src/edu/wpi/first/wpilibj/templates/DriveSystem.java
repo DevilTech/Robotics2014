@@ -175,7 +175,7 @@ public class DriveSystem {
             speedZ = control.getRotation() * Math.abs(control.getRotation());
         } else {
             speedY = control.getForward() * Math.abs(control.getForward());
-            speedX = control.getRight() * Math.abs(control.getRight());
+            speedX = control.getRight() * control.getRight() * control.getRight();
             speedZ = control.getRotation() * Math.abs(control.getRotation());
         }
     }

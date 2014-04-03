@@ -44,12 +44,14 @@ public class RobotTemplate extends IterativeRobot {
     static boolean gathererReversed = false;
     int gathCount = 101;
     boolean hasFired = false;
+    int doubleState = 0;
     int state = 0;
     Camera cam;
     int loopCounter = 0;
     int shootCounter = 0;
     MaxSonar sonar;
-    double disAuto = 132;
+    double disAuto = 96;
+    double disDoubleAuto = 120;
     double disAutoD = 24;
     boolean goBack = false;
     DriverStationEnhancedIO kateKrate;
@@ -92,6 +94,7 @@ public class RobotTemplate extends IterativeRobot {
     
     public void autonomousInit() {
         enY.reset();
+        doubleState = 0;
         state = 0;
         loopCounter = 0;
         shootCounter = 0;
@@ -100,8 +103,7 @@ public class RobotTemplate extends IterativeRobot {
     }
 
     public void autonomousPeriodic() {
-//        hailMary();
-        barcodeDefense();
+        autoThatWorks();
     }
     /*
      cam.setAngle(90.0);
@@ -114,6 +116,41 @@ public class RobotTemplate extends IterativeRobot {
      //just move the robot forward
      }
      */
+    
+    public void doubleAuto() {
+        switch (doubleState){
+            case 0:
+                shooter.cock();
+                d.setSpeed(0,.5,0,0);
+                
+                if(enY.getDistance() > disDoubleAuto){
+                    doubleState = 1;
+                    d.setSpeed(0,0,0,0);
+                }
+                break;
+            case 1:
+                if(cam.getBarcode()){
+                    shooter.shoot();
+                    System.out.println("shot");
+                    shootCounter++;
+                }
+                else if(loopCounter > 300){
+                    shooter.shoot();
+                    shootCounter++;
+                }
+                
+                if(shootCounter > 50){
+                    state = 2;
+                }
+                loopCounter++;
+                break;
+            case 2:
+                shooter.cock();
+                break;
+            default:
+                shooter.cock();
+        }
+    }
     public void hailMary(){
         switch(state){
             case 0:
@@ -153,7 +190,7 @@ public class RobotTemplate extends IterativeRobot {
         switch (state){
             case 0:
                 shooter.cock();
-                d.setSpeed(0,.5,.01,0);
+                d.setSpeed(0,.5,0,0);
                 if(enY.getDistance() > disAuto){
                     state = 1;
                     d.setSpeed(0,0,0,0);
@@ -272,21 +309,20 @@ public class RobotTemplate extends IterativeRobot {
     }
 
     public void teleopPeriodic() {
+        //DRIVE
         d.getJoy();
         d.calculateInput();
-        
+        //UPPER MECH
         gathererButtonCheck(driver.getGather(), driver.getReverseGather());
         shooterButtonCheck();
         defenseCheck();
-        
-        DriverStationLCD.getInstance().println(DriverStationLCD.Line.kUser2, 1, "teleopper"+sonar.getVoltage());
+        //PRINT/DEBUG
+        DriverStationLCD.getInstance().println(DriverStationLCD.Line.kUser2, 1, "Sonar:"+sonar.getFeet());
         DriverStationLCD.getInstance().updateLCD();
-        System.out.println("DISTANCE: " + sonar.getFeet() + "VOLTAGE: " + sonar.getVoltage());
     }
 
     public void disabledInit() {
-        //d.driveSystemDenit();
-//        System.out.println("d");
+        doubleState = 0;
         state = 0;
         loopCounter = 0;
         SmartDashboard.putNumber("RIGHT", 0);
@@ -294,7 +330,6 @@ public class RobotTemplate extends IterativeRobot {
     }
 
     public void disabledPeriodic() {
-//        System.out.println("dp");
         arm.goDown();
     }
 
@@ -320,7 +355,7 @@ public class RobotTemplate extends IterativeRobot {
         } else {
             shooter.outerPistons.retract();
         }
-        System.out.println(shooter.middlePistonLimit.get() + " " + shooter.deTensioned.get() + " " + shooter.tensionedCounter.get());
+        System.out.println(shooter.limitDown.get());
 
     }
     
