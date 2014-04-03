@@ -51,7 +51,6 @@ public class RobotTemplate extends IterativeRobot {
     int shootCounter = 0;
     MaxSonar sonar;
     double disAuto = 96;
-    double disDoubleAuto = 120;
     double disAutoD = 24;
     boolean goBack = false;
     DriverStationEnhancedIO kateKrate;
@@ -118,37 +117,35 @@ public class RobotTemplate extends IterativeRobot {
      */
     
     public void doubleAuto() {
-        switch (doubleState){
+        switch (state){
             case 0:
                 shooter.cock();
-                d.setSpeed(0,.5,0,0);
-                
-                if(enY.getDistance() > disDoubleAuto){
-                    doubleState = 1;
+                d.setSpeed(0,.5,0.02,0);
+                g.reverse();
+                if(enY.getDistance() > disAuto){
+                    state = 1;
                     d.setSpeed(0,0,0,0);
                 }
                 break;
             case 1:
-                if(cam.getBarcode()){
-                    shooter.shoot();
-                    System.out.println("shot");
-                    shootCounter++;
-                }
-                else if(loopCounter > 300){
-                    shooter.shoot();
-                    shootCounter++;
-                }
-                
-                if(shootCounter > 50){
-                    state = 2;
-                }
-                loopCounter++;
+                shooter.shoot();
+                state = 2;
                 break;
             case 2:
                 shooter.cock();
+                g.gather();
+                d.setSpeed(0,.5,.02,0);
+                if(enY.getDistance() > 12) {
+                    d.setSpeed(0,.5,0,0);
+                    state = 3;
+                }
+                break;
+            case 3:
+                shooter.shoot();
                 break;
             default:
                 shooter.cock();
+                break;
         }
     }
     public void hailMary(){
@@ -190,7 +187,7 @@ public class RobotTemplate extends IterativeRobot {
         switch (state){
             case 0:
                 shooter.cock();
-                d.setSpeed(0,.5,0,0);
+                d.setSpeed(0,.5,.02,0);
                 if(enY.getDistance() > disAuto){
                     state = 1;
                     d.setSpeed(0,0,0,0);

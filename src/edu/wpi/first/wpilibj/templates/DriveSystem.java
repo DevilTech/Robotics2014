@@ -175,7 +175,7 @@ public class DriveSystem {
             speedZ = control.getRotation() * Math.abs(control.getRotation());
         } else {
             speedY = control.getForward() * Math.abs(control.getForward());
-            speedX = control.getRight() * control.getRight() * control.getRight();
+            speedX = control.getRight() * Math.abs(control.getRight());
             speedZ = control.getRotation() * Math.abs(control.getRotation());
         }
     }
@@ -284,7 +284,7 @@ public class DriveSystem {
 
         double tempCZ = clockwiseZ + errorInHeading;
         double tempFY = speedY;
-        double tempRX = speedX;
+        double tempRX = speedX * Math.abs(speedX);
 
         double lf, rf, lb, rb;
 
