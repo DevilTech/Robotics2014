@@ -27,6 +27,7 @@ public class Shooter {
     Piston outerPistons;
     AnalogChannel ball;
     DigitalInput middlePistonLimit;
+    DigitalInput limitDown;
     double distance;
     int counter = 0;
     boolean readyToShoot = false;
@@ -39,13 +40,11 @@ public class Shooter {
         shoot = new Piston(Wiring.SOLENOID_SHOOTER_SHOOT_OUT, Wiring.SOLENOID_SHOOTER_SHOOT_IN);
         outerPistons = new Piston(Wiring.SOLENOID_SHOOTER_TENSION_OUT, Wiring.SOLENOID_SHOOTER_TENSION_IN);
         middlePiston = new Piston(Wiring.SOLENOID_SHOOTER_PRETENSION_IN, Wiring.SOLENOID_SHOOTER_PRETENSION_OUT);
-        //tensioned = new DigitalInput(Wiring.LIMIT_SHOOTER_TENSIONED);
-        // up = new DigitalInput(Wiring.LIMIT_SHOOTER_UP);
-        //down = new DigitalInput(Wiring.LIMIT_SHOOTER_DOWN);
         deTensioned = new DigitalInput(Wiring.LIMIT_SHOOTER_DETENSIONED);
         ball = new AnalogChannel(Wiring.OPTICAL_SHOOTER_BALL_SENSOR);
         middlePistonLimit = new DigitalInput(Wiring.LIMIT_SHOOTER_MIDDLE_PISTON);
         tensionedCounter = new Counter(Wiring.LIMIT_SHOOTER_TENSIONED);
+        limitDown =  new DigitalInput(Wiring.LIMIT_SHOOTER_DOWN);
         tensionedCounter.start();
         tensionedCounter.reset();
         
