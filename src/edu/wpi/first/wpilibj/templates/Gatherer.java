@@ -17,10 +17,7 @@ import edu.wpi.first.wpilibj.Talon;
  */
 public class Gatherer {
 
-
-
     Relay arm;
-
     Talon armMotorL;
     Talon armMotorR;
 
@@ -41,42 +38,42 @@ public class Gatherer {
         arm.set(Relay.Value.kReverse);
     }
 
-    public void startIn() //Starts the motors of gatherer in
+    public void startMotorsToGathererBall() //Starts the motors of gatherer in
     {
         armMotorL.set(-Wiring.GATHERER_SPEED_FORWARD);
         armMotorR.set(Wiring.GATHERER_SPEED_FORWARD);
     }
 
-    public void stop() //Stops the motors of gatherer
+    public void stopMotors() //Stops the motors of gatherer
     {
         armMotorL.set(0);
         armMotorR.set(0);
     }
 
-    public void startOut() //Starts the motors of gatherer in reverse
+    public void startMotorsToReverseBall() //Starts the motors of gatherer in reverse
     {
         armMotorL.set(-Wiring.GATHERER_SPEED_REVERSE);
         armMotorR.set(Wiring.GATHERER_SPEED_REVERSE);
 
     }
-    
-    public void gather(){
-        startIn();
+
+    public void gather() {
+        startMotorsToGathererBall();
         down();
     }
-    
-    public void pullUp(){
-        startIn();
-        up();   
-    }
-    
-    public void reverse(){
-        startOut();
+
+    public void pullUp() {
+        startMotorsToGathererBall();
         up();
     }
-    
-    public void rest(){
-        stop();
+
+    public void reverse() {
+        startMotorsToReverseBall();
+        up();
+    }
+
+    public void rest() {
+        stopMotors();
         up();
     }
 }

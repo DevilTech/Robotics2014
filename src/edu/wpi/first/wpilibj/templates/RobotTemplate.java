@@ -120,8 +120,9 @@ public class RobotTemplate extends IterativeRobot {
         switch (state){
             case 0:
                 shooter.cock();
-                d.setSpeed(0,.5,0.02,0);
-                g.reverse();
+                d.setSpeed(0,.5,0,0);
+                g.startMotorsToReverseBall();
+                g.down();
                 if(enY.getDistance() > disAuto){
                     state = 1;
                     d.setSpeed(0,0,0,0);
@@ -134,9 +135,10 @@ public class RobotTemplate extends IterativeRobot {
             case 2:
                 shooter.cock();
                 g.gather();
-                d.setSpeed(0,.5,.02,0);
+                d.setSpeed(0,.5,0,0);
                 if(enY.getDistance() > 12) {
                     d.setSpeed(0,.5,0,0);
+                    g.pullUp();
                     state = 3;
                 }
                 break;

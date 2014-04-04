@@ -147,8 +147,9 @@ public class Shooter {
 
     public void popShot() {
         
-            if (!deTensioned.get() && RobotTemplate.gathererReversed) {
+            if (!deTensioned.get()) {
                 shoot.extend();
+                middlePiston.retract();
                 readyToShoot = false;
                 popTrig = true;
                 isDown = false;
@@ -156,6 +157,7 @@ public class Shooter {
                 SmartDashboard.putBoolean("DOWN", false);
             } else if (deTensioned.get()) {
                 outerPistons.retract();
+                middlePiston.retract();
                 SmartDashboard.putBoolean("READY", false);
                 //System.out.println("pop");
                 readyToShoot = false;
