@@ -165,18 +165,19 @@ public class DriveSystem {
             resetHeading();
         }
 
-        if (getHooks()) {
-            speedX = 0;
-            speedZ = 0;
-            speedY = 0;
-        } else if (getHat()) {
+        if (getHat()) {
             speedZ = 0;
             speedX = control.getRight() * Math.abs(control.getRight());
-            speedZ = control.getRotation() * Math.abs(control.getRotation());
+            speedY = control.getForward() * Math.abs(control.getForward());
         } else {
             speedY = control.getForward() * Math.abs(control.getForward());
             speedX = control.getRight() * Math.abs(control.getRight());
             speedZ = control.getRotation() * Math.abs(control.getRotation());
+        }
+        calculateInput();
+        if(getHooks()){
+            speedX = 0;
+            speedY = control.getForward() * Math.abs(control.getForward());
         }
     }
 
@@ -208,18 +209,16 @@ public class DriveSystem {
 
     public boolean getHooks() {
         if (control.getLeftHook()) {
-            directLF = Wiring.CF_HOOK;
-            directRF = Wiring.FF_HOOK;
-            directLB = Wiring.CB_HOOK;
-            directRB = Wiring.FB_HOOK;
-            System.out.println("HOOKED?");
+//            directLF = Wiring.CF_HOOK;
+//            directRF = Wiring.FF_HOOK;
+//            directLB = Wiring.CB_HOOK;
+//            directRB = Wiring.FB_HOOK;
             return true;
         } else if (control.getRightHook()) {
-            directLF = Wiring.FF_HOOK;
-            directRF = Wiring.CF_HOOK;
-            directLB = Wiring.FB_HOOK;
-            directRB = Wiring.CB_HOOK;
-            System.out.println("HOOKED?");
+//            directLF = Wiring.FF_HOOK;
+//            directRF = Wiring.CF_HOOK;
+//            directLB = Wiring.FB_HOOK;
+//            directRB = Wiring.CB_HOOK;
             return true;
         } else {
             directLF = 0;

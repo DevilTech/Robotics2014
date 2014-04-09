@@ -72,7 +72,7 @@ public class Wiring extends WiringParent {
     
     //Sonar things
     public static final int SONAR_CHANNEL = 7; //This will probably have to change...
-    public static final double MAX_DIST_R1 = 14;
+    public static final double MAX_DIST_R1 = 14; //Needs an update...
     public static final double MIN_DIST_R1 = 13;
     public static final double MAX_DIST_R2 = 5;
     public static final double MIN_DIST_R2 = 0;
