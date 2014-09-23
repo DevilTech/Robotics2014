@@ -50,6 +50,7 @@ public class RobotTemplate extends IterativeRobot {
     int loopCounter = 0;
     int shootCounter = 0;
     MaxSonar sonar;
+    PressureSensor pressureS;
     double disAuto = 96;
     double disAutoD = 24;
     boolean goBack = false;
@@ -64,6 +65,7 @@ public class RobotTemplate extends IterativeRobot {
         joy = new Joystick(1);
         cam = new Camera();
         arm = new DefensiveArm();
+        pressureS = new PressureSensor(Wiring.PRESSURE_SENSOR); 
         compressor = new Compressor(Wiring.COMPRESSOR_PRESSURE_SWITCH, Wiring.COMPRESSOR_RELAY);
         compressor.start();
         g = new Gatherer();
@@ -71,6 +73,7 @@ public class RobotTemplate extends IterativeRobot {
         sonar = new MaxSonar(Wiring.SONAR_CHANNEL);
         kateKrate  = DriverStation.getInstance().getEnhancedIO();
         d.driveSystemInit();
+        smartInit();
 
     }
 
@@ -288,6 +291,7 @@ public class RobotTemplate extends IterativeRobot {
     }
 
     public void teleopInit() {
+        
         System.out.println("start");
         d.driveSystemInit();
         shootonce = true;
@@ -299,6 +303,8 @@ public class RobotTemplate extends IterativeRobot {
     }
 
     public void teleopPeriodic() {
+        smartPull();
+        smartPush();
         //DRIVE
         d.getJoy();
         //UPPER MECH
@@ -419,6 +425,7 @@ public class RobotTemplate extends IterativeRobot {
         SmartDashboard.putNumber("kdX", Wiring.KdX);
         SmartDashboard.putNumber("kdY", Wiring.KdY);
         SmartDashboard.putNumber("KiR", Wiring.KiR);
+        SmartDashboard.putNumber("Pressure:", pressureS.getVoltage());
     }
 
     public void smartPush() {
@@ -429,6 +436,7 @@ public class RobotTemplate extends IterativeRobot {
         SmartDashboard.putNumber("enX", enX.getDistance());
         SmartDashboard.putNumber("enY", enY.getDistance());
         SmartDashboard.putNumber("errorH", d.errorInHeading);
+        SmartDashboard.putNumber("Pressure:", pressureS.getVoltage());
         //SmartDashboard.putNumber("Distance: ", sonar.getFeet());
         
         /*

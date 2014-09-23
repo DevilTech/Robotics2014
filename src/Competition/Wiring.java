@@ -76,6 +76,8 @@ public class Wiring extends WiringParent {
     public static final double MIN_DIST_R1 = 13;
     public static final double MAX_DIST_R2 = 5;
     public static final double MIN_DIST_R2 = 0;
+    //PRESSURE SENSOR
+    public static final int PRESSURE_SENSOR = 6;
     //----------------------------------------------------------------KATE KRATE
     public static final int KATE_KRATE_SWITCH = 7;
     public static final int KATE_KRATE_ARM = 16;
