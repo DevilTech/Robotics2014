@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.AnalogChannel;
 
 public class PressureSensor {
     AnalogChannel pSensor;
-    //approx 25 psi per volt
+    //currently on 6
     public PressureSensor(int channel){
         pSensor = new AnalogChannel(channel);
     }
