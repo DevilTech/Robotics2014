@@ -60,7 +60,7 @@ public class RobotTemplate extends IterativeRobot {
         setupEncoders();
         driver = new Happystick(1, Control.getXbox());
         coPilot = new Happystick(2, Control.getXbox());
-        d = new DriveSystem(sensor, driver, enY, enX, Wiring.HALF_C);
+        d = new DriveSystem(sensor, driver, enY, enX, Wiring.OPEN_C);
         d.FCMode = true;
         joy = new Joystick(1);
         cam = new Camera();
