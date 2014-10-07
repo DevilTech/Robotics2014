@@ -145,6 +145,10 @@ public class DriveSystem {
     }
 
     public void getJoy() {
+        
+        /**--------------THERE WILL BE NO LOOP SWITCHING FOR RUKUS------------------------
+         * Remove if you want full competition operability
+         * 
         if (control.getFCSwitch()) {
             FCMode = (FCMode && driveType == Wiring.OPEN_C) ? false : true;
             SmartDashboard.putBoolean("FCMODE", FCMode);
@@ -160,7 +164,8 @@ public class DriveSystem {
                 SmartDashboard.putBoolean("OPEN DRIVE", false);
                 SmartDashboard.putBoolean("HALF DRIVE", true);
             }
-        }
+        }-------------END OF LOOP SWITCHING---------------------
+         */ 
         if(control.getReset()){
             resetHeading();
         }
