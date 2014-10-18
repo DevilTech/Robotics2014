@@ -61,7 +61,7 @@ public class RobotTemplate extends IterativeRobot {
         driver = new Happystick(1, Control.getXbox());
         coPilot = new Happystick(2, Control.getXbox());
         d = new DriveSystem(sensor, driver, enY, enX, Wiring.OPEN_C);
-        d.FCMode = true;
+        d.FCMode = false;
         joy = new Joystick(1);
         cam = new Camera();
         arm = new DefensiveArm();
@@ -106,7 +106,7 @@ public class RobotTemplate extends IterativeRobot {
     }
 
     public void autonomousPeriodic() {
-        autoThatWorks();
+        autoRuckus();
     }
     /*
      * Here be monsters
@@ -179,6 +179,19 @@ public class RobotTemplate extends IterativeRobot {
                 d.setSpeed(0,0,0,0);
 
         }
+    }
+    
+    public void autoRuckus(){
+         if(cam.getBarcode()){
+             shooter.shoot();
+             d.setSpeed(0,0,0,0);
+             shootCounter++;
+         }else{
+             d.setSpeed(.04,.5,.018,0);
+         }
+         if(shootCounter > 50){
+             shooter.cock();
+         }
     }
     public void autoThatWorks(){
         switch (state){
