@@ -29,6 +29,8 @@ public class RobotTemplate extends IterativeRobot {
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
+     * 
+     * Have you ever tried slurping burgers and chewing soda? -Colin
      */
     AxisCamera camera;
     int redLow = 100; //h
