@@ -62,6 +62,7 @@ public class RobotTemplate extends IterativeRobot {
 
     /**
      * This function is called periodically during autonomous
+     * Is this function truely periodically called? Perhaps we need to try calling Anonymous - Colin. :P
      */
     
     
