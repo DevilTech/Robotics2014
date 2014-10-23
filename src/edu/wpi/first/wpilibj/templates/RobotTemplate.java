@@ -187,7 +187,7 @@ public class RobotTemplate extends IterativeRobot {
              d.setSpeed(0,0,0,0);
              shootCounter++;
          }else{
-             d.setSpeed(.04,.5,.018,0);
+             d.setSpeed(.04,.5,.02,0);
          }
          if(shootCounter > 50){
              shooter.cock();

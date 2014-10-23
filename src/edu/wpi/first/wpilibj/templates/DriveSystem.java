@@ -166,7 +166,7 @@ public class DriveSystem {
                 SmartDashboard.putBoolean("OPEN DRIVE", false);
                 SmartDashboard.putBoolean("HALF DRIVE", true);
             }
-        }-------------END OF LOOP SWITCHING---------------------
+        }-------------END OdF LOOP SWITCHING---------------------
          */ 
         if(control.getReset()){
             resetHeading();
