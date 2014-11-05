@@ -9,6 +9,8 @@ public class GY85_I2C {
     private I2C gread, gwrite;
     private I2C aread, awrite;
     
+    boolean clear = true;
+    
     private byte compassBuffer[], gyroBuffer[], accelBuffer[];
     private int compassByte, gyroByte, accelByte;
     
@@ -24,29 +26,41 @@ public class GY85_I2C {
     }
 
     public void setupCompass() {
-        cwrite = new I2C(DigitalModule.getInstance(1), 0x3C);
-        cread = new I2C(DigitalModule.getInstance(1), 0x3D);
+        if(clear){
+            clear = false;
+            cwrite = new I2C(DigitalModule.getInstance(1), 0x3C);
+            cread = new I2C(DigitalModule.getInstance(1), 0x3D);
 
-        cwrite.write(0, 88);
-        cwrite.write(1, 64);
-        cwrite.write(2, 0);
+            cwrite.write(0, 88);
+            cwrite.write(1, 64);
+            cwrite.write(2, 0);
+        }
+        clear = true;
     }
     
     public void setupGyro() {
-        gwrite = new I2C(DigitalModule.getInstance(1), 0xD1);
-        gread = new I2C(DigitalModule.getInstance(1), 0xD0);
+        if(clear){
+            clear = false;
+            gwrite = new I2C(DigitalModule.getInstance(1), 0xD1);
+            gread = new I2C(DigitalModule.getInstance(1), 0xD0);
 
-        gwrite.write(21, Wiring.SAMPLE_RATE);
-        gwrite.write(22, 0x1A);
+            gwrite.write(21, Wiring.SAMPLE_RATE);
+            gwrite.write(22, 0x1A);
+        }
+        clear = true;
     }
     
     public void setupAccel() {
-        awrite = new I2C(DigitalModule.getInstance(1), 0xA6);
-        aread = new I2C(DigitalModule.getInstance(1), 0xA7);
+        if(clear){
+            clear = false;
+            awrite = new I2C(DigitalModule.getInstance(1), 0xA6);
+            aread = new I2C(DigitalModule.getInstance(1), 0xA7);
 
-        awrite.write(44, 0x0A);
-        awrite.write(45, 0x08);
-        awrite.write(49, 0x08);
+            awrite.write(44, 0x0A);
+            awrite.write(45, 0x08);
+            awrite.write(49, 0x08);
+        }
+        clear = true;
     }
     
     double getAccelX() { return byteCombo(accelBuffer[1], accelBuffer[0]); }
@@ -67,9 +81,13 @@ public class GY85_I2C {
     double getCompassRadAngle(double initialHeading) { return radianWrap(atan2(getCompassY(), getCompassX()) - initialHeading); }
     
     public void readAll() {
-        cread.read(3, compassByte, compassBuffer);
-        gread.read(29, gyroByte, gyroBuffer);
-        aread.read(50, accelByte, accelBuffer);
+        if(clear){
+            clear = false;
+            cread.read(3, compassByte, compassBuffer);
+            gread.read(29, gyroByte, gyroBuffer);
+            aread.read(50, accelByte, accelBuffer);
+        }
+        clear = true;
     }
     
     public int byteCombo(byte num1, byte num2) {
